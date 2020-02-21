@@ -27,6 +27,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 import org.slf4j.Logger;
@@ -167,6 +168,10 @@ public enum HTML {
         this.interfaceOf = interfaceOf;
     }
 
+    public String tag() {
+        return this.name().toLowerCase();
+    }
+
     public Class<?> interfaceOf() {
         return this.interfaceOf;
     }
@@ -230,7 +235,7 @@ public enum HTML {
         return newInstance;
     }
 
-    public enum ContentCategory {
+    static public enum ContentCategory {
         Metadata("base", "link", "meta", "noscript", "script", "style", "template", "title"),
         Flow("a", "abbr", "address", "area", "articlea", "side", "audio", "b", "bdi", "bdo",
                 "blockquote", "br", "button", "canvas", "cite", "code", "data", "datalist",
@@ -267,50 +272,28 @@ public enum HTML {
 
         private final List<String> members;
 
-        ContentCategory(String... members) {
-            this.members = Arrays.asList(members);
+        ContentCategory(String... tags) {
+            List<String> members0 = new ArrayList<>();
+            for (String tag : Arrays.asList(tags)) {
+                members0.add(tag);
+            }
+            this.members = Collections.unmodifiableList(members0);
         }
 
         public List<String> members() {
             return this.members;
         }
 
-        static public List<ContentCategory> parse(String tag) {
+
+        static public List<ContentCategory> parse(HTML html) {
             List<ContentCategory> list = new ArrayList<>();
             for (ContentCategory contentCategory : ContentCategory.values()) {
-                if (contentCategory.members().contains(tag)) {
+                if (contentCategory.members().contains(html)) {
                     list.add(contentCategory);
                 }
             }
             return list;
         }
-    }
-
-    public enum PermittedRule {
-        OPTIONAL,
-        ZERO_OR_MORE,
-        ONE_OR_MORE,
-        EITHER_ONE_OF,
-        LIST_ORDERED,
-        NONE;
-    }
-
-    public interface Permitted {
-
-        List<PermittedRule> permittedRules();
-    }
-
-    public interface PermittedContent extends Permitted {
-
-        Element targetElement();
-
-        /**
-         * List of elements that may be appended to target element.
-         *
-         * @return
-         */
-        List<Permitted> contentElements();
-
     }
 
     public interface Render {
@@ -369,8 +352,10 @@ public enum HTML {
 
         String tag();
 
+        List<Element> children();
+
         default List<ContentCategory> contentCategories() {
-            return ContentCategory.parse(this.tag());
+            return ContentCategory.parse(HTML.valueOf(this.tag()));
         }
     }
 

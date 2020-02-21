@@ -30,6 +30,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -161,6 +162,11 @@ public class HTMLImpl {
             builder.append(renderEndTag());
             builder.append(renderLinefeed());
             return builder.toString();
+        }
+
+        @Override
+        public List<Element> children() {
+            return Collections.unmodifiableList(this.children);
         }
 
         @Override
