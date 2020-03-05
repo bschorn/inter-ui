@@ -28,8 +28,13 @@ package org.schorn.ella.ui.html;
  * @author bschorn
  */
 public enum DOM {
+    EventTarget,
+    Node,
+    Element,
     HTMLElement,
     HTMLDivElement,
-    HTMLTableElement;
+    HTMLTableElement,
+    HTMLAnchorElement,
+    HTMLBRElement;
 
 }

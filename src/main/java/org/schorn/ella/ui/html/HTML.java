@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,134 +39,136 @@ import org.slf4j.LoggerFactory;
  * @author bschorn
  */
 public enum HTML {
-    ELEMENT(Element.class),
-    SINGLE(SingleElement.class),
-    HTML(Page.class),
-    ATTRIBUTE(Attribute.class),
-    A(Element.class),
-    ABBR(Element.class),
-    ACRONYM(Element.class),
-    ADDRESS(Element.class),
-    APPLET(Element.class),
-    AREA(Element.class),
-    ARTICLE(Article.class),
-    ASIDE(Element.class),
-    AUDIO(Element.class),
-    B(Element.class),
-    BASE(Element.class),
-    BASEFONT(Element.class),
-    BB(Element.class),
-    BDO(Element.class),
-    BIG(Element.class),
-    BLOCKQUOTE(Element.class),
-    BODY(Body.class),
-    BR(Element.class),
-    BUTTON(Element.class),
-    CANVAS(Element.class),
-    CAPTION(Element.class),
-    CENTER(Element.class),
-    CITE(Element.class),
-    CODE(Element.class),
-    COL(Element.class),
-    COLGROUP(Element.class),
-    COMMAND(Element.class),
-    DATAGRID(Element.class),
-    DATALIST(Element.class),
-    DD(Element.class),
-    DEL(Element.class),
-    DETAILS(Element.class),
-    DIALOG(Element.class),
-    DIR(Element.class),
-    DIV(Div.class),
-    DFN(Element.class),
-    DL(Element.class),
-    DT(Element.class),
-    EM(Element.class),
-    EMBED(Element.class),
-    FIELDSET(Fieldset.class),
-    FIGURE(Element.class),
-    FONT(Element.class),
-    FOOTER(Element.class),
-    FORM(Form.class),
-    FRAME(Element.class),
-    FRAMESET(Element.class),
-    H1(Element.class),
-    H2(Element.class),
-    H3(Element.class),
-    H4(Element.class),
-    H5(Element.class),
-    H6(Element.class),
-    HEAD(Head.class),
-    HEADER(Element.class),
-    HGROUP(Element.class),
-    HR(Element.class),
-    I(Element.class),
-    IFRAME(Element.class),
-    IMG(Element.class),
-    INPUT(Input.class),
-    INS(Element.class),
-    ISINDEX(Element.class),
-    KDB(Element.class),
-    LABEL(Label.class),
-    LEGEND(Element.class),
-    LI(Element.class),
-    LINK(Element.class),
-    MARK(Element.class),
-    MAP(Element.class),
-    MENU(Element.class),
-    META(Meta.class),
-    METER(Element.class),
-    NAV(Element.class),
-    NOFRAMES(Element.class),
-    NOSCRIPT(Element.class),
-    OBJECT(Element.class),
-    OL(Element.class),
-    OPTGROUP(Element.class),
-    OPTION(Option.class),
-    OUTPUT(Element.class),
-    P(Element.class),
-    PARAM(Element.class),
-    PRE(Element.class),
-    PROGRESS(Element.class),
-    Q(Element.class),
-    RUBY(Element.class),
-    RP(Element.class),
-    RT(Element.class),
-    S(Element.class),
-    SAMP(Element.class),
-    SCRIPT(Script.class),
-    SECTION(Section.class),
-    SELECT(Element.class),
-    SMALL(Element.class),
-    SOURCE(Element.class),
-    SPAN(Element.class),
-    STRIKE(Element.class),
-    STRONG(Element.class),
-    STYLE(Style.class),
-    SUB(Element.class),
-    SUP(Element.class),
-    TABLE(Table.class),
-    TBODY(Element.class),
-    TD(Td.class),
-    TEXTAREA(Element.class),
-    TFOOT(Element.class),
-    TH(Th.class),
-    THEAD(Element.class),
-    TIME(Element.class),
-    TITLE(Element.class),
-    TR(Tr.class),
-    TT(Element.class),
-    U(Element.class),
-    UL(Element.class),
-    VAR(Element.class),
-    VIDEO(Element.class),
-    XMP(Element.class);
+    ELEMENT(Element.class, DOM.HTMLElement),
+    SINGLE(SingleElement.class, DOM.HTMLElement),
+    HTML(Page.class, DOM.HTMLElement),
+    ATTRIBUTE(Attribute.class, DOM.HTMLElement),
+    A(A.class, DOM.HTMLAnchorElement),
+    ABBR(Abbr.class, DOM.HTMLElement),
+    ACRONYM(Element.class, DOM.HTMLElement),
+    ADDRESS(Element.class, DOM.HTMLElement),
+    APPLET(Element.class, DOM.HTMLElement),
+    AREA(Element.class, DOM.HTMLElement),
+    ARTICLE(Article.class, DOM.HTMLElement),
+    ASIDE(Element.class, DOM.HTMLElement),
+    AUDIO(Element.class, DOM.HTMLElement),
+    B(Element.class, DOM.HTMLElement),
+    BASE(Element.class, DOM.HTMLElement),
+    BASEFONT(Element.class, DOM.HTMLElement),
+    BB(Element.class, DOM.HTMLElement),
+    BDO(Element.class, DOM.HTMLElement),
+    BIG(Element.class, DOM.HTMLElement),
+    BLOCKQUOTE(Element.class, DOM.HTMLElement),
+    BODY(Body.class, DOM.HTMLElement),
+    BR(Element.class, DOM.HTMLBRElement),
+    BUTTON(Element.class, DOM.HTMLElement),
+    CANVAS(Element.class, DOM.HTMLElement),
+    CAPTION(Element.class, DOM.HTMLElement),
+    CENTER(Element.class, DOM.HTMLElement),
+    CITE(Element.class, DOM.HTMLElement),
+    CODE(Element.class, DOM.HTMLElement),
+    COL(Element.class, DOM.HTMLElement),
+    COLGROUP(Element.class, DOM.HTMLElement),
+    COMMAND(Element.class, DOM.HTMLElement),
+    DATAGRID(Element.class, DOM.HTMLElement),
+    DATALIST(Element.class, DOM.HTMLElement),
+    DD(Element.class, DOM.HTMLElement),
+    DEL(Element.class, DOM.HTMLElement),
+    DETAILS(Element.class, DOM.HTMLElement),
+    DIALOG(Element.class, DOM.HTMLElement),
+    DIR(Element.class, DOM.HTMLElement),
+    DIV(Div.class, DOM.HTMLDivElement),
+    DFN(Element.class, DOM.HTMLElement),
+    DL(Element.class, DOM.HTMLElement),
+    DT(Element.class, DOM.HTMLElement),
+    EM(Element.class, DOM.HTMLElement),
+    EMBED(Element.class, DOM.HTMLElement),
+    FIELDSET(Fieldset.class, DOM.HTMLElement),
+    FIGURE(Element.class, DOM.HTMLElement),
+    FONT(Element.class, DOM.HTMLElement),
+    FOOTER(Element.class, DOM.HTMLElement),
+    FORM(Form.class, DOM.HTMLElement),
+    FRAME(Element.class, DOM.HTMLElement),
+    FRAMESET(Element.class, DOM.HTMLElement),
+    H1(Element.class, DOM.HTMLElement),
+    H2(Element.class, DOM.HTMLElement),
+    H3(Element.class, DOM.HTMLElement),
+    H4(Element.class, DOM.HTMLElement),
+    H5(Element.class, DOM.HTMLElement),
+    H6(Element.class, DOM.HTMLElement),
+    HEAD(Head.class, DOM.HTMLElement),
+    HEADER(Element.class, DOM.HTMLElement),
+    HGROUP(Element.class, DOM.HTMLElement),
+    HR(Element.class, DOM.HTMLElement),
+    I(Element.class, DOM.HTMLElement),
+    IFRAME(Element.class, DOM.HTMLElement),
+    IMG(Element.class, DOM.HTMLElement),
+    INPUT(Input.class, DOM.HTMLElement),
+    INS(Element.class, DOM.HTMLElement),
+    ISINDEX(Element.class, DOM.HTMLElement),
+    KDB(Element.class, DOM.HTMLElement),
+    LABEL(Label.class, DOM.HTMLElement),
+    LEGEND(Element.class, DOM.HTMLElement),
+    LI(Element.class, DOM.HTMLElement),
+    LINK(Element.class, DOM.HTMLElement),
+    MARK(Element.class, DOM.HTMLElement),
+    MAP(Element.class, DOM.HTMLElement),
+    MENU(Element.class, DOM.HTMLElement),
+    META(Meta.class, DOM.HTMLElement),
+    METER(Element.class, DOM.HTMLElement),
+    NAV(Element.class, DOM.HTMLElement),
+    NOFRAMES(Element.class, DOM.HTMLElement),
+    NOSCRIPT(Element.class, DOM.HTMLElement),
+    OBJECT(Element.class, DOM.HTMLElement),
+    OL(Element.class, DOM.HTMLElement),
+    OPTGROUP(Element.class, DOM.HTMLElement),
+    OPTION(Option.class, DOM.HTMLElement),
+    OUTPUT(Element.class, DOM.HTMLElement),
+    P(Element.class, DOM.HTMLElement),
+    PARAM(Element.class, DOM.HTMLElement),
+    PRE(Element.class, DOM.HTMLElement),
+    PROGRESS(Element.class, DOM.HTMLElement),
+    Q(Element.class, DOM.HTMLElement),
+    RUBY(Element.class, DOM.HTMLElement),
+    RP(Element.class, DOM.HTMLElement),
+    RT(Element.class, DOM.HTMLElement),
+    S(Element.class, DOM.HTMLElement),
+    SAMP(Element.class, DOM.HTMLElement),
+    SCRIPT(Script.class, DOM.HTMLElement),
+    SECTION(Section.class, DOM.HTMLElement),
+    SELECT(Element.class, DOM.HTMLElement),
+    SMALL(Element.class, DOM.HTMLElement),
+    SOURCE(Element.class, DOM.HTMLElement),
+    SPAN(Element.class, DOM.HTMLElement),
+    STRIKE(Element.class, DOM.HTMLElement),
+    STRONG(Element.class, DOM.HTMLElement),
+    STYLE(Style.class, DOM.HTMLElement),
+    SUB(Element.class, DOM.HTMLElement),
+    SUP(Element.class, DOM.HTMLElement),
+    TABLE(Table.class, DOM.HTMLElement),
+    TBODY(Element.class, DOM.HTMLElement),
+    TD(Td.class, DOM.HTMLElement),
+    TEXTAREA(Element.class, DOM.HTMLElement),
+    TFOOT(Element.class, DOM.HTMLElement),
+    TH(Th.class, DOM.HTMLElement),
+    THEAD(Element.class, DOM.HTMLElement),
+    TIME(Element.class, DOM.HTMLElement),
+    TITLE(Element.class, DOM.HTMLElement),
+    TR(Tr.class, DOM.HTMLElement),
+    TT(Element.class, DOM.HTMLElement),
+    U(Element.class, DOM.HTMLElement),
+    UL(Element.class, DOM.HTMLElement),
+    VAR(Element.class, DOM.HTMLElement),
+    VIDEO(Element.class, DOM.HTMLElement),
+    XMP(Element.class, DOM.HTMLElement);
 
     private final Class<?> interfaceOf;
+    private final DOM domInterface;
     private Class<?> implOf = null;
 
-    HTML(Class<?> interfaceOf) {
+    HTML(Class<?> interfaceOf, DOM domInterface) {
         this.interfaceOf = interfaceOf;
+        this.domInterface = domInterface;
     }
 
     public String tag() {
@@ -174,6 +177,10 @@ public enum HTML {
 
     public Class<?> interfaceOf() {
         return this.interfaceOf;
+    }
+
+    public DOM domInterface() {
+        return this.domInterface;
     }
 
     public void setImpl(Class<?> implOf) {
@@ -233,6 +240,90 @@ public enum HTML {
              */
         }
         return newInstance;
+    }
+
+    interface Attributes {
+        public enum Type {
+            AVOID,
+            FLAG,
+            LIST,
+            PATTERN;
+        }
+        String tag();
+
+        Type type();
+    }
+
+    static public enum GlobalAttributes implements Attributes {
+        ACCESSKEY(Attributes.Type.AVOID, Pattern.compile("[A-Za-z]")),
+        AUTOCAPITALIZE(Attributes.Type.LIST, new String[]{"off", "none", "on", "sentences", "words", "characters"}),
+        CLASS(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        CONTENTEDITABLE(Attributes.Type.LIST, new String[]{"true", "false"}),
+        DATA(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        DIR(Attributes.Type.LIST, new String[]{"ltr", "rtl", "auto"}),
+        DRAGGABLE(Attributes.Type.LIST, new String[]{"true", "false"}),
+        HIDDEN(Attributes.Type.FLAG, new String[]{}),
+        ID(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        INPUTMODE(Attributes.Type.LIST, new String[]{"none", "text", "decimal", "numeric", "tel", "search", "email", "url"}),
+        IS(Attributes.Type.PATTERN, Pattern.compile("^.*[-].*$")),
+        ITEMID(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        ITEMPROP(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        ITEMREF(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        ITEMSCOPE(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        ITEMTYPE(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        LANG(Attributes.Type.PATTERN, Pattern.compile("^[a-z]+{2,3}.*$")),
+        PART(Attributes.Type.AVOID, Pattern.compile("[A-Za-z]")),
+        SLOT(Attributes.Type.FLAG, new String[]{}),
+        SPELLCHECK(Attributes.Type.LIST, new String[]{"true", "false"}),
+        STYLE(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
+        TABINDEX(Attributes.Type.PATTERN, Pattern.compile("^(\\d|-1)$")),
+        TITLE(Attributes.Type.PATTERN, Pattern.compile("^.*$"));
+
+        private final String attributeTag;
+        private final Attributes.Type attributesType;
+        private final List<String> allowables;
+        private final Pattern pattern;
+
+        GlobalAttributes(Attributes.Type attributesType, String[] allowables) {
+            this.attributeTag = this.name().toLowerCase();
+            this.attributesType = attributesType;
+            this.allowables = Arrays.asList(allowables);
+            this.pattern = Pattern.compile("^.*$");
+        }
+        GlobalAttributes(Attributes.Type attributesType, Pattern pattern) {
+            this.attributeTag = this.name().toLowerCase();
+            this.attributesType = attributesType;
+            this.allowables = new ArrayList<>(0);
+            this.pattern = pattern;
+        }
+
+        @Override
+        public String tag() {
+            return this.attributeTag;
+        }
+
+        @Override
+        public Attributes.Type type() {
+            return this.attributesType;
+        }
+
+        public List<String> allowables() {
+            return this.allowables;
+        }
+
+        public Pattern pattern() {
+            return this.pattern;
+        }
+
+        static public List<Attributes> attributes() {
+            return Arrays.asList(GlobalAttributes.values());
+        }
+    }
+
+    static public enum TagOmission {
+        None,
+        EndOptional,
+        EndMustBeOmitted;
     }
 
     static public enum ContentCategory {
@@ -348,14 +439,24 @@ public enum HTML {
 
         String getId();
 
-        DOM dom();
-
         String tag();
 
         List<Element> children();
 
         default List<ContentCategory> contentCategories() {
             return ContentCategory.parse(HTML.valueOf(this.tag()));
+        }
+
+        default TagOmission tagOmission() {
+            return TagOmission.None;
+        }
+
+        default DOM domInterface() {
+            return HTML.valueOf(this.tag()).domInterface;
+        }
+
+        default boolean isPermittedContent(Element element) {
+            return true;
         }
     }
 
@@ -416,6 +517,46 @@ public enum HTML {
         Head htmlHead();
 
         Body htmlBody();
+    }
+
+    public interface A extends Element {
+        static public A create(Object... params) throws Exception {
+            return HTML.A.create(A.class, params);
+        }
+
+    }
+
+    /**
+     * It's certainly not required that all abbreviations be marked up using
+     * <abbr>. There are, though, a few cases where it's helpful to do so: When
+     * an abbreviation is used and you want to provide an expansion or
+     * definition outside the flow of the document's content, use <abbr> with an
+     * appropriate title. To define an abbreviation which may be unfamiliar to
+     * the reader, present the term using <abbr> and either a title attribute or
+     * inline text providing the definition. When an abbreviation's presence in
+     * the text needs to be semantically noted, the <abbr> element is useful.
+     * This can be used, in turn, for styling or scripting purposes. You can use
+     * <abbr> in concert with <dfn> to establish definitions for terms which are
+     * abbreviations or acronyms. See the example Defining an abbreviation
+     * below.
+     */
+    public interface Abbr extends Element {
+
+        static public Abbr create(Object... params) throws Exception {
+            return HTML.ABBR.create(Abbr.class, params);
+        }
+    }
+
+    public interface Br extends Element {
+
+        static public Br create(Object... params) throws Exception {
+            return HTML.BR.create(Br.class, params);
+        }
+
+        @Override
+        default boolean isPermittedContent(Element element) {
+            return false;
+        }
     }
 
     public interface Div extends Element {

@@ -36,8 +36,8 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import org.schorn.ella.ui.html.DOM;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.html.HTML.A;
 import org.schorn.ella.ui.html.HTML.Attribute;
 import org.schorn.ella.ui.html.HTML.Element;
 import org.schorn.ella.ui.html.HTML.SingleElement;
@@ -57,6 +57,7 @@ public class HTMLImpl {
         }
         HTML.ELEMENT.setImpl(HtmlElementImpl.class);
         HTML.ATTRIBUTE.setImpl(HtmlAttributeImpl.class);
+        HTML.BR.setImpl(HtmlBrImpl.class);
         HTML.TABLE.setImpl(HtmlTableImpl.class);
         HTML.SINGLE.setImpl(HtmlSingleElementImpl.class);
 
@@ -242,11 +243,6 @@ public class HTMLImpl {
         }
 
         @Override
-        public DOM dom() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
         public String tag() {
             return this.tag;
         }
@@ -382,9 +378,39 @@ public class HTMLImpl {
         }
     }
 
-    static class HtmlTableImpl extends ElementImpl implements HTML.Table {
-        public HtmlTableImpl(String tag) {
-            super(tag);
+    static class HtmlAImpl extends ElementImpl implements A {
+
+        public HtmlAImpl() {
+            super("a");
         }
     }
+
+    static class HtmlAbbrImpl extends ElementImpl implements HTML.Abbr {
+
+        public HtmlAbbrImpl() {
+            super("abbr");
+        }
+    }
+
+    static class HtmlBrImpl extends ElementImpl implements HTML.Br {
+
+        public HtmlBrImpl() {
+            super("br");
+        }
+    }
+
+    static class HtmlTableImpl extends ElementImpl implements HTML.Table {
+        public HtmlTableImpl() {
+            super("table");
+        }
+    }
+
+    static class HtmlFieldset extends ElementImpl implements HTML.Fieldset {
+
+        public HtmlFieldset() {
+            super("fieldset");
+        }
+
+    }
+
 }
