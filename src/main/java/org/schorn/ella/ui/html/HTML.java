@@ -25,6 +25,12 @@ package org.schorn.ella.ui.html;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,126 +47,125 @@ import org.slf4j.LoggerFactory;
 public enum HTML {
     ELEMENT(Element.class, DOM.HTMLElement),
     SINGLE(SingleElement.class, DOM.HTMLElement),
-    HTML(Page.class, DOM.HTMLElement),
-    ATTRIBUTE(Attribute.class, DOM.HTMLElement),
     A(A.class, DOM.HTMLAnchorElement),
     ABBR(Abbr.class, DOM.HTMLElement),
-    ACRONYM(Element.class, DOM.HTMLElement),
-    ADDRESS(Element.class, DOM.HTMLElement),
-    APPLET(Element.class, DOM.HTMLElement),
-    AREA(Element.class, DOM.HTMLElement),
+    ACRONYM(Acronym.class, DOM.HTMLElement),
+    ADDRESS(Address.class, DOM.HTMLElement),
+    APPLET(Applet.class, DOM.HTMLElement),
+    AREA(Area.class, DOM.HTMLAreaElement),
     ARTICLE(Article.class, DOM.HTMLElement),
-    ASIDE(Element.class, DOM.HTMLElement),
-    AUDIO(Element.class, DOM.HTMLElement),
-    B(Element.class, DOM.HTMLElement),
-    BASE(Element.class, DOM.HTMLElement),
-    BASEFONT(Element.class, DOM.HTMLElement),
-    BB(Element.class, DOM.HTMLElement),
-    BDO(Element.class, DOM.HTMLElement),
-    BIG(Element.class, DOM.HTMLElement),
-    BLOCKQUOTE(Element.class, DOM.HTMLElement),
-    BODY(Body.class, DOM.HTMLElement),
-    BR(Element.class, DOM.HTMLBRElement),
-    BUTTON(Element.class, DOM.HTMLElement),
-    CANVAS(Element.class, DOM.HTMLElement),
-    CAPTION(Element.class, DOM.HTMLElement),
-    CENTER(Element.class, DOM.HTMLElement),
-    CITE(Element.class, DOM.HTMLElement),
-    CODE(Element.class, DOM.HTMLElement),
-    COL(Element.class, DOM.HTMLElement),
-    COLGROUP(Element.class, DOM.HTMLElement),
-    COMMAND(Element.class, DOM.HTMLElement),
-    DATAGRID(Element.class, DOM.HTMLElement),
-    DATALIST(Element.class, DOM.HTMLElement),
-    DD(Element.class, DOM.HTMLElement),
-    DEL(Element.class, DOM.HTMLElement),
-    DETAILS(Element.class, DOM.HTMLElement),
-    DIALOG(Element.class, DOM.HTMLElement),
-    DIR(Element.class, DOM.HTMLElement),
+    ASIDE(Aside.class, DOM.HTMLElement),
+    AUDIO(Audio.class, DOM.HTMLAudioElement),
+    B(B.class, DOM.HTMLElement),
+    BASE(Base.class, DOM.HTMLBaseElement),
+    BASEFONT(Basefont.class, DOM.HTMLBaseFontElement),
+    BB(Bb.class, DOM.HTMLElement),
+    BDO(Bdo.class, DOM.HTMLElement),
+    BIG(Big.class, DOM.HTMLElement),
+    BLOCKQUOTE(Blockquote.class, DOM.HTMLElement),
+    BODY(Body.class, DOM.HTMLBodyElement),
+    BR(Br.class, DOM.HTMLBRElement),
+    BUTTON(Button.class, DOM.HTMLButtonElement),
+    CANVAS(Canvas.class, DOM.HTMLCanvasElement),
+    CAPTION(Caption.class, DOM.HTMLTableCaptionElement),
+    CENTER(Center.class, DOM.HTMLElement),
+    CITE(Cite.class, DOM.HTMLElement),
+    CODE(Code.class, DOM.HTMLElement),
+    COL(Col.class, DOM.HTMLElement),
+    COLGROUP(Colgroup.class, DOM.HTMLElement),
+    COMMAND(Command.class, DOM.HTMLElement),
+    DATAGRID(Datagrid.class, DOM.HTMLElement),
+    DATALIST(Datalist.class, DOM.HTMLDataListElement),
+    DD(Dd.class, DOM.HTMLElement),
+    DEL(Del.class, DOM.HTMLElement),
+    DETAILS(Details.class, DOM.HTMLElement),
+    DIALOG(Dialog.class, DOM.HTMLDialgElement),
+    DIR(Dir.class, DOM.HTMLElement),
     DIV(Div.class, DOM.HTMLDivElement),
-    DFN(Element.class, DOM.HTMLElement),
-    DL(Element.class, DOM.HTMLElement),
-    DT(Element.class, DOM.HTMLElement),
-    EM(Element.class, DOM.HTMLElement),
-    EMBED(Element.class, DOM.HTMLElement),
-    FIELDSET(Fieldset.class, DOM.HTMLElement),
-    FIGURE(Element.class, DOM.HTMLElement),
-    FONT(Element.class, DOM.HTMLElement),
-    FOOTER(Element.class, DOM.HTMLElement),
-    FORM(Form.class, DOM.HTMLElement),
-    FRAME(Element.class, DOM.HTMLElement),
-    FRAMESET(Element.class, DOM.HTMLElement),
-    H1(Element.class, DOM.HTMLElement),
-    H2(Element.class, DOM.HTMLElement),
-    H3(Element.class, DOM.HTMLElement),
-    H4(Element.class, DOM.HTMLElement),
-    H5(Element.class, DOM.HTMLElement),
-    H6(Element.class, DOM.HTMLElement),
-    HEAD(Head.class, DOM.HTMLElement),
-    HEADER(Element.class, DOM.HTMLElement),
-    HGROUP(Element.class, DOM.HTMLElement),
-    HR(Element.class, DOM.HTMLElement),
-    I(Element.class, DOM.HTMLElement),
-    IFRAME(Element.class, DOM.HTMLElement),
-    IMG(Element.class, DOM.HTMLElement),
-    INPUT(Input.class, DOM.HTMLElement),
-    INS(Element.class, DOM.HTMLElement),
-    ISINDEX(Element.class, DOM.HTMLElement),
-    KDB(Element.class, DOM.HTMLElement),
-    LABEL(Label.class, DOM.HTMLElement),
-    LEGEND(Element.class, DOM.HTMLElement),
-    LI(Element.class, DOM.HTMLElement),
-    LINK(Element.class, DOM.HTMLElement),
-    MARK(Element.class, DOM.HTMLElement),
-    MAP(Element.class, DOM.HTMLElement),
-    MENU(Element.class, DOM.HTMLElement),
-    META(Meta.class, DOM.HTMLElement),
-    METER(Element.class, DOM.HTMLElement),
-    NAV(Element.class, DOM.HTMLElement),
-    NOFRAMES(Element.class, DOM.HTMLElement),
-    NOSCRIPT(Element.class, DOM.HTMLElement),
-    OBJECT(Element.class, DOM.HTMLElement),
-    OL(Element.class, DOM.HTMLElement),
-    OPTGROUP(Element.class, DOM.HTMLElement),
-    OPTION(Option.class, DOM.HTMLElement),
-    OUTPUT(Element.class, DOM.HTMLElement),
-    P(Element.class, DOM.HTMLElement),
-    PARAM(Element.class, DOM.HTMLElement),
-    PRE(Element.class, DOM.HTMLElement),
-    PROGRESS(Element.class, DOM.HTMLElement),
-    Q(Element.class, DOM.HTMLElement),
-    RUBY(Element.class, DOM.HTMLElement),
-    RP(Element.class, DOM.HTMLElement),
-    RT(Element.class, DOM.HTMLElement),
-    S(Element.class, DOM.HTMLElement),
-    SAMP(Element.class, DOM.HTMLElement),
-    SCRIPT(Script.class, DOM.HTMLElement),
+    DFN(Dfn.class, DOM.HTMLElement),
+    DL(Dl.class, DOM.HTMLDListElement),
+    DT(Dt.class, DOM.HTMLElement),
+    EM(Em.class, DOM.HTMLElement),
+    EMBED(Embed.class, DOM.HTMLEmbedElement),
+    FIELDSET(Fieldset.class, DOM.HTMLFieldSetElement),
+    FIGURE(Figure.class, DOM.HTMLElement),
+    FONT(Font.class, DOM.HTMLElement),
+    FOOTER(Footer.class, DOM.HTMLElement),
+    FORM(Form.class, DOM.HTMLFormElement),
+    FRAME(Frame.class, DOM.HTMLElement),
+    FRAMESET(Frameset.class, DOM.HTMLFrameSetElement),
+    H1(H1.class, DOM.HTMLElement),
+    H2(H2.class, DOM.HTMLElement),
+    H3(H3.class, DOM.HTMLElement),
+    H4(H4.class, DOM.HTMLElement),
+    H5(H5.class, DOM.HTMLElement),
+    H6(H6.class, DOM.HTMLElement),
+    HEAD(Head.class, DOM.HTMLHeadElement),
+    HEADER(Header.class, DOM.HTMLElement),
+    HGROUP(Hgroup.class, DOM.HTMLElement),
+    HR(Hr.class, DOM.HTMLHRElement),
+    HTML(Page.class, DOM.HTMLHtmlElement),
+    I(I.class, DOM.HTMLElement),
+    IFRAME(Iframe.class, DOM.HTMLIFrameElement),
+    IMG(Img.class, DOM.HTMLImageElement),
+    INPUT(Input.class, DOM.HTMLInputElement),
+    INS(Ins.class, DOM.HTMLElement),
+    ISINDEX(Isindex.class, DOM.HTMLElement),
+    KDB(Kdb.class, DOM.HTMLElement),
+    LABEL(Label.class, DOM.HTMLLabelElement),
+    LEGEND(Legend.class, DOM.HTMLLegendElement),
+    LI(Li.class, DOM.HTMLLIElement),
+    LINK(Link.class, DOM.HTMLLinkElement),
+    MARK(Mark.class, DOM.HTMLElement),
+    MAP(Map.class, DOM.HTMLMapElement),
+    MENU(Menu.class, DOM.HTMLElement),
+    META(Meta.class, DOM.HTMLMetaElement),
+    METER(Meter.class, DOM.HTMLMeterElement),
+    NAV(Nav.class, DOM.HTMLElement),
+    NOFRAMES(Noframes.class, DOM.HTMLElement),
+    NOSCRIPT(Noscript.class, DOM.HTMLElement),
+    OBJECT(Object.class, DOM.HTMLObjectElement),
+    OL(Ol.class, DOM.HTMLOListElement),
+    OPTGROUP(Optgroup.class, DOM.HTMLOptGroupElement),
+    OPTION(Option.class, DOM.HTMLOptionElement),
+    OUTPUT(Output.class, DOM.HTMLOutputElement),
+    P(P.class, DOM.HTMLParagraphElement),
+    PARAM(Param.class, DOM.HTMLParamElement),
+    PRE(Pre.class, DOM.HTMLPreElement),
+    PROGRESS(Progress.class, DOM.HTMLProgressElement),
+    Q(Q.class, DOM.HTMLQuoteElement),
+    RUBY(Ruby.class, DOM.HTMLElement),
+    RP(Rp.class, DOM.HTMLElement),
+    RT(Rt.class, DOM.HTMLElement),
+    S(S.class, DOM.HTMLElement),
+    SAMP(Samp.class, DOM.HTMLElement),
+    SCRIPT(Script.class, DOM.HTMLScriptElement),
     SECTION(Section.class, DOM.HTMLElement),
-    SELECT(Element.class, DOM.HTMLElement),
-    SMALL(Element.class, DOM.HTMLElement),
-    SOURCE(Element.class, DOM.HTMLElement),
-    SPAN(Element.class, DOM.HTMLElement),
-    STRIKE(Element.class, DOM.HTMLElement),
-    STRONG(Element.class, DOM.HTMLElement),
-    STYLE(Style.class, DOM.HTMLElement),
-    SUB(Element.class, DOM.HTMLElement),
-    SUP(Element.class, DOM.HTMLElement),
-    TABLE(Table.class, DOM.HTMLElement),
-    TBODY(Element.class, DOM.HTMLElement),
-    TD(Td.class, DOM.HTMLElement),
-    TEXTAREA(Element.class, DOM.HTMLElement),
-    TFOOT(Element.class, DOM.HTMLElement),
-    TH(Th.class, DOM.HTMLElement),
-    THEAD(Element.class, DOM.HTMLElement),
-    TIME(Element.class, DOM.HTMLElement),
-    TITLE(Element.class, DOM.HTMLElement),
-    TR(Tr.class, DOM.HTMLElement),
-    TT(Element.class, DOM.HTMLElement),
-    U(Element.class, DOM.HTMLElement),
-    UL(Element.class, DOM.HTMLElement),
-    VAR(Element.class, DOM.HTMLElement),
-    VIDEO(Element.class, DOM.HTMLElement),
-    XMP(Element.class, DOM.HTMLElement);
+    SELECT(Select.class, DOM.HTMLSelectElement),
+    SMALL(Small.class, DOM.HTMLElement),
+    SOURCE(Source.class, DOM.HTMLSourceElement),
+    SPAN(Span.class, DOM.HTMLSpanElement),
+    STRIKE(Strike.class, DOM.HTMLElement),
+    STRONG(Strong.class, DOM.HTMLElement),
+    STYLE(Style.class, DOM.HTMLStyleElement),
+    SUB(Sub.class, DOM.HTMLElement),
+    SUP(Sup.class, DOM.HTMLElement),
+    TABLE(Table.class, DOM.HTMLTableElement),
+    TBODY(Tbody.class, DOM.HTMLElement),
+    TD(Td.class, DOM.HTMLTableCellElement),
+    TEXTAREA(Textarea.class, DOM.HTMLElement),
+    TFOOT(Tfoot.class, DOM.HTMLElement),
+    TH(Th.class, DOM.HTMLTableCellElement),
+    THEAD(Thead.class, DOM.HTMLElement),
+    TIME(Time.class, DOM.HTMLTimeElement),
+    TITLE(Title.class, DOM.HTMLTitleElement),
+    TR(Tr.class, DOM.HTMLTableRowElement),
+    TT(Tt.class, DOM.HTMLElement),
+    U(U.class, DOM.HTMLElement),
+    UL(Ul.class, DOM.HTMLUListElement),
+    VAR(Var.class, DOM.HTMLElement),
+    VIDEO(Video.class, DOM.HTMLVideoElement),
+    XMP(Xmp.class, DOM.HTMLElement);
 
     private final Class<?> interfaceOf;
     private final DOM domInterface;
@@ -242,8 +247,9 @@ public enum HTML {
         return newInstance;
     }
 
-    interface Attributes {
-        public enum Type {
+    public interface AttributeType {
+
+        public enum ValueType {
             AVOID,
             FLAG,
             LIST,
@@ -251,46 +257,46 @@ public enum HTML {
         }
         String tag();
 
-        Type type();
+        ValueType type();
     }
 
-    static public enum GlobalAttributes implements Attributes {
-        ACCESSKEY(Attributes.Type.AVOID, Pattern.compile("[A-Za-z]")),
-        AUTOCAPITALIZE(Attributes.Type.LIST, new String[]{"off", "none", "on", "sentences", "words", "characters"}),
-        CLASS(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        CONTENTEDITABLE(Attributes.Type.LIST, new String[]{"true", "false"}),
-        DATA(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        DIR(Attributes.Type.LIST, new String[]{"ltr", "rtl", "auto"}),
-        DRAGGABLE(Attributes.Type.LIST, new String[]{"true", "false"}),
-        HIDDEN(Attributes.Type.FLAG, new String[]{}),
-        ID(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        INPUTMODE(Attributes.Type.LIST, new String[]{"none", "text", "decimal", "numeric", "tel", "search", "email", "url"}),
-        IS(Attributes.Type.PATTERN, Pattern.compile("^.*[-].*$")),
-        ITEMID(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        ITEMPROP(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        ITEMREF(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        ITEMSCOPE(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        ITEMTYPE(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        LANG(Attributes.Type.PATTERN, Pattern.compile("^[a-z]+{2,3}.*$")),
-        PART(Attributes.Type.AVOID, Pattern.compile("[A-Za-z]")),
-        SLOT(Attributes.Type.FLAG, new String[]{}),
-        SPELLCHECK(Attributes.Type.LIST, new String[]{"true", "false"}),
-        STYLE(Attributes.Type.PATTERN, Pattern.compile("^.*$")),
-        TABINDEX(Attributes.Type.PATTERN, Pattern.compile("^(\\d|-1)$")),
-        TITLE(Attributes.Type.PATTERN, Pattern.compile("^.*$"));
+    static public enum GlobalAttributes implements AttributeType {
+        ACCESSKEY(AttributeType.ValueType.AVOID, Pattern.compile("[A-Za-z]")),
+        AUTOCAPITALIZE(AttributeType.ValueType.LIST, new String[]{"off", "none", "on", "sentences", "words", "characters"}),
+        CLASS(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        CONTENTEDITABLE(AttributeType.ValueType.LIST, new String[]{"true", "false"}),
+        DATA(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        DIR(AttributeType.ValueType.LIST, new String[]{"ltr", "rtl", "auto"}),
+        DRAGGABLE(AttributeType.ValueType.LIST, new String[]{"true", "false"}),
+        HIDDEN(AttributeType.ValueType.FLAG, new String[]{}),
+        ID(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        INPUTMODE(AttributeType.ValueType.LIST, new String[]{"none", "text", "decimal", "numeric", "tel", "search", "email", "url"}),
+        IS(AttributeType.ValueType.PATTERN, Pattern.compile("^.*[-].*$")),
+        ITEMID(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        ITEMPROP(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        ITEMREF(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        ITEMSCOPE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        ITEMTYPE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        LANG(AttributeType.ValueType.PATTERN, Pattern.compile("^[a-z]+{2,3}.*$")),
+        PART(AttributeType.ValueType.AVOID, Pattern.compile("[A-Za-z]")),
+        SLOT(AttributeType.ValueType.FLAG, new String[]{}),
+        SPELLCHECK(AttributeType.ValueType.LIST, new String[]{"true", "false"}),
+        STYLE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+        TABINDEX(AttributeType.ValueType.PATTERN, Pattern.compile("^(\\d|-1)$")),
+        TITLE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$"));
 
         private final String attributeTag;
-        private final Attributes.Type attributesType;
+        private final AttributeType.ValueType attributesType;
         private final List<String> allowables;
         private final Pattern pattern;
 
-        GlobalAttributes(Attributes.Type attributesType, String[] allowables) {
+        GlobalAttributes(AttributeType.ValueType attributesType, String[] allowables) {
             this.attributeTag = this.name().toLowerCase();
             this.attributesType = attributesType;
             this.allowables = Arrays.asList(allowables);
             this.pattern = Pattern.compile("^.*$");
         }
-        GlobalAttributes(Attributes.Type attributesType, Pattern pattern) {
+        GlobalAttributes(AttributeType.ValueType attributesType, Pattern pattern) {
             this.attributeTag = this.name().toLowerCase();
             this.attributesType = attributesType;
             this.allowables = new ArrayList<>(0);
@@ -303,7 +309,7 @@ public enum HTML {
         }
 
         @Override
-        public Attributes.Type type() {
+        public AttributeType.ValueType type() {
             return this.attributesType;
         }
 
@@ -315,7 +321,7 @@ public enum HTML {
             return this.pattern;
         }
 
-        static public List<Attributes> attributes() {
+        static public List<AttributeType> attributes() {
             return Arrays.asList(GlobalAttributes.values());
         }
     }
@@ -394,17 +400,138 @@ public enum HTML {
 
     public interface Attribute extends Render {
 
-        static public Attribute create(String name, Object value) throws Exception {
-            return HTML.ATTRIBUTE.create(Attribute.class, name, value);
+        static public Attribute create(AttributeType attributeType, String value) throws Exception {
+            return (Attribute) new Impl(attributeType, value);
         }
+        public String name();
 
-        String name();
+        public AttributeType attributeType();
 
-        Object value();
+        public String value();
 
-        void setValue(Object value);
+        public void setValue(String value);
 
-        void addValue(Object value);
+        public void addValue(Number value);
+
+        public void addValue(String value);
+
+        static class Impl implements Attribute {
+
+            protected final AttributeType attributeType;
+            protected java.lang.Object value;
+            String rendered = null;
+
+            public Impl(AttributeType attributeType, String value) {
+                this.attributeType = attributeType;
+                this.value = value;
+                this.setValue0(this.value);
+            }
+
+            @Override
+            public String name() {
+                return this.attributeType.tag();
+            }
+
+            @Override
+            public AttributeType attributeType() {
+                return this.attributeType;
+            }
+
+            @Override
+            public String value() {
+                return this.value.toString();
+            }
+
+            @Override
+            public void setValue(String value) {
+                this.value = value;
+                this.setValue0(this.value);
+            }
+
+            @Override
+            public void addValue(String value) {
+                if (value == null) {
+                    return;
+                }
+                if (this.value == null) {
+                    this.setValue0(value);
+                    return;
+                }
+
+            }
+
+            @Override
+            public void addValue(Number value) {
+                if (value == null) {
+                    return;
+                }
+                if (this.value == null) {
+                    this.setValue0(value);
+                    return;
+                }
+                if (value instanceof Number && this.value instanceof Number) {
+                    if (value instanceof BigDecimal && this.value instanceof BigDecimal) {
+                        this.value = BigDecimal.valueOf(((Number) value).doubleValue()).add(BigDecimal.valueOf(((Number) this.value).doubleValue()));
+                    } else if (value instanceof Double && this.value instanceof Double) {
+                        this.value = ((Double) value) + ((Double) this.value);
+                    } else if (value instanceof Float && this.value instanceof Float) {
+                        this.value = ((Float) value) + ((Float) this.value);
+                    } else if (value instanceof Integer && this.value instanceof Integer) {
+                        this.value = ((Integer) value) + ((Integer) this.value);
+                    }
+                }
+                this.setValue0(this.value);
+            }
+
+            @Override
+            public String render() {
+                return this.rendered;
+            }
+
+            @Override
+            public String toString() {
+                return this.rendered;
+            }
+
+            /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+             *
+             * 										PRIVATE
+             *
+             * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+            /**
+             *
+             * @param value
+             */
+            private void setValue0(java.lang.Object value) {
+                if (value != null) {
+                    if (value instanceof Boolean && (Boolean) value) {
+                        this.rendered = String.format("%s", this.attributeType.tag());
+                    } else if (value instanceof String) {
+                        this.rendered = String.format("%s='%s'", this.attributeType.tag(), value);
+                    } else if (value instanceof Number) {
+                        if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
+                            this.rendered = String.format("%s='%f'", this.attributeType.tag(), value);
+                        } else {
+                            this.rendered = String.format("%s='%d'", this.attributeType.tag(), value);
+                        }
+                    } else if (value instanceof Temporal) {
+                        if (value instanceof LocalDate) {
+                            this.rendered = String.format("%s='%s'",
+                                    this.attributeType.tag(),
+                                    ((LocalDate) value).format(DateTimeFormatter.ISO_LOCAL_DATE));
+                        } else if (value instanceof LocalTime) {
+                            this.rendered = String.format("%s='%s'",
+                                    this.attributeType.tag(),
+                                    ((LocalTime) value).format(DateTimeFormatter.ISO_LOCAL_TIME));
+                        } else if (value instanceof LocalDateTime) {
+                            this.rendered = String.format("%s='%s'",
+                                    this.attributeType.tag(),
+                                    ((LocalDateTime) value).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public class InvalidContentException extends Exception {
@@ -547,6 +674,13 @@ public enum HTML {
         }
     }
 
+    public interface Address extends Element {
+
+        static public Address create(Object... params) throws Exception {
+            return HTML.ADDRESS.create(Address.class, params);
+        }
+    }
+
     public interface Br extends Element {
 
         static public Br create(Object... params) throws Exception {
@@ -639,4 +773,698 @@ public enum HTML {
     /*
     To be continued...
      */
+
+    public interface Single extends Element {
+
+        static public Single create(Object... params) throws Exception {
+            return HTML.SINGLE.create(Single.class, params);
+        }
+    }
+
+    public interface Html extends Element {
+
+        static public Html create(Object... params) throws Exception {
+            return HTML.HTML.create(Html.class, params);
+        }
+    }
+
+    public interface Acronym extends Element {
+
+        static public Acronym create(Object... params) throws Exception {
+            return HTML.ACRONYM.create(Acronym.class, params);
+        }
+    }
+
+    public interface Applet extends Element {
+
+        static public Applet create(Object... params) throws Exception {
+            return HTML.APPLET.create(Applet.class, params);
+        }
+    }
+
+    public interface Area extends Element {
+
+        static public Area create(Object... params) throws Exception {
+            return HTML.AREA.create(Area.class, params);
+        }
+    }
+
+    public interface Aside extends Element {
+
+        static public Aside create(Object... params) throws Exception {
+            return HTML.ASIDE.create(Aside.class, params);
+        }
+    }
+
+    public interface Audio extends Element {
+
+        static public Audio create(Object... params) throws Exception {
+            return HTML.AUDIO.create(Audio.class, params);
+        }
+    }
+
+    public interface B extends Element {
+
+        static public B create(Object... params) throws Exception {
+            return HTML.B.create(B.class, params);
+        }
+    }
+
+    public interface Base extends Element {
+
+        static public Base create(Object... params) throws Exception {
+            return HTML.BASE.create(Base.class, params);
+        }
+    }
+
+    public interface Basefont extends Element {
+
+        static public Basefont create(Object... params) throws Exception {
+            return HTML.BASEFONT.create(Basefont.class, params);
+        }
+    }
+
+    public interface Bb extends Element {
+
+        static public Bb create(Object... params) throws Exception {
+            return HTML.BB.create(Bb.class, params);
+        }
+    }
+
+    public interface Bdo extends Element {
+
+        static public Bdo create(Object... params) throws Exception {
+            return HTML.BDO.create(Bdo.class, params);
+        }
+    }
+
+    public interface Big extends Element {
+
+        static public Big create(Object... params) throws Exception {
+            return HTML.BIG.create(Big.class, params);
+        }
+    }
+
+    public interface Blockquote extends Element {
+
+        static public Blockquote create(Object... params) throws Exception {
+            return HTML.BLOCKQUOTE.create(Blockquote.class, params);
+        }
+    }
+
+    public interface Button extends Element {
+
+        static public Button create(Object... params) throws Exception {
+            return HTML.BUTTON.create(Button.class, params);
+        }
+    }
+
+    public interface Canvas extends Element {
+
+        static public Canvas create(Object... params) throws Exception {
+            return HTML.CANVAS.create(Canvas.class, params);
+        }
+    }
+
+    public interface Caption extends Element {
+
+        static public Caption create(Object... params) throws Exception {
+            return HTML.CAPTION.create(Caption.class, params);
+        }
+    }
+
+    public interface Center extends Element {
+
+        static public Center create(Object... params) throws Exception {
+            return HTML.CENTER.create(Center.class, params);
+        }
+    }
+
+    public interface Cite extends Element {
+
+        static public Cite create(Object... params) throws Exception {
+            return HTML.CITE.create(Cite.class, params);
+        }
+    }
+
+    public interface Code extends Element {
+
+        static public Code create(Object... params) throws Exception {
+            return HTML.CODE.create(Code.class, params);
+        }
+    }
+
+    public interface Col extends Element {
+
+        static public Col create(Object... params) throws Exception {
+            return HTML.COL.create(Col.class, params);
+        }
+    }
+
+    public interface Colgroup extends Element {
+
+        static public Colgroup create(Object... params) throws Exception {
+            return HTML.COLGROUP.create(Colgroup.class, params);
+        }
+    }
+
+    public interface Command extends Element {
+
+        static public Command create(Object... params) throws Exception {
+            return HTML.COMMAND.create(Command.class, params);
+        }
+    }
+
+    public interface Datagrid extends Element {
+
+        static public Datagrid create(Object... params) throws Exception {
+            return HTML.DATAGRID.create(Datagrid.class, params);
+        }
+    }
+
+    public interface Datalist extends Element {
+
+        static public Datalist create(Object... params) throws Exception {
+            return HTML.DATALIST.create(Datalist.class, params);
+        }
+    }
+
+    public interface Dd extends Element {
+
+        static public Dd create(Object... params) throws Exception {
+            return HTML.DD.create(Dd.class, params);
+        }
+    }
+
+    public interface Del extends Element {
+
+        static public Del create(Object... params) throws Exception {
+            return HTML.DEL.create(Del.class, params);
+        }
+    }
+
+    public interface Details extends Element {
+
+        static public Details create(Object... params) throws Exception {
+            return HTML.DETAILS.create(Details.class, params);
+        }
+    }
+
+    public interface Dialog extends Element {
+
+        static public Dialog create(Object... params) throws Exception {
+            return HTML.DIALOG.create(Dialog.class, params);
+        }
+    }
+
+    public interface Dir extends Element {
+
+        static public Dir create(Object... params) throws Exception {
+            return HTML.DIR.create(Dir.class, params);
+        }
+    }
+
+    public interface Dfn extends Element {
+
+        static public Dfn create(Object... params) throws Exception {
+            return HTML.DFN.create(Dfn.class, params);
+        }
+    }
+
+    public interface Dl extends Element {
+
+        static public Dl create(Object... params) throws Exception {
+            return HTML.DL.create(Dl.class, params);
+        }
+    }
+
+    public interface Dt extends Element {
+
+        static public Dt create(Object... params) throws Exception {
+            return HTML.DT.create(Dt.class, params);
+        }
+    }
+
+    public interface Em extends Element {
+
+        static public Em create(Object... params) throws Exception {
+            return HTML.EM.create(Em.class, params);
+        }
+    }
+
+    public interface Embed extends Element {
+
+        static public Embed create(Object... params) throws Exception {
+            return HTML.EMBED.create(Embed.class, params);
+        }
+    }
+
+    public interface Figure extends Element {
+
+        static public Figure create(Object... params) throws Exception {
+            return HTML.FIGURE.create(Figure.class, params);
+        }
+    }
+
+    public interface Font extends Element {
+
+        static public Font create(Object... params) throws Exception {
+            return HTML.FONT.create(Font.class, params);
+        }
+    }
+
+    public interface Footer extends Element {
+
+        static public Footer create(Object... params) throws Exception {
+            return HTML.FOOTER.create(Footer.class, params);
+        }
+    }
+
+    public interface Frame extends Element {
+
+        static public Frame create(Object... params) throws Exception {
+            return HTML.FRAME.create(Frame.class, params);
+        }
+    }
+
+    public interface Frameset extends Element {
+
+        static public Frameset create(Object... params) throws Exception {
+            return HTML.FRAMESET.create(Frameset.class, params);
+        }
+    }
+
+    public interface H1 extends Element {
+
+        static public H1 create(Object... params) throws Exception {
+            return HTML.H1.create(H1.class, params);
+        }
+    }
+
+    public interface H2 extends Element {
+
+        static public H2 create(Object... params) throws Exception {
+            return HTML.H2.create(H2.class, params);
+        }
+    }
+
+    public interface H3 extends Element {
+
+        static public H3 create(Object... params) throws Exception {
+            return HTML.H3.create(H3.class, params);
+        }
+    }
+
+    public interface H4 extends Element {
+
+        static public H4 create(Object... params) throws Exception {
+            return HTML.H4.create(H4.class, params);
+        }
+    }
+
+    public interface H5 extends Element {
+
+        static public H5 create(Object... params) throws Exception {
+            return HTML.H5.create(H5.class, params);
+        }
+    }
+
+    public interface H6 extends Element {
+
+        static public H6 create(Object... params) throws Exception {
+            return HTML.H6.create(H6.class, params);
+        }
+    }
+
+    public interface Header extends Element {
+
+        static public Header create(Object... params) throws Exception {
+            return HTML.HEADER.create(Header.class, params);
+        }
+    }
+
+    public interface Hgroup extends Element {
+
+        static public Hgroup create(Object... params) throws Exception {
+            return HTML.HGROUP.create(Hgroup.class, params);
+        }
+    }
+
+    public interface Hr extends Element {
+
+        static public Hr create(Object... params) throws Exception {
+            return HTML.HR.create(Hr.class, params);
+        }
+    }
+
+    public interface I extends Element {
+
+        static public I create(Object... params) throws Exception {
+            return HTML.I.create(I.class, params);
+        }
+    }
+
+    public interface Iframe extends Element {
+
+        static public Iframe create(Object... params) throws Exception {
+            return HTML.IFRAME.create(Iframe.class, params);
+        }
+    }
+
+    public interface Img extends Element {
+
+        static public Img create(Object... params) throws Exception {
+            return HTML.IMG.create(Img.class, params);
+        }
+    }
+
+    public interface Ins extends Element {
+
+        static public Ins create(Object... params) throws Exception {
+            return HTML.INS.create(Ins.class, params);
+        }
+    }
+
+    public interface Isindex extends Element {
+
+        static public Isindex create(Object... params) throws Exception {
+            return HTML.ISINDEX.create(Isindex.class, params);
+        }
+    }
+
+    public interface Kdb extends Element {
+
+        static public Kdb create(Object... params) throws Exception {
+            return HTML.KDB.create(Kdb.class, params);
+        }
+    }
+
+    public interface Legend extends Element {
+
+        static public Legend create(Object... params) throws Exception {
+            return HTML.LEGEND.create(Legend.class, params);
+        }
+    }
+
+    public interface Li extends Element {
+
+        static public Li create(Object... params) throws Exception {
+            return HTML.LI.create(Li.class, params);
+        }
+    }
+
+    public interface Link extends Element {
+
+        static public Link create(Object... params) throws Exception {
+            return HTML.LINK.create(Link.class, params);
+        }
+    }
+
+    public interface Mark extends Element {
+
+        static public Mark create(Object... params) throws Exception {
+            return HTML.MARK.create(Mark.class, params);
+        }
+    }
+
+    public interface Map extends Element {
+
+        static public Map create(Object... params) throws Exception {
+            return HTML.MAP.create(Map.class, params);
+        }
+    }
+
+    public interface Menu extends Element {
+
+        static public Menu create(Object... params) throws Exception {
+            return HTML.MENU.create(Menu.class, params);
+        }
+    }
+
+    public interface Meter extends Element {
+
+        static public Meter create(Object... params) throws Exception {
+            return HTML.METER.create(Meter.class, params);
+        }
+    }
+
+    public interface Nav extends Element {
+
+        static public Nav create(Object... params) throws Exception {
+            return HTML.NAV.create(Nav.class, params);
+        }
+    }
+
+    public interface Noframes extends Element {
+
+        static public Noframes create(Object... params) throws Exception {
+            return HTML.NOFRAMES.create(Noframes.class, params);
+        }
+    }
+
+    public interface Noscript extends Element {
+
+        static public Noscript create(Object... params) throws Exception {
+            return HTML.NOSCRIPT.create(Noscript.class, params);
+        }
+    }
+
+    public interface Object extends Element {
+
+        static public Object create(Object... params) throws Exception {
+            return HTML.OBJECT.create(Object.class, params);
+        }
+    }
+
+    public interface Ol extends Element {
+
+        static public Ol create(Object... params) throws Exception {
+            return HTML.OL.create(Ol.class, params);
+        }
+    }
+
+    public interface Optgroup extends Element {
+
+        static public Optgroup create(Object... params) throws Exception {
+            return HTML.OPTGROUP.create(Optgroup.class, params);
+        }
+    }
+
+    public interface Output extends Element {
+
+        static public Output create(Object... params) throws Exception {
+            return HTML.OUTPUT.create(Output.class, params);
+        }
+    }
+
+    public interface P extends Element {
+
+        static public P create(Object... params) throws Exception {
+            return HTML.P.create(P.class, params);
+        }
+    }
+
+    public interface Param extends Element {
+
+        static public Param create(Object... params) throws Exception {
+            return HTML.PARAM.create(Param.class, params);
+        }
+    }
+
+    public interface Pre extends Element {
+
+        static public Pre create(Object... params) throws Exception {
+            return HTML.PRE.create(Pre.class, params);
+        }
+    }
+
+    public interface Progress extends Element {
+
+        static public Progress create(Object... params) throws Exception {
+            return HTML.PROGRESS.create(Progress.class, params);
+        }
+    }
+
+    public interface Q extends Element {
+
+        static public Q create(Object... params) throws Exception {
+            return HTML.Q.create(Q.class, params);
+        }
+    }
+
+    public interface Ruby extends Element {
+
+        static public Ruby create(Object... params) throws Exception {
+            return HTML.RUBY.create(Ruby.class, params);
+        }
+    }
+
+    public interface Rp extends Element {
+
+        static public Rp create(Object... params) throws Exception {
+            return HTML.RP.create(Rp.class, params);
+        }
+    }
+
+    public interface Rt extends Element {
+
+        static public Rt create(Object... params) throws Exception {
+            return HTML.RT.create(Rt.class, params);
+        }
+    }
+
+    public interface S extends Element {
+
+        static public S create(Object... params) throws Exception {
+            return HTML.S.create(S.class, params);
+        }
+    }
+
+    public interface Samp extends Element {
+
+        static public Samp create(Object... params) throws Exception {
+            return HTML.SAMP.create(Samp.class, params);
+        }
+    }
+
+    public interface Select extends Element {
+
+        static public Select create(Object... params) throws Exception {
+            return HTML.SELECT.create(Select.class, params);
+        }
+    }
+
+    public interface Small extends Element {
+
+        static public Small create(Object... params) throws Exception {
+            return HTML.SMALL.create(Small.class, params);
+        }
+    }
+
+    public interface Source extends Element {
+
+        static public Source create(Object... params) throws Exception {
+            return HTML.SOURCE.create(Source.class, params);
+        }
+    }
+
+    public interface Span extends Element {
+
+        static public Span create(Object... params) throws Exception {
+            return HTML.SPAN.create(Span.class, params);
+        }
+    }
+
+    public interface Strike extends Element {
+
+        static public Strike create(Object... params) throws Exception {
+            return HTML.STRIKE.create(Strike.class, params);
+        }
+    }
+
+    public interface Strong extends Element {
+
+        static public Strong create(Object... params) throws Exception {
+            return HTML.STRONG.create(Strong.class, params);
+        }
+    }
+
+    public interface Sub extends Element {
+
+        static public Sub create(Object... params) throws Exception {
+            return HTML.SUB.create(Sub.class, params);
+        }
+    }
+
+    public interface Sup extends Element {
+
+        static public Sup create(Object... params) throws Exception {
+            return HTML.SUP.create(Sup.class, params);
+        }
+    }
+
+    public interface Tbody extends Element {
+
+        static public Tbody create(Object... params) throws Exception {
+            return HTML.TBODY.create(Tbody.class, params);
+        }
+    }
+
+    public interface Textarea extends Element {
+
+        static public Textarea create(Object... params) throws Exception {
+            return HTML.TEXTAREA.create(Textarea.class, params);
+        }
+    }
+
+    public interface Tfoot extends Element {
+
+        static public Tfoot create(Object... params) throws Exception {
+            return HTML.TFOOT.create(Tfoot.class, params);
+        }
+    }
+
+    public interface Thead extends Element {
+
+        static public Thead create(Object... params) throws Exception {
+            return HTML.THEAD.create(Thead.class, params);
+        }
+    }
+
+    public interface Time extends Element {
+
+        static public Time create(Object... params) throws Exception {
+            return HTML.TIME.create(Time.class, params);
+        }
+    }
+
+    public interface Title extends Element {
+
+        static public Title create(Object... params) throws Exception {
+            return HTML.TITLE.create(Title.class, params);
+        }
+    }
+
+    public interface Tt extends Element {
+
+        static public Tt create(Object... params) throws Exception {
+            return HTML.TT.create(Tt.class, params);
+        }
+    }
+
+    public interface U extends Element {
+
+        static public U create(Object... params) throws Exception {
+            return HTML.U.create(U.class, params);
+        }
+    }
+
+    public interface Ul extends Element {
+
+        static public Ul create(Object... params) throws Exception {
+            return HTML.UL.create(Ul.class, params);
+        }
+    }
+
+    public interface Var extends Element {
+
+        static public Var create(Object... params) throws Exception {
+            return HTML.VAR.create(Var.class, params);
+        }
+    }
+
+    public interface Video extends Element {
+
+        static public Video create(Object... params) throws Exception {
+            return HTML.VIDEO.create(Video.class, params);
+        }
+    }
+
+    public interface Xmp extends Element {
+
+        static public Xmp create(Object... params) throws Exception {
+            return HTML.XMP.create(Xmp.class, params);
+        }
+    }
+
 }
