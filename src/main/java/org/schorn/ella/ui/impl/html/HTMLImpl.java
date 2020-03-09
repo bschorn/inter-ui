@@ -23,6 +23,8 @@
  */
 package org.schorn.ella.ui.impl.html;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,7 @@ import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.html.HTML.A;
 import org.schorn.ella.ui.html.HTML.Attribute;
+import org.schorn.ella.ui.html.HTML.CustomElement;
 import org.schorn.ella.ui.html.HTML.Element;
 import org.schorn.ella.ui.html.HTML.SingleElement;
 import org.schorn.ella.ui.util.ToString;
@@ -44,15 +47,26 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public class HTMLImpl {
+public class HTMLImpl implements HTML.HtmlFactory {
 
-    static public void register() {
+    static private final HTMLImpl INSTANCE = new HTMLImpl();
+
+    static public HTML.HtmlFactory getFactory() {
+        return INSTANCE;
+    }
+
+    private HTMLImpl() {
+        this.register();
+    }
+
+    @Override
+    public void register() {
         for (HTML html : HTML.values()) {
             html.setImpl(HtmlElementImpl.class);
         }
         HTML.ELEMENT.setImpl(HtmlElementImpl.class);
         HTML.SINGLE.setImpl(HtmlSingleElementImpl.class);
-        //HTML.HTML.setImpl(HtmlElementImpl.class);
+        HTML.HTML.setImpl(HtmlPageElementImpl.class);
         HTML.A.setImpl(HtmlAImpl.class);
         HTML.ABBR.setImpl(HtmlAbbrImpl.class);
         //HTML.ACRONYM.setImpl(HtmlAcronymImpl.class);
@@ -174,6 +188,52 @@ public class HTMLImpl {
 
     }
 
+    @Override
+    public <T> T createInstance(HTML html, HTML.Object... params) throws Exception {
+        Class<?> classFor = html.getImpl();
+        if (classFor == null) {
+            // ERROR
+            return null;
+        }
+        Constructor<?> constructor = null;
+        T newInstance = null;
+        for (Constructor<?> ctr : classFor.getDeclaredConstructors()) {
+            if (params.length == ctr.getParameterCount()) {
+                constructor = ctr;
+                for (int i = 0; i < params.length; i++) {
+                    Class<?> paramClass = ctr.getParameterTypes()[i];
+                    Object paramObj = params[i];
+                    if (paramObj == null || paramClass.isInstance(paramObj)) {
+                        continue;
+                    }
+                    constructor = null;
+                    break;
+                }
+            }
+            if (constructor != null) {
+                try {
+                    newInstance = (T) constructor.newInstance(params);
+                } catch (InvocationTargetException ite) {
+                    // ERROR
+                }
+                break;
+            }
+        }
+        if (newInstance == null) {
+            StringJoiner joiner = new StringJoiner(", ", "[", "] ");
+            for (Object o : params) {
+                joiner.add(String.format("(%s) %s", o.getClass().getSimpleName(), o.toString()));
+            }
+            /*
+            LGR.error("{}.newInstance() - there is no constructor available to match the parameters {} specificed for interface {}",
+                HTML.class.getSimpleName(),
+                joiner.toString(),
+                html.interfaceOf.getSimpleName());
+             */
+        }
+        return newInstance;
+    }
+
     static class ElementImpl implements Element {
 
         static private final AtomicInteger ID = new AtomicInteger(100);
@@ -204,14 +264,37 @@ public class HTMLImpl {
         }
 
         @Override
+        public String tag() {
+            return this.tag;
+        }
+
+        @Override
         public Element setTextContent(String content) {
             this.textContent = content;
             return this;
         }
 
         @Override
+        public Element insert(Element element) throws HTML.InvalidContentException {
+            //validateContent(this, element);
+            if (element instanceof CustomElement) {
+                element = ((CustomElement) element).owner();
+            }
+            ElementImpl elementImpl = (ElementImpl) element;
+            if (elementImpl.parent != element) {
+                ((ElementImpl) elementImpl.parent).children.remove(element);
+            }
+            elementImpl.parent = this;
+            this.children.add(0, element);
+            return this;
+        }
+
+        @Override
         public Element append(Element element) throws HTML.InvalidContentException {
             //validateContent(this, element);
+            if (element instanceof CustomElement) {
+                element = ((CustomElement) element).owner();
+            }
             ElementImpl elementImpl = (ElementImpl) element;
             if (elementImpl.parent != element) {
                 ((ElementImpl) elementImpl.parent).children.remove(element);
@@ -241,6 +324,57 @@ public class HTMLImpl {
         @Override
         public Element addAttribute(HTML.Attribute attribute) throws HTML.InvalidAttributeException {
             this.addAttribute0(attribute);
+            return this;
+        }
+
+        @Override
+        public List<Attribute> attributes() {
+            return this.attributes;
+        }
+
+        @Override
+        public Element setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
+            this.attributes.add(autoCapitalize.asAttribute());
+            return this;
+        }
+
+        @Override
+        public Element setContentEditable(boolean flag) {
+            try {
+                this.attributes.add(HTML.Attribute.create(HTML.GlobalAttributes.CONTENTEDITABLE.tag(), flag ? "true" : "false"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public Element setDraggable(boolean flag) {
+            try {
+                this.addAttribute(HTML.Attribute.create(HTML.GlobalAttributes.DRAGGABLE.tag(), flag ? "true" : "false"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public Element setHidden(boolean flag) {
+            try {
+                this.addAttribute(HTML.Attribute.create(HTML.GlobalAttributes.HIDDEN.tag(), flag ? "true" : "false"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public Element setInputMode(HTML.InputMode inputMode) {
+            try {
+                this.addAttribute(inputMode.asAttribute());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             return this;
         }
 
@@ -276,6 +410,11 @@ public class HTMLImpl {
             builder.append(renderEndTag());
             builder.append(renderLinefeed());
             return builder.toString();
+        }
+
+        @Override
+        public Element parent() {
+            return this.parent;
         }
 
         @Override
@@ -324,10 +463,20 @@ public class HTMLImpl {
         }
 
         protected String renderStartTag() {
-            if (this.attributes.isEmpty()) {
-                return String.format("<%s>", this.tag);
-            } else {
-                return String.format("<%s %s>", this.tag, this.renderAttributes());
+            switch (this.tagOmission()) {
+                case EndMustBeOmitted:
+                    if (this.attributes.isEmpty()) {
+                        return String.format("<%s />", this.tag);
+                    } else {
+                        return String.format("<%s %s />", this.tag, this.renderAttributes());
+                    }
+                //case None:
+                default:
+                    if (this.attributes.isEmpty()) {
+                        return String.format("<%s>", this.tag);
+                    } else {
+                        return String.format("<%s %s>", this.tag, this.renderAttributes());
+                    }
             }
         }
 
@@ -338,6 +487,7 @@ public class HTMLImpl {
         protected String renderChildren() {
             StringBuilder builder = new StringBuilder();
             if (this.children != null && !this.children.isEmpty()) {
+                /*
                 children.stream()
                         .filter(e -> ((HtmlElementImpl) e).parent == this)
                         .forEach(e -> {
@@ -347,18 +497,27 @@ public class HTMLImpl {
 
                             }
                         });
+                 */
+                for (Element element : this.children) {
+                    if (element.parent() == this) {
+                        builder.append(element.render());
+                    }
+                }
             }
             return builder.toString();
         }
 
         protected String renderEndTag() {
-            return String.format("</%s>", this.tag);
+            switch (this.tagOmission()) {
+                case EndMustBeOmitted:
+                    return "";
+                //case None:
+                default:
+                    return String.format("</%s>", this.tag);
+
+            }
         }
 
-        @Override
-        public String tag() {
-            return this.tag;
-        }
     }
 
     static class HtmlElementImpl extends ElementImpl {
@@ -392,6 +551,40 @@ public class HTMLImpl {
         protected String renderStartTag() {
             return String.format("<%s %s />", this.tag, this.renderAttributes());
         }
+    }
+
+    static class HtmlPageElementImpl extends ElementImpl implements HTML.Page {
+
+        private final HTML.Head head;
+        private final HTML.Body body;
+
+        HtmlPageElementImpl() {
+            super("html");
+            HTML.Head head0 = null;
+            HTML.Body body0 = null;
+            try {
+                head0 = HTML.Head.create();
+                body0 = HTML.Body.create();
+                this.append(head0);
+                this.append(body0);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            this.head = head0;
+            this.body = body0;
+        }
+
+        @Override
+        public HTML.Head htmlHead() {
+            return this.head;
+        }
+
+        @Override
+        public HTML.Body htmlBody() {
+            return this.body;
+        }
+
     }
 
     static class HtmlAImpl extends ElementImpl implements A {
@@ -812,6 +1005,22 @@ public class HTMLImpl {
         public HtmlInputImpl() {
             super("input");
         }
+
+        @Override
+        public Element setName(String name) {
+            try {
+                this.addAttribute(HTML.Attribute.create("name", name));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public HTML.TagOmission tagOmission() {
+            return HTML.TagOmission.EndMustBeOmitted;
+        }
+
     }
 
     static class HtmlInsImpl extends ElementImpl implements HTML.Ins {
@@ -950,6 +1159,30 @@ public class HTMLImpl {
         public HtmlOptionImpl() {
             super("option");
         }
+
+        public Element setValue(String value) {
+            try {
+                this.addAttribute(HTML.Attribute.create("value", value));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+        public Element setLabel(String label) {
+            try {
+                this.setTextContent(label);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public Element setTextContent(String content) {
+            this.textContent = content;
+            return this;
+        }
+
     }
 
     static class HtmlOutputImpl extends ElementImpl implements HTML.Output {

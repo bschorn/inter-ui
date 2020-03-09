@@ -23,8 +23,6 @@
  */
 package org.schorn.ella.ui.html;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,8 +33,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.schorn.ella.ui.impl.html.HTMLImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,6 +169,7 @@ public enum HTML {
     private final Class<?> interfaceOf;
     private final DOM domInterface;
     private Class<?> implOf = null;
+    private Element instance = null;
 
     HTML(Class<?> interfaceOf, DOM domInterface) {
         this.interfaceOf = interfaceOf;
@@ -192,66 +192,34 @@ public enum HTML {
         this.implOf = implOf;
     }
 
+    public Class<?> getImpl() {
+        return this.implOf;
+    }
+
     public Element createElement(Object... params) throws Exception {
-        return createInstance(this, params);
+        return FACTORY.createInstance(this, params);
     }
 
     private <T> T create(Class<T> classOfT, Object... params) throws Exception {
-        return (T) createInstance(this, params);
+        return (T) FACTORY.createInstance(this, params);
     }
 
     static final Logger LGR = LoggerFactory.getLogger(HTML.class);
 
-    static private <T> T createInstance(HTML html, Object... params) throws Exception {
-        Class<?> classFor = html.implOf;
-        if (classFor == null) {
-            // ERROR
-            return null;
-        }
-        Constructor<?> constructor = null;
-        T newInstance = null;
-        for (Constructor<?> ctr : classFor.getDeclaredConstructors()) {
-            if (params.length == ctr.getParameterCount()) {
-                constructor = ctr;
-                for (int i = 0; i < params.length; i++) {
-                    Class<?> paramClass = ctr.getParameterTypes()[i];
-                    Object paramObj = params[i];
-                    if (paramObj == null || paramClass.isInstance(paramObj)) {
-                        continue;
-                    }
-                    constructor = null;
-                    break;
-                }
-            }
-            if (constructor != null) {
-                try {
-                    newInstance = (T) constructor.newInstance(params);
-                } catch (InvocationTargetException ite) {
-                    // ERROR
-                }
-                break;
-            }
-        }
-        if (newInstance == null) {
-            StringJoiner joiner = new StringJoiner(", ", "[", "] ");
-            for (Object o : params) {
-                joiner.add(String.format("(%s) %s", o.getClass().getSimpleName(), o.toString()));
-            }
-            /*
-            LGR.error("{}.newInstance() - there is no constructor available to match the parameters {} specificed for interface {}",
-                HTML.class.getSimpleName(),
-                joiner.toString(),
-                html.interfaceOf.getSimpleName());
-             */
-        }
-        return newInstance;
+    public interface HtmlFactory {
+
+        public void register();
+        public <T> T createInstance(HTML html, Object... params) throws Exception;
     }
+
+    static final HtmlFactory FACTORY = HTMLImpl.getFactory();
 
     public interface AttributeType {
 
         public enum ValueType {
             AVOID,
             FLAG,
+            BOOLEAN,
             LIST,
             PATTERN;
         }
@@ -264,13 +232,13 @@ public enum HTML {
         ACCESSKEY(AttributeType.ValueType.AVOID, Pattern.compile("[A-Za-z]")),
         AUTOCAPITALIZE(AttributeType.ValueType.LIST, new String[]{"off", "none", "on", "sentences", "words", "characters"}),
         CLASS(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
-        CONTENTEDITABLE(AttributeType.ValueType.LIST, new String[]{"true", "false"}),
+        CONTENTEDITABLE(AttributeType.ValueType.BOOLEAN, new String[]{"true", "false"}),
         DATA(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
         DIR(AttributeType.ValueType.LIST, new String[]{"ltr", "rtl", "auto"}),
-        DRAGGABLE(AttributeType.ValueType.LIST, new String[]{"true", "false"}),
+        DRAGGABLE(AttributeType.ValueType.BOOLEAN, new String[]{"true", "false"}),
         HIDDEN(AttributeType.ValueType.FLAG, new String[]{}),
         ID(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
-        INPUTMODE(AttributeType.ValueType.LIST, new String[]{"none", "text", "decimal", "numeric", "tel", "search", "email", "url"}),
+        INPUTMODE(AttributeType.ValueType.LIST, InputMode.valuesAsString()),
         IS(AttributeType.ValueType.PATTERN, Pattern.compile("^.*[-].*$")),
         ITEMID(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
         ITEMPROP(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
@@ -280,7 +248,7 @@ public enum HTML {
         LANG(AttributeType.ValueType.PATTERN, Pattern.compile("^[a-z]+{2,3}.*$")),
         PART(AttributeType.ValueType.AVOID, Pattern.compile("[A-Za-z]")),
         SLOT(AttributeType.ValueType.FLAG, new String[]{}),
-        SPELLCHECK(AttributeType.ValueType.LIST, new String[]{"true", "false"}),
+        SPELLCHECK(AttributeType.ValueType.BOOLEAN, new String[]{"true", "false"}),
         STYLE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
         TABINDEX(AttributeType.ValueType.PATTERN, Pattern.compile("^(\\d|-1)$")),
         TITLE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$"));
@@ -323,6 +291,73 @@ public enum HTML {
 
         static public List<AttributeType> attributes() {
             return Arrays.asList(GlobalAttributes.values());
+        }
+    }
+
+    public enum AutoCapitalize {
+        OFF, NONE, ON, SENTENCES, WORDS, CHARACTERS;
+
+        private final Attribute attribute;
+
+        AutoCapitalize() {
+            Attribute attribute0 = null;
+            try {
+                attribute0 = Attribute.create("contenteditable", this.value());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            this.attribute = attribute0;
+        }
+
+        public String value() {
+            return this.name().toLowerCase().replace("_", "-");
+        }
+
+        public Attribute asAttribute() {
+            return this.attribute;
+        }
+
+        static public String[] valuesAsString() {
+            return Arrays.asList(AutoCapitalize.values()).stream()
+                    .map(t -> t.value()).collect(Collectors.toList())
+                    .toArray(new String[AutoCapitalize.values().length]);
+        }
+    }
+
+    public enum InputMode {
+        NONE,
+        TEXT,
+        DECIMAL,
+        NUMERIC,
+        TEL,
+        SEARCH,
+        EMAIL,
+        URL;
+
+        private final Attribute attribute;
+
+        InputMode() {
+            Attribute attribute0 = null;
+            try {
+                attribute0 = Attribute.create("inputmode", this.value());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            this.attribute = attribute0;
+        }
+
+        public String value() {
+            return this.name().toLowerCase().replace("_", "-");
+        }
+
+        public Attribute asAttribute() {
+            return this.attribute;
+        }
+
+        static public String[] valuesAsString() {
+            return Arrays.asList(InputMode.values()).stream()
+                    .map(t -> t.value()).collect(Collectors.toList())
+                    .toArray(new String[InputMode.values().length]);
         }
     }
 
@@ -401,11 +436,14 @@ public enum HTML {
     public interface Attribute extends Render {
 
         static public Attribute create(AttributeType attributeType, String value) throws Exception {
-            return (Attribute) new Impl(attributeType, value);
+            return (Attribute) new Impl(attributeType.tag(), value);
         }
-        public String name();
 
-        public AttributeType attributeType();
+        static public Attribute create(String name, String value) throws Exception {
+            return (Attribute) new Impl(name, value);
+        }
+
+        public String name();
 
         public String value();
 
@@ -417,24 +455,19 @@ public enum HTML {
 
         static class Impl implements Attribute {
 
-            protected final AttributeType attributeType;
-            protected java.lang.Object value;
-            String rendered = null;
+            private final String name;
+            private java.lang.Object value;
+            private String rendered = null;
 
-            public Impl(AttributeType attributeType, String value) {
-                this.attributeType = attributeType;
+            public Impl(String name, String value) {
+                this.name = name;
                 this.value = value;
                 this.setValue0(this.value);
             }
 
             @Override
             public String name() {
-                return this.attributeType.tag();
-            }
-
-            @Override
-            public AttributeType attributeType() {
-                return this.attributeType;
+                return this.name;
             }
 
             @Override
@@ -505,27 +538,27 @@ public enum HTML {
             private void setValue0(java.lang.Object value) {
                 if (value != null) {
                     if (value instanceof Boolean && (Boolean) value) {
-                        this.rendered = String.format("%s", this.attributeType.tag());
+                        this.rendered = String.format("%s", this.name);
                     } else if (value instanceof String) {
-                        this.rendered = String.format("%s='%s'", this.attributeType.tag(), value);
+                        this.rendered = String.format("%s='%s'", this.name, value);
                     } else if (value instanceof Number) {
                         if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
-                            this.rendered = String.format("%s='%f'", this.attributeType.tag(), value);
+                            this.rendered = String.format("%s='%f'", this.name, value);
                         } else {
-                            this.rendered = String.format("%s='%d'", this.attributeType.tag(), value);
+                            this.rendered = String.format("%s='%d'", this.name, value);
                         }
                     } else if (value instanceof Temporal) {
                         if (value instanceof LocalDate) {
                             this.rendered = String.format("%s='%s'",
-                                    this.attributeType.tag(),
+                                    this.name,
                                     ((LocalDate) value).format(DateTimeFormatter.ISO_LOCAL_DATE));
                         } else if (value instanceof LocalTime) {
                             this.rendered = String.format("%s='%s'",
-                                    this.attributeType.tag(),
+                                    this.name,
                                     ((LocalTime) value).format(DateTimeFormatter.ISO_LOCAL_TIME));
                         } else if (value instanceof LocalDateTime) {
                             this.rendered = String.format("%s='%s'",
-                                    this.attributeType.tag(),
+                                    this.name,
                                     ((LocalDateTime) value).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                         }
                     }
@@ -558,15 +591,32 @@ public enum HTML {
 
         Element append(Element element) throws InvalidContentException;
 
-        Element addClass(String className);
+        Element insert(Element element) throws InvalidContentException;
 
         Element addAttribute(Attribute attribute) throws InvalidAttributeException;
+
+        List<Attribute> attributes();
+
+        Element addClass(String className);
+
+        Element setAutoCapitalize(AutoCapitalize autoCapitalize);
+
+        Element setContentEditable(boolean flag);
+
+        Element setDraggable(boolean flag);
+
+        Element setHidden(boolean flag);
+
+        Element setInputMode(InputMode inputMode);
 
         Element setId(String value) throws Exception;
 
         String getId();
 
+
         String tag();
+
+        Element parent();
 
         List<Element> children();
 
@@ -592,6 +642,13 @@ public enum HTML {
         static public SingleElement create(Object... params) throws Exception {
             return HTML.SINGLE.create(SingleElement.class, params);
         }
+    }
+
+    public interface CustomElement extends Element {
+
+        Element owner();
+
+        String customTag();
     }
 
     public interface Head extends Element {
@@ -762,6 +819,136 @@ public enum HTML {
         static public Input create(Object... params) throws Exception {
             return HTML.INPUT.create(Input.class, params);
         }
+
+        public Element setName(String name);
+
+        public enum InputAttributes implements AttributeType {
+            ACCEPT(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            ALT(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            AUTOCOMPLETE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            AUTOFOCUS(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            CAPTURE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            CHECKED(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            DIRNAME(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            DISABLED(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            FORM(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            FORMACTION(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            FORMENCTYPE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            FORMMETHOD(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            FORMNOVALIDATE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            FORMTARGET(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            HEIGHT(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            LIST(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            MAX(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            MAXLENGTH(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            MIN(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            MINLENGTH(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            MULTIPLE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            NAME(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            PATTERN(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            PLACEHOLDER(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            READONLY(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            REQUIRED(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            SIZE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            SRC(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            STEP(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            TYPE(AttributeType.ValueType.LIST, Input.Type.valuesAsString()),
+            VALUE(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$")),
+            WIDTH(AttributeType.ValueType.PATTERN, Pattern.compile("^.*$"));
+
+            private final String attributeTag;
+            private final AttributeType.ValueType attributesType;
+            private final List<String> allowables;
+            private final Pattern pattern;
+
+            InputAttributes(AttributeType.ValueType attributesType, String[] allowables) {
+                this.attributeTag = this.name().toLowerCase();
+                this.attributesType = attributesType;
+                this.allowables = Arrays.asList(allowables);
+                this.pattern = Pattern.compile("^.*$");
+            }
+
+            InputAttributes(AttributeType.ValueType attributesType, Pattern pattern) {
+                this.attributeTag = this.name().toLowerCase();
+                this.attributesType = attributesType;
+                this.allowables = new ArrayList<>(0);
+                this.pattern = pattern;
+            }
+
+            @Override
+            public String tag() {
+                return this.attributeTag;
+            }
+
+            @Override
+            public AttributeType.ValueType type() {
+                return this.attributesType;
+            }
+
+            public List<String> allowables() {
+                return this.allowables;
+            }
+
+            public Pattern pattern() {
+                return this.pattern;
+            }
+
+            static public List<AttributeType> attributes() {
+                return Arrays.asList(InputAttributes.values());
+            }
+        }
+
+        public enum Type {
+            BUTTON,
+            CHECKBOX,
+            COLOR,
+            DATE,
+            DATETIME_LOCAL,
+            EMAIL,
+            FILE,
+            HIDDEN,
+            IMAGE,
+            MONTH,
+            NUMBER,
+            PASSWORD,
+            RADIO,
+            RANGE,
+            RESET,
+            SEARCH,
+            SUBMIT,
+            TEL,
+            TEXT,
+            TIME,
+            URL,
+            WEEK;
+
+            private final Attribute attribute;
+
+            Type() {
+                Attribute attribute0 = null;
+                try {
+                    attribute0 = Attribute.create("type", this.value());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                this.attribute = attribute0;
+            }
+
+            public String value() {
+                return this.name().toLowerCase().replace("_", "-");
+            }
+
+            public Attribute asAttribute() {
+                return this.attribute;
+            }
+
+            static public String[] valuesAsString() {
+                return Arrays.asList(Type.values()).stream()
+                        .map(t -> t.value()).collect(Collectors.toList())
+                        .toArray(new String[Type.values().length]);
+            }
+        }
+
     }
 
     public interface Label extends Element {
@@ -947,6 +1134,7 @@ public enum HTML {
         static public Datalist create(Object... params) throws Exception {
             return HTML.DATALIST.create(Datalist.class, params);
         }
+
     }
 
     public interface Dd extends Element {
