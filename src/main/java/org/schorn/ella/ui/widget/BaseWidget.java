@@ -25,6 +25,8 @@ package org.schorn.ella.ui.widget;
 
 import java.util.List;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.html.HTML.Element;
+import org.schorn.ella.ui.html.HTML.HtmlElement;
 
 /**
  *
@@ -33,25 +35,25 @@ import org.schorn.ella.ui.html.HTML;
 public abstract class BaseWidget implements HTML.CustomElement {
 
     @Override
-    public HTML.Element setTextContent(String content) {
+    public Element setTextContent(String content) {
         this.owner().setTextContent(content);
         return this;
     }
 
     @Override
-    public HTML.Element append(HTML.Element element) throws HTML.InvalidContentException {
+    public Element append(Element element) throws HTML.InvalidContentException {
         this.owner().append(element);
         return this;
     }
 
     @Override
-    public HTML.Element insert(HTML.Element element) throws HTML.InvalidContentException {
+    public Element insert(Element element) throws HTML.InvalidContentException {
         this.owner().insert(element);
         return this;
     }
 
     @Override
-    public HTML.Element addAttribute(HTML.Attribute attribute) throws HTML.InvalidAttributeException {
+    public Element addAttribute(HTML.Attribute attribute) throws HTML.InvalidAttributeException {
         this.owner().addAttribute(attribute);
         return this;
     }
@@ -62,43 +64,49 @@ public abstract class BaseWidget implements HTML.CustomElement {
     }
 
     @Override
-    public HTML.Element addClass(String className) {
+    public Element addClass(String className) {
         this.owner().addClass(className);
         return this;
     }
 
     @Override
-    public HTML.Element setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
+    public HtmlElement setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
         this.owner().setAutoCapitalize(autoCapitalize);
         return this;
     }
 
     @Override
-    public HTML.Element setContentEditable(boolean flag) {
+    public HtmlElement setContentEditable(boolean flag) {
         this.owner().setContentEditable(flag);
         return this;
     }
 
     @Override
-    public HTML.Element setDraggable(boolean flag) {
+    public HtmlElement setDraggable(boolean flag) {
         this.owner().setDraggable(flag);
         return this;
     }
 
     @Override
-    public HTML.Element setHidden(boolean flag) {
+    public HtmlElement setHidden(boolean flag) {
         this.owner().setHidden(flag);
         return this;
     }
 
     @Override
-    public HTML.Element setInputMode(HTML.InputMode inputMode) {
+    public HtmlElement setInputMode(HTML.InputMode inputMode) {
         this.owner().setInputMode(inputMode);
         return this;
     }
 
     @Override
-    public HTML.Element setId(String id) throws Exception {
+    public HTML.HtmlElement setStyle(HTML.Style style) {
+        this.owner().setStyle(style);
+        return this;
+    }
+
+    @Override
+    public Element setId(String id) throws Exception {
         this.owner().setId(id);
         return this;
     }
@@ -114,12 +122,12 @@ public abstract class BaseWidget implements HTML.CustomElement {
     }
 
     @Override
-    public HTML.Element parent() {
+    public Element parent() {
         return this.owner().parent();
     }
 
     @Override
-    public List<HTML.Element> children() {
+    public List<Element> children() {
         return this.owner().children();
     }
 

@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.form;
+package org.schorn.ella.ui.facet;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.page.GenericPage;
-import org.schorn.ella.ui.widget.BaseWidget;
+import org.schorn.ella.ui.ref.PageImpl;
 import org.schorn.ella.ui.widget.InputWidget;
 import org.schorn.ella.ui.widget.TitleWidget;
 
@@ -35,7 +34,7 @@ import org.schorn.ella.ui.widget.TitleWidget;
  *
  * @author bschorn
  */
-public class FormAddress extends BaseWidget {
+public class AddressPanel extends Panel {
 
     private final String customTag = "form-address";
     private final HTML.Div divElement;
@@ -44,23 +43,13 @@ public class FormAddress extends BaseWidget {
     private final String name;
     private final Map<String, String> formIds = new HashMap<>();
 
-    public FormAddress(String id, String name) throws Exception {
+    public AddressPanel(String id, String name) throws Exception {
         this.id = id;
         this.name = name;
         this.divElement = HTML.Div.create();
         this.form = HTML.Form.create();
         this.form.setId(id);
         this.divElement.append(this.form);
-    }
-
-    @Override
-    public HTML.Element owner() {
-        return this.divElement;
-    }
-
-    @Override
-    public String customTag() {
-        return this.customTag;
     }
 
     public void addTitle(String title) throws HTML.InvalidContentException {
@@ -91,8 +80,8 @@ public class FormAddress extends BaseWidget {
 
     static public void main(String[] args) {
         try {
-            GenericPage page = new GenericPage();
-            FormAddress formAddress = new FormAddress("Form.Address.00", "Address");
+            PageImpl page = new PageImpl();
+            AddressPanel formAddress = new AddressPanel("Form.Address.00", "Address");
             page.addContent(formAddress);
             formAddress.addTitle("Customer Address");
             formAddress.addText("streetAddress", "Street Address");

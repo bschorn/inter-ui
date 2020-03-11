@@ -21,27 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.core;
+package org.schorn.ella.ui.panel;
 
-import org.schorn.ella.ui.ref.EventImpl;
+import java.util.List;
 
 /**
  *
  * @author bschorn
  */
-public interface Event {
-    public enum Purpose {
-        SUB, PUB;
-    }
+public interface Panel {
 
-    public Purpose eventFlow();
+    public Panel parent();
 
-    static Event pub() {
-        return new EventImpl(Purpose.PUB);
-    }
+    public List<Panel> children();
 
-    static Event sub() {
-        return new EventImpl(Purpose.SUB);
-    }
+    public void setWeight(int weight);
+
+    public int getWeight();
+
+    public List<Panel> divide();
+
+    public List<Panel> divide(int... weights);
+
 
 }

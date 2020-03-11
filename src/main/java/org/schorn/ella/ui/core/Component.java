@@ -23,8 +23,6 @@
  */
 package org.schorn.ella.ui.core;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -32,37 +30,12 @@ import java.util.function.Predicate;
  *
  * @author bschorn
  */
-public class Component implements Consumer<Event>, Predicate<Event> {
+public interface Component extends Consumer<Event>, Predicate<Event> {
+    public Component setParent(Component parent);
 
-    private Component parent = null;
-    private final List<Component> children = new ArrayList<>();
+    public Component append(Component child);
 
-    public Component setParent(Component parent) {
-        this.parent = parent;
-        return this;
-    }
+    public boolean test(Event event);
 
-    public Component append(Component child) {
-        this.children.add(child.setParent(this));
-        return this;
-    }
-
-    @Override
-    public boolean test(Event event) {
-        return true;
-    }
-
-    @Override
-    public void accept(Event event) {
-        switch (event.eventFlow()) {
-            case SUB:
-                this.children.stream()
-                        .filter(c -> c.test(event))
-                        .forEach(c -> c.accept(event));
-                break;
-            case PUB:
-                this.parent.accept(event);
-                break;
-        }
-    }
+    public void accept(Event event);
 }

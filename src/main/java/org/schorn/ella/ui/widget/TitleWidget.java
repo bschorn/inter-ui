@@ -32,7 +32,7 @@ import org.schorn.ella.ui.html.HTML;
 public class TitleWidget extends BaseWidget {
 
     private final String customTag = "form-title";
-    private final String title;
+    private String title;
     private final HTML.Div divElement;
 
     public TitleWidget(String title) {
@@ -47,14 +47,30 @@ public class TitleWidget extends BaseWidget {
         this.divElement = divElement0;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+        this.divElement.setTextContent(title);
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+
     @Override
     public String customTag() {
         return this.customTag;
     }
 
     @Override
-    public HTML.Element owner() {
+    public HTML.HtmlElement owner() {
         return this.divElement;
+    }
+
+    @Override
+    public HTML.HtmlElement setStyle(HTML.Style style) {
+        this.divElement.setStyle(style);
+        return this;
     }
 
 }

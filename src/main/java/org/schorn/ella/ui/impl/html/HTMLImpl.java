@@ -38,7 +38,7 @@ import org.schorn.ella.ui.html.HTML.A;
 import org.schorn.ella.ui.html.HTML.Attribute;
 import org.schorn.ella.ui.html.HTML.CustomElement;
 import org.schorn.ella.ui.html.HTML.Element;
-import org.schorn.ella.ui.html.HTML.SingleElement;
+import org.schorn.ella.ui.html.HTML.HtmlElement;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +64,6 @@ public class HTMLImpl implements HTML.HtmlFactory {
         for (HTML html : HTML.values()) {
             html.setImpl(HtmlElementImpl.class);
         }
-        HTML.ELEMENT.setImpl(HtmlElementImpl.class);
-        HTML.SINGLE.setImpl(HtmlSingleElementImpl.class);
         HTML.HTML.setImpl(HtmlPageElementImpl.class);
         HTML.A.setImpl(HtmlAImpl.class);
         HTML.ABBR.setImpl(HtmlAbbrImpl.class);
@@ -234,7 +232,7 @@ public class HTMLImpl implements HTML.HtmlFactory {
         return newInstance;
     }
 
-    static class ElementImpl implements Element {
+    static abstract class ElementImpl implements Element {
 
         static private final AtomicInteger ID = new AtomicInteger(100);
         static public final String[] INDENT = new String[]{"  ", "    ", "      ", "        ", "          ", "            ", "              "};
@@ -245,7 +243,6 @@ public class HTMLImpl implements HTML.HtmlFactory {
         protected Integer level = 0;
         protected String id;
         protected String tag;
-        protected String textContent = "";
         protected List<Element> children = new ArrayList<>();
         protected List<Attribute> attributes = new ArrayList<>();
 
@@ -266,12 +263,6 @@ public class HTMLImpl implements HTML.HtmlFactory {
         @Override
         public String tag() {
             return this.tag;
-        }
-
-        @Override
-        public Element setTextContent(String content) {
-            this.textContent = content;
-            return this;
         }
 
         @Override
@@ -330,52 +321,6 @@ public class HTMLImpl implements HTML.HtmlFactory {
         @Override
         public List<Attribute> attributes() {
             return this.attributes;
-        }
-
-        @Override
-        public Element setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
-            this.attributes.add(autoCapitalize.asAttribute());
-            return this;
-        }
-
-        @Override
-        public Element setContentEditable(boolean flag) {
-            try {
-                this.attributes.add(HTML.Attribute.create(HTML.GlobalAttributes.CONTENTEDITABLE.tag(), flag ? "true" : "false"));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return this;
-        }
-
-        @Override
-        public Element setDraggable(boolean flag) {
-            try {
-                this.addAttribute(HTML.Attribute.create(HTML.GlobalAttributes.DRAGGABLE.tag(), flag ? "true" : "false"));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return this;
-        }
-
-        @Override
-        public Element setHidden(boolean flag) {
-            try {
-                this.addAttribute(HTML.Attribute.create(HTML.GlobalAttributes.HIDDEN.tag(), flag ? "true" : "false"));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return this;
-        }
-
-        @Override
-        public Element setInputMode(HTML.InputMode inputMode) {
-            try {
-                this.addAttribute(inputMode.asAttribute());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return this;
         }
 
         @Override
@@ -462,28 +407,6 @@ public class HTMLImpl implements HTML.HtmlFactory {
             return joiner.toString();
         }
 
-        protected String renderStartTag() {
-            switch (this.tagOmission()) {
-                case EndMustBeOmitted:
-                    if (this.attributes.isEmpty()) {
-                        return String.format("<%s />", this.tag);
-                    } else {
-                        return String.format("<%s %s />", this.tag, this.renderAttributes());
-                    }
-                //case None:
-                default:
-                    if (this.attributes.isEmpty()) {
-                        return String.format("<%s>", this.tag);
-                    } else {
-                        return String.format("<%s %s>", this.tag, this.renderAttributes());
-                    }
-            }
-        }
-
-        protected String renderContent() {
-            return this.textContent != null ? this.textContent : "";
-        }
-
         protected String renderChildren() {
             StringBuilder builder = new StringBuilder();
             if (this.children != null && !this.children.isEmpty()) {
@@ -517,24 +440,94 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
             }
         }
+        protected String renderStartTag() {
+            switch (this.tagOmission()) {
+                case EndMustBeOmitted:
+                    if (this.attributes.isEmpty()) {
+                        return String.format("<%s />", this.tag);
+                    } else {
+                        return String.format("<%s %s />", this.tag, this.renderAttributes());
+                    }
+                //case None:
+                default:
+                    if (this.attributes.isEmpty()) {
+                        return String.format("<%s>", this.tag);
+                    } else {
+                        return String.format("<%s %s>", this.tag, this.renderAttributes());
+                    }
+            }
+        }
 
+        protected String renderContent() {
+            return "";
+        }
     }
 
-    static class HtmlElementImpl extends ElementImpl {
+    static class HtmlElementImpl extends ElementImpl implements HtmlElement {
+
+        protected String textContent = "";
+        protected HTML.Style style = null;
 
         public HtmlElementImpl(String tag) {
             super(tag);
         }
-    }
 
-    static class HtmlSingleElementImpl extends ElementImpl implements SingleElement {
-
-        public HtmlSingleElementImpl(String tag) {
-            super(tag);
+        @Override
+        public HtmlElement setTextContent(String content) {
+            this.textContent = content;
+            return this;
         }
 
         @Override
-        public Element setTextContent(String content) {
+        public HtmlElement setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
+            this.attributes.add(autoCapitalize.asAttribute());
+            return this;
+        }
+
+        @Override
+        public HtmlElement setContentEditable(boolean flag) {
+            try {
+                this.attributes.add(HTML.Attribute.create(HTML.GlobalAttributes.CONTENTEDITABLE.tag(), flag ? "true" : "false"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public HtmlElement setDraggable(boolean flag) {
+            try {
+                this.addAttribute(HTML.Attribute.create(HTML.GlobalAttributes.DRAGGABLE.tag(), flag ? "true" : "false"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public HtmlElement setHidden(boolean flag) {
+            try {
+                this.addAttribute(HTML.Attribute.create(HTML.GlobalAttributes.HIDDEN.tag(), flag ? "true" : "false"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public HtmlElement setInputMode(HTML.InputMode inputMode) {
+            try {
+                this.addAttribute(inputMode.asAttribute());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+
+        @Override
+        public HtmlElement setStyle(HTML.Style style) {
+            // TODO
+            // Convert <style></style> into <tag style=''>
             return this;
         }
 
@@ -543,17 +536,44 @@ public class HTMLImpl implements HTML.HtmlFactory {
             StringBuilder builder = new StringBuilder();
             builder.append(renderIndent());
             builder.append(renderStartTag());
+            builder.append(renderContent());
+            if (!this.children.isEmpty()) {
+                builder.append(renderLinefeed());
+                builder.append(renderChildren());
+                builder.append(renderIndent());
+            }
+            builder.append(renderEndTag());
             builder.append(renderLinefeed());
             return builder.toString();
         }
 
         @Override
         protected String renderStartTag() {
-            return String.format("<%s %s />", this.tag, this.renderAttributes());
+            switch (this.tagOmission()) {
+                case EndMustBeOmitted:
+                    if (this.attributes.isEmpty()) {
+                        return String.format("<%s />", this.tag);
+                    } else {
+                        return String.format("<%s %s />", this.tag, this.renderAttributes());
+                    }
+                //case None:
+                default:
+                    if (this.attributes.isEmpty()) {
+                        return String.format("<%s>", this.tag);
+                    } else {
+                        return String.format("<%s %s>", this.tag, this.renderAttributes());
+                    }
+            }
         }
+
+        @Override
+        protected String renderContent() {
+            return this.textContent != null ? this.textContent : "";
+        }
+
     }
 
-    static class HtmlPageElementImpl extends ElementImpl implements HTML.Page {
+    static class HtmlPageElementImpl extends HtmlElementImpl implements HTML.Page {
 
         private final HTML.Head head;
         private final HTML.Body body;
@@ -587,420 +607,420 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
     }
 
-    static class HtmlAImpl extends ElementImpl implements A {
+    static class HtmlAImpl extends HtmlElementImpl implements A {
 
         public HtmlAImpl() {
             super("a");
         }
     }
 
-    static class HtmlAbbrImpl extends ElementImpl implements HTML.Abbr {
+    static class HtmlAbbrImpl extends HtmlElementImpl implements HTML.Abbr {
 
         public HtmlAbbrImpl() {
             super("abbr");
         }
     }
 
-    static class HtmlAddressImpl extends ElementImpl implements HTML.Address {
+    static class HtmlAddressImpl extends HtmlElementImpl implements HTML.Address {
 
         public HtmlAddressImpl() {
             super("address");
         }
     }
 
-    static class HtmlAppletImpl extends ElementImpl implements HTML.Applet {
+    static class HtmlAppletImpl extends HtmlElementImpl implements HTML.Applet {
 
         public HtmlAppletImpl() {
             super("applet");
         }
     }
 
-    static class HtmlAreaImpl extends ElementImpl implements HTML.Area {
+    static class HtmlAreaImpl extends HtmlElementImpl implements HTML.Area {
 
         public HtmlAreaImpl() {
             super("area");
         }
     }
 
-    static class HtmlArticleImpl extends ElementImpl implements HTML.Article {
+    static class HtmlArticleImpl extends HtmlElementImpl implements HTML.Article {
 
         public HtmlArticleImpl() {
             super("article");
         }
     }
 
-    static class HtmlAsideImpl extends ElementImpl implements HTML.Aside {
+    static class HtmlAsideImpl extends HtmlElementImpl implements HTML.Aside {
 
         public HtmlAsideImpl() {
             super("aside");
         }
     }
 
-    static class HtmlAudioImpl extends ElementImpl implements HTML.Audio {
+    static class HtmlAudioImpl extends HtmlElementImpl implements HTML.Audio {
 
         public HtmlAudioImpl() {
             super("audio");
         }
     }
 
-    static class HtmlBImpl extends ElementImpl implements HTML.B {
+    static class HtmlBImpl extends HtmlElementImpl implements HTML.B {
 
         public HtmlBImpl() {
             super("b");
         }
     }
 
-    static class HtmlBaseImpl extends ElementImpl implements HTML.Base {
+    static class HtmlBaseImpl extends HtmlElementImpl implements HTML.Base {
 
         public HtmlBaseImpl() {
             super("base");
         }
     }
 
-    static class HtmlBasefontImpl extends ElementImpl implements HTML.Basefont {
+    static class HtmlBasefontImpl extends HtmlElementImpl implements HTML.Basefont {
 
         public HtmlBasefontImpl() {
             super("basefont");
         }
     }
 
-    static class HtmlBbImpl extends ElementImpl implements HTML.Bb {
+    static class HtmlBbImpl extends HtmlElementImpl implements HTML.Bb {
 
         public HtmlBbImpl() {
             super("bb");
         }
     }
 
-    static class HtmlBdoImpl extends ElementImpl implements HTML.Bdo {
+    static class HtmlBdoImpl extends HtmlElementImpl implements HTML.Bdo {
 
         public HtmlBdoImpl() {
             super("bdo");
         }
     }
 
-    static class HtmlBigImpl extends ElementImpl implements HTML.Big {
+    static class HtmlBigImpl extends HtmlElementImpl implements HTML.Big {
 
         public HtmlBigImpl() {
             super("big");
         }
     }
 
-    static class HtmlBlockquoteImpl extends ElementImpl implements HTML.Blockquote {
+    static class HtmlBlockquoteImpl extends HtmlElementImpl implements HTML.Blockquote {
 
         public HtmlBlockquoteImpl() {
             super("blockquote");
         }
     }
 
-    static class HtmlBodyImpl extends ElementImpl implements HTML.Body {
+    static class HtmlBodyImpl extends HtmlElementImpl implements HTML.Body {
 
         public HtmlBodyImpl() {
             super("body");
         }
     }
 
-    static class HtmlBrImpl extends ElementImpl implements HTML.Br {
+    static class HtmlBrImpl extends HtmlElementImpl implements HTML.Br {
 
         public HtmlBrImpl() {
             super("br");
         }
     }
 
-    static class HtmlButtonImpl extends ElementImpl implements HTML.Button {
+    static class HtmlButtonImpl extends HtmlElementImpl implements HTML.Button {
 
         public HtmlButtonImpl() {
             super("button");
         }
     }
 
-    static class HtmlCanvasImpl extends ElementImpl implements HTML.Canvas {
+    static class HtmlCanvasImpl extends HtmlElementImpl implements HTML.Canvas {
 
         public HtmlCanvasImpl() {
             super("canvas");
         }
     }
 
-    static class HtmlCaptionImpl extends ElementImpl implements HTML.Caption {
+    static class HtmlCaptionImpl extends HtmlElementImpl implements HTML.Caption {
 
         public HtmlCaptionImpl() {
             super("caption");
         }
     }
 
-    static class HtmlCenterImpl extends ElementImpl implements HTML.Center {
+    static class HtmlCenterImpl extends HtmlElementImpl implements HTML.Center {
 
         public HtmlCenterImpl() {
             super("center");
         }
     }
 
-    static class HtmlCiteImpl extends ElementImpl implements HTML.Cite {
+    static class HtmlCiteImpl extends HtmlElementImpl implements HTML.Cite {
 
         public HtmlCiteImpl() {
             super("cite");
         }
     }
 
-    static class HtmlCodeImpl extends ElementImpl implements HTML.Code {
+    static class HtmlCodeImpl extends HtmlElementImpl implements HTML.Code {
 
         public HtmlCodeImpl() {
             super("code");
         }
     }
 
-    static class HtmlColImpl extends ElementImpl implements HTML.Col {
+    static class HtmlColImpl extends HtmlElementImpl implements HTML.Col {
 
         public HtmlColImpl() {
             super("col");
         }
     }
 
-    static class HtmlColgroupImpl extends ElementImpl implements HTML.Colgroup {
+    static class HtmlColgroupImpl extends HtmlElementImpl implements HTML.Colgroup {
 
         public HtmlColgroupImpl() {
             super("colgroup");
         }
     }
 
-    static class HtmlCommandImpl extends ElementImpl implements HTML.Command {
+    static class HtmlCommandImpl extends HtmlElementImpl implements HTML.Command {
 
         public HtmlCommandImpl() {
             super("command");
         }
     }
 
-    static class HtmlDatagridImpl extends ElementImpl implements HTML.Datagrid {
+    static class HtmlDatagridImpl extends HtmlElementImpl implements HTML.Datagrid {
 
         public HtmlDatagridImpl() {
             super("datagrid");
         }
     }
 
-    static class HtmlDatalistImpl extends ElementImpl implements HTML.Datalist {
+    static class HtmlDatalistImpl extends HtmlElementImpl implements HTML.Datalist {
 
         public HtmlDatalistImpl() {
             super("datalist");
         }
     }
 
-    static class HtmlDdImpl extends ElementImpl implements HTML.Dd {
+    static class HtmlDdImpl extends HtmlElementImpl implements HTML.Dd {
 
         public HtmlDdImpl() {
             super("dd");
         }
     }
 
-    static class HtmlDelImpl extends ElementImpl implements HTML.Del {
+    static class HtmlDelImpl extends HtmlElementImpl implements HTML.Del {
 
         public HtmlDelImpl() {
             super("del");
         }
     }
 
-    static class HtmlDetailsImpl extends ElementImpl implements HTML.Details {
+    static class HtmlDetailsImpl extends HtmlElementImpl implements HTML.Details {
 
         public HtmlDetailsImpl() {
             super("details");
         }
     }
 
-    static class HtmlDialogImpl extends ElementImpl implements HTML.Dialog {
+    static class HtmlDialogImpl extends HtmlElementImpl implements HTML.Dialog {
 
         public HtmlDialogImpl() {
             super("dialog");
         }
     }
 
-    static class HtmlDirImpl extends ElementImpl implements HTML.Dir {
+    static class HtmlDirImpl extends HtmlElementImpl implements HTML.Dir {
 
         public HtmlDirImpl() {
             super("dir");
         }
     }
 
-    static class HtmlDivImpl extends ElementImpl implements HTML.Div {
+    static class HtmlDivImpl extends HtmlElementImpl implements HTML.Div {
 
         public HtmlDivImpl() {
             super("div");
         }
     }
 
-    static class HtmlDfnImpl extends ElementImpl implements HTML.Dfn {
+    static class HtmlDfnImpl extends HtmlElementImpl implements HTML.Dfn {
 
         public HtmlDfnImpl() {
             super("dfn");
         }
     }
 
-    static class HtmlDlImpl extends ElementImpl implements HTML.Dl {
+    static class HtmlDlImpl extends HtmlElementImpl implements HTML.Dl {
 
         public HtmlDlImpl() {
             super("dl");
         }
     }
 
-    static class HtmlDtImpl extends ElementImpl implements HTML.Dt {
+    static class HtmlDtImpl extends HtmlElementImpl implements HTML.Dt {
 
         public HtmlDtImpl() {
             super("dt");
         }
     }
 
-    static class HtmlEmImpl extends ElementImpl implements HTML.Em {
+    static class HtmlEmImpl extends HtmlElementImpl implements HTML.Em {
 
         public HtmlEmImpl() {
             super("em");
         }
     }
 
-    static class HtmlEmbedImpl extends ElementImpl implements HTML.Embed {
+    static class HtmlEmbedImpl extends HtmlElementImpl implements HTML.Embed {
 
         public HtmlEmbedImpl() {
             super("embed");
         }
     }
 
-    static class HtmlFieldsetImpl extends ElementImpl implements HTML.Fieldset {
+    static class HtmlFieldsetImpl extends HtmlElementImpl implements HTML.Fieldset {
 
         public HtmlFieldsetImpl() {
             super("fieldset");
         }
     }
 
-    static class HtmlFigureImpl extends ElementImpl implements HTML.Figure {
+    static class HtmlFigureImpl extends HtmlElementImpl implements HTML.Figure {
 
         public HtmlFigureImpl() {
             super("figure");
         }
     }
 
-    static class HtmlFontImpl extends ElementImpl implements HTML.Font {
+    static class HtmlFontImpl extends HtmlElementImpl implements HTML.Font {
 
         public HtmlFontImpl() {
             super("font");
         }
     }
 
-    static class HtmlFooterImpl extends ElementImpl implements HTML.Footer {
+    static class HtmlFooterImpl extends HtmlElementImpl implements HTML.Footer {
 
         public HtmlFooterImpl() {
             super("footer");
         }
     }
 
-    static class HtmlFormImpl extends ElementImpl implements HTML.Form {
+    static class HtmlFormImpl extends HtmlElementImpl implements HTML.Form {
 
         public HtmlFormImpl() {
             super("form");
         }
     }
 
-    static class HtmlFrameImpl extends ElementImpl implements HTML.Frame {
+    static class HtmlFrameImpl extends HtmlElementImpl implements HTML.Frame {
 
         public HtmlFrameImpl() {
             super("frame");
         }
     }
 
-    static class HtmlFramesetImpl extends ElementImpl implements HTML.Frameset {
+    static class HtmlFramesetImpl extends HtmlElementImpl implements HTML.Frameset {
 
         public HtmlFramesetImpl() {
             super("frameset");
         }
     }
 
-    static class HtmlH1Impl extends ElementImpl implements HTML.H1 {
+    static class HtmlH1Impl extends HtmlElementImpl implements HTML.H1 {
 
         public HtmlH1Impl() {
             super("h1");
         }
     }
 
-    static class HtmlH2Impl extends ElementImpl implements HTML.H2 {
+    static class HtmlH2Impl extends HtmlElementImpl implements HTML.H2 {
 
         public HtmlH2Impl() {
             super("h2");
         }
     }
 
-    static class HtmlH3Impl extends ElementImpl implements HTML.H3 {
+    static class HtmlH3Impl extends HtmlElementImpl implements HTML.H3 {
 
         public HtmlH3Impl() {
             super("h3");
         }
     }
 
-    static class HtmlH4Impl extends ElementImpl implements HTML.H4 {
+    static class HtmlH4Impl extends HtmlElementImpl implements HTML.H4 {
 
         public HtmlH4Impl() {
             super("h4");
         }
     }
 
-    static class HtmlH5Impl extends ElementImpl implements HTML.H5 {
+    static class HtmlH5Impl extends HtmlElementImpl implements HTML.H5 {
 
         public HtmlH5Impl() {
             super("h5");
         }
     }
 
-    static class HtmlH6Impl extends ElementImpl implements HTML.H6 {
+    static class HtmlH6Impl extends HtmlElementImpl implements HTML.H6 {
 
         public HtmlH6Impl() {
             super("h6");
         }
     }
 
-    static class HtmlHeadImpl extends ElementImpl implements HTML.Head {
+    static class HtmlHeadImpl extends HtmlElementImpl implements HTML.Head {
 
         public HtmlHeadImpl() {
             super("head");
         }
     }
 
-    static class HtmlHeaderImpl extends ElementImpl implements HTML.Header {
+    static class HtmlHeaderImpl extends HtmlElementImpl implements HTML.Header {
 
         public HtmlHeaderImpl() {
             super("header");
         }
     }
 
-    static class HtmlHgroupImpl extends ElementImpl implements HTML.Hgroup {
+    static class HtmlHgroupImpl extends HtmlElementImpl implements HTML.Hgroup {
 
         public HtmlHgroupImpl() {
             super("hgroup");
         }
     }
 
-    static class HtmlHrImpl extends ElementImpl implements HTML.Hr {
+    static class HtmlHrImpl extends HtmlElementImpl implements HTML.Hr {
 
         public HtmlHrImpl() {
             super("hr");
         }
     }
 
-    static class HtmlIImpl extends ElementImpl implements HTML.I {
+    static class HtmlIImpl extends HtmlElementImpl implements HTML.I {
 
         public HtmlIImpl() {
             super("i");
         }
     }
 
-    static class HtmlIframeImpl extends ElementImpl implements HTML.Iframe {
+    static class HtmlIframeImpl extends HtmlElementImpl implements HTML.Iframe {
 
         public HtmlIframeImpl() {
             super("iframe");
         }
     }
 
-    static class HtmlImgImpl extends ElementImpl implements HTML.Img {
+    static class HtmlImgImpl extends HtmlElementImpl implements HTML.Img {
 
         public HtmlImgImpl() {
             super("img");
         }
     }
 
-    static class HtmlInputImpl extends ElementImpl implements HTML.Input {
+    static class HtmlInputImpl extends HtmlElementImpl implements HTML.Input {
 
         public HtmlInputImpl() {
             super("input");
@@ -1023,77 +1043,77 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
     }
 
-    static class HtmlInsImpl extends ElementImpl implements HTML.Ins {
+    static class HtmlInsImpl extends HtmlElementImpl implements HTML.Ins {
 
         public HtmlInsImpl() {
             super("ins");
         }
     }
 
-    static class HtmlIsindexImpl extends ElementImpl implements HTML.Isindex {
+    static class HtmlIsindexImpl extends HtmlElementImpl implements HTML.Isindex {
 
         public HtmlIsindexImpl() {
             super("isindex");
         }
     }
 
-    static class HtmlKdbImpl extends ElementImpl implements HTML.Kdb {
+    static class HtmlKdbImpl extends HtmlElementImpl implements HTML.Kdb {
 
         public HtmlKdbImpl() {
             super("kdb");
         }
     }
 
-    static class HtmlLabelImpl extends ElementImpl implements HTML.Label {
+    static class HtmlLabelImpl extends HtmlElementImpl implements HTML.Label {
 
         public HtmlLabelImpl() {
             super("label");
         }
     }
 
-    static class HtmlLegendImpl extends ElementImpl implements HTML.Legend {
+    static class HtmlLegendImpl extends HtmlElementImpl implements HTML.Legend {
 
         public HtmlLegendImpl() {
             super("legend");
         }
     }
 
-    static class HtmlLiImpl extends ElementImpl implements HTML.Li {
+    static class HtmlLiImpl extends HtmlElementImpl implements HTML.Li {
 
         public HtmlLiImpl() {
             super("li");
         }
     }
 
-    static class HtmlLinkImpl extends ElementImpl implements HTML.Link {
+    static class HtmlLinkImpl extends HtmlElementImpl implements HTML.Link {
 
         public HtmlLinkImpl() {
             super("link");
         }
     }
 
-    static class HtmlMarkImpl extends ElementImpl implements HTML.Mark {
+    static class HtmlMarkImpl extends HtmlElementImpl implements HTML.Mark {
 
         public HtmlMarkImpl() {
             super("mark");
         }
     }
 
-    static class HtmlMapImpl extends ElementImpl implements HTML.Map {
+    static class HtmlMapImpl extends HtmlElementImpl implements HTML.Map {
 
         public HtmlMapImpl() {
             super("map");
         }
     }
 
-    static class HtmlMenuImpl extends ElementImpl implements HTML.Menu {
+    static class HtmlMenuImpl extends HtmlElementImpl implements HTML.Menu {
 
         public HtmlMenuImpl() {
             super("menu");
         }
     }
 
-    static class HtmlMetaImpl extends ElementImpl implements HTML.Meta {
+    static class HtmlMetaImpl extends HtmlElementImpl implements HTML.Meta {
 
         public HtmlMetaImpl() {
             super("meta");
@@ -1105,56 +1125,56 @@ public class HTMLImpl implements HTML.HtmlFactory {
         }
     }
 
-    static class HtmlMeterImpl extends ElementImpl implements HTML.Meter {
+    static class HtmlMeterImpl extends HtmlElementImpl implements HTML.Meter {
 
         public HtmlMeterImpl() {
             super("meter");
         }
     }
 
-    static class HtmlNavImpl extends ElementImpl implements HTML.Nav {
+    static class HtmlNavImpl extends HtmlElementImpl implements HTML.Nav {
 
         public HtmlNavImpl() {
             super("nav");
         }
     }
 
-    static class HtmlNoframesImpl extends ElementImpl implements HTML.Noframes {
+    static class HtmlNoframesImpl extends HtmlElementImpl implements HTML.Noframes {
 
         public HtmlNoframesImpl() {
             super("noframes");
         }
     }
 
-    static class HtmlNoscriptImpl extends ElementImpl implements HTML.Noscript {
+    static class HtmlNoscriptImpl extends HtmlElementImpl implements HTML.Noscript {
 
         public HtmlNoscriptImpl() {
             super("noscript");
         }
     }
 
-    static class HtmlObjectImpl extends ElementImpl implements HTML.Object {
+    static class HtmlObjectImpl extends HtmlElementImpl implements HTML.Object {
 
         public HtmlObjectImpl() {
             super("object");
         }
     }
 
-    static class HtmlOlImpl extends ElementImpl implements HTML.Ol {
+    static class HtmlOlImpl extends HtmlElementImpl implements HTML.Ol {
 
         public HtmlOlImpl() {
             super("ol");
         }
     }
 
-    static class HtmlOptgroupImpl extends ElementImpl implements HTML.Optgroup {
+    static class HtmlOptgroupImpl extends HtmlElementImpl implements HTML.Optgroup {
 
         public HtmlOptgroupImpl() {
             super("optgroup");
         }
     }
 
-    static class HtmlOptionImpl extends ElementImpl implements HTML.Option {
+    static class HtmlOptionImpl extends HtmlElementImpl implements HTML.Option {
 
         public HtmlOptionImpl() {
             super("option");
@@ -1178,91 +1198,91 @@ public class HTMLImpl implements HTML.HtmlFactory {
         }
 
         @Override
-        public Element setTextContent(String content) {
+        public HtmlElement setTextContent(String content) {
             this.textContent = content;
             return this;
         }
 
     }
 
-    static class HtmlOutputImpl extends ElementImpl implements HTML.Output {
+    static class HtmlOutputImpl extends HtmlElementImpl implements HTML.Output {
 
         public HtmlOutputImpl() {
             super("output");
         }
     }
 
-    static class HtmlPImpl extends ElementImpl implements HTML.P {
+    static class HtmlPImpl extends HtmlElementImpl implements HTML.P {
 
         public HtmlPImpl() {
             super("p");
         }
     }
 
-    static class HtmlParamImpl extends ElementImpl implements HTML.Param {
+    static class HtmlParamImpl extends HtmlElementImpl implements HTML.Param {
 
         public HtmlParamImpl() {
             super("param");
         }
     }
 
-    static class HtmlPreImpl extends ElementImpl implements HTML.Pre {
+    static class HtmlPreImpl extends HtmlElementImpl implements HTML.Pre {
 
         public HtmlPreImpl() {
             super("pre");
         }
     }
 
-    static class HtmlProgressImpl extends ElementImpl implements HTML.Progress {
+    static class HtmlProgressImpl extends HtmlElementImpl implements HTML.Progress {
 
         public HtmlProgressImpl() {
             super("progress");
         }
     }
 
-    static class HtmlQImpl extends ElementImpl implements HTML.Q {
+    static class HtmlQImpl extends HtmlElementImpl implements HTML.Q {
 
         public HtmlQImpl() {
             super("q");
         }
     }
 
-    static class HtmlRubyImpl extends ElementImpl implements HTML.Ruby {
+    static class HtmlRubyImpl extends HtmlElementImpl implements HTML.Ruby {
 
         public HtmlRubyImpl() {
             super("ruby");
         }
     }
 
-    static class HtmlRpImpl extends ElementImpl implements HTML.Rp {
+    static class HtmlRpImpl extends HtmlElementImpl implements HTML.Rp {
 
         public HtmlRpImpl() {
             super("rp");
         }
     }
 
-    static class HtmlRtImpl extends ElementImpl implements HTML.Rt {
+    static class HtmlRtImpl extends HtmlElementImpl implements HTML.Rt {
 
         public HtmlRtImpl() {
             super("rt");
         }
     }
 
-    static class HtmlSImpl extends ElementImpl implements HTML.S {
+    static class HtmlSImpl extends HtmlElementImpl implements HTML.S {
 
         public HtmlSImpl() {
             super("s");
         }
     }
 
-    static class HtmlSampImpl extends ElementImpl implements HTML.Samp {
+    static class HtmlSampImpl extends HtmlElementImpl implements HTML.Samp {
 
         public HtmlSampImpl() {
             super("samp");
         }
     }
 
-    static class HtmlScriptImpl extends ElementImpl implements HTML.Script {
+    static class HtmlScriptImpl extends HtmlElementImpl implements HTML.Script {
 
         public HtmlScriptImpl() {
             super("script");
@@ -1274,56 +1294,56 @@ public class HTMLImpl implements HTML.HtmlFactory {
         }
     }
 
-    static class HtmlSectionImpl extends ElementImpl implements HTML.Section {
+    static class HtmlSectionImpl extends HtmlElementImpl implements HTML.Section {
 
         public HtmlSectionImpl() {
             super("section");
         }
     }
 
-    static class HtmlSelectImpl extends ElementImpl implements HTML.Select {
+    static class HtmlSelectImpl extends HtmlElementImpl implements HTML.Select {
 
         public HtmlSelectImpl() {
             super("select");
         }
     }
 
-    static class HtmlSmallImpl extends ElementImpl implements HTML.Small {
+    static class HtmlSmallImpl extends HtmlElementImpl implements HTML.Small {
 
         public HtmlSmallImpl() {
             super("small");
         }
     }
 
-    static class HtmlSourceImpl extends ElementImpl implements HTML.Source {
+    static class HtmlSourceImpl extends HtmlElementImpl implements HTML.Source {
 
         public HtmlSourceImpl() {
             super("source");
         }
     }
 
-    static class HtmlSpanImpl extends ElementImpl implements HTML.Span {
+    static class HtmlSpanImpl extends HtmlElementImpl implements HTML.Span {
 
         public HtmlSpanImpl() {
             super("span");
         }
     }
 
-    static class HtmlStrikeImpl extends ElementImpl implements HTML.Strike {
+    static class HtmlStrikeImpl extends HtmlElementImpl implements HTML.Strike {
 
         public HtmlStrikeImpl() {
             super("strike");
         }
     }
 
-    static class HtmlStrongImpl extends ElementImpl implements HTML.Strong {
+    static class HtmlStrongImpl extends HtmlElementImpl implements HTML.Strong {
 
         public HtmlStrongImpl() {
             super("strong");
         }
     }
 
-    static class HtmlStyleImpl extends ElementImpl implements HTML.Style {
+    static class HtmlStyleImpl extends HtmlElementImpl implements HTML.Style {
 
         private final List<CSS.Element> cssElements = new ArrayList<>();
 
@@ -1368,126 +1388,126 @@ public class HTMLImpl implements HTML.HtmlFactory {
         }
     }
 
-    static class HtmlSubImpl extends ElementImpl implements HTML.Sub {
+    static class HtmlSubImpl extends HtmlElementImpl implements HTML.Sub {
 
         public HtmlSubImpl() {
             super("sub");
         }
     }
 
-    static class HtmlSupImpl extends ElementImpl implements HTML.Sup {
+    static class HtmlSupImpl extends HtmlElementImpl implements HTML.Sup {
 
         public HtmlSupImpl() {
             super("sup");
         }
     }
 
-    static class HtmlTableImpl extends ElementImpl implements HTML.Table {
+    static class HtmlTableImpl extends HtmlElementImpl implements HTML.Table {
 
         public HtmlTableImpl() {
             super("table");
         }
     }
 
-    static class HtmlTbodyImpl extends ElementImpl implements HTML.Tbody {
+    static class HtmlTbodyImpl extends HtmlElementImpl implements HTML.Tbody {
 
         public HtmlTbodyImpl() {
             super("tbody");
         }
     }
 
-    static class HtmlTdImpl extends ElementImpl implements HTML.Td {
+    static class HtmlTdImpl extends HtmlElementImpl implements HTML.Td {
 
         public HtmlTdImpl() {
             super("td");
         }
     }
 
-    static class HtmlTextareaImpl extends ElementImpl implements HTML.Textarea {
+    static class HtmlTextareaImpl extends HtmlElementImpl implements HTML.Textarea {
 
         public HtmlTextareaImpl() {
             super("textarea");
         }
     }
 
-    static class HtmlTfootImpl extends ElementImpl implements HTML.Tfoot {
+    static class HtmlTfootImpl extends HtmlElementImpl implements HTML.Tfoot {
 
         public HtmlTfootImpl() {
             super("tfoot");
         }
     }
 
-    static class HtmlThImpl extends ElementImpl implements HTML.Th {
+    static class HtmlThImpl extends HtmlElementImpl implements HTML.Th {
 
         public HtmlThImpl() {
             super("th");
         }
     }
 
-    static class HtmlTheadImpl extends ElementImpl implements HTML.Thead {
+    static class HtmlTheadImpl extends HtmlElementImpl implements HTML.Thead {
 
         public HtmlTheadImpl() {
             super("thead");
         }
     }
 
-    static class HtmlTimeImpl extends ElementImpl implements HTML.Time {
+    static class HtmlTimeImpl extends HtmlElementImpl implements HTML.Time {
 
         public HtmlTimeImpl() {
             super("time");
         }
     }
 
-    static class HtmlTitleImpl extends ElementImpl implements HTML.Title {
+    static class HtmlTitleImpl extends HtmlElementImpl implements HTML.Title {
 
         public HtmlTitleImpl() {
             super("title");
         }
     }
 
-    static class HtmlTrImpl extends ElementImpl implements HTML.Tr {
+    static class HtmlTrImpl extends HtmlElementImpl implements HTML.Tr {
 
         public HtmlTrImpl() {
             super("tr");
         }
     }
 
-    static class HtmlTtImpl extends ElementImpl implements HTML.Tt {
+    static class HtmlTtImpl extends HtmlElementImpl implements HTML.Tt {
 
         public HtmlTtImpl() {
             super("tt");
         }
     }
 
-    static class HtmlUImpl extends ElementImpl implements HTML.U {
+    static class HtmlUImpl extends HtmlElementImpl implements HTML.U {
 
         public HtmlUImpl() {
             super("u");
         }
     }
 
-    static class HtmlUlImpl extends ElementImpl implements HTML.Ul {
+    static class HtmlUlImpl extends HtmlElementImpl implements HTML.Ul {
 
         public HtmlUlImpl() {
             super("ul");
         }
     }
 
-    static class HtmlVarImpl extends ElementImpl implements HTML.Var {
+    static class HtmlVarImpl extends HtmlElementImpl implements HTML.Var {
 
         public HtmlVarImpl() {
             super("var");
         }
     }
 
-    static class HtmlVideoImpl extends ElementImpl implements HTML.Video {
+    static class HtmlVideoImpl extends HtmlElementImpl implements HTML.Video {
 
         public HtmlVideoImpl() {
             super("video");
         }
     }
 
-    static class HtmlXmpImpl extends ElementImpl implements HTML.Xmp {
+    static class HtmlXmpImpl extends HtmlElementImpl implements HTML.Xmp {
 
         public HtmlXmpImpl() {
             super("xmp");

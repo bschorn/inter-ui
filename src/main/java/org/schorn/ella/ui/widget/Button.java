@@ -21,27 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.core;
+package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.ref.EventImpl;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public interface Event {
-    public enum Purpose {
-        SUB, PUB;
+public class Button extends BaseWidget {
+
+    private final String customTag = "form-button";
+    private final HTML.Div owner;
+
+    Button() {
+        HTML.Div owner0 = null;
+        try {
+            owner0 = HTML.Div.create();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        this.owner = owner0;
     }
 
-    public Purpose eventFlow();
-
-    static Event pub() {
-        return new EventImpl(Purpose.PUB);
+    @Override
+    public HTML.HtmlElement owner() {
+        return this.owner;
     }
 
-    static Event sub() {
-        return new EventImpl(Purpose.SUB);
+    @Override
+    public String customTag() {
+        return this.customTag;
     }
 
 }

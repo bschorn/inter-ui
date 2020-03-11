@@ -21,27 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.core;
+package org.schorn.ella.ui.page;
 
-import org.schorn.ella.ui.ref.EventImpl;
+import java.util.List;
+import org.schorn.ella.ui.html.HTML.Render;
+import org.schorn.ella.ui.panel.Facet;
 
 /**
  *
  * @author bschorn
  */
-public interface Event {
-    public enum Purpose {
-        SUB, PUB;
-    }
-
-    public Purpose eventFlow();
-
-    static Event pub() {
-        return new EventImpl(Purpose.PUB);
-    }
-
-    static Event sub() {
-        return new EventImpl(Purpose.SUB);
-    }
-
+public interface Page extends Render {
+    public List<Facet> facets();
 }

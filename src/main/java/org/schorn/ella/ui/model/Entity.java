@@ -21,27 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.core;
+package org.schorn.ella.ui.model;
 
-import org.schorn.ella.ui.ref.EventImpl;
+import org.schorn.ella.ui.core.Component;
 
 /**
  *
  * @author bschorn
  */
-public interface Event {
-    public enum Purpose {
-        SUB, PUB;
-    }
-
-    public Purpose eventFlow();
-
-    static Event pub() {
-        return new EventImpl(Purpose.PUB);
-    }
-
-    static Event sub() {
-        return new EventImpl(Purpose.SUB);
-    }
+public interface Entity extends Data, Component {
 
 }

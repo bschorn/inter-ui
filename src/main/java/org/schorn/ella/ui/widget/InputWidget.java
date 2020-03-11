@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.html.HTML.Element;
+import org.schorn.ella.ui.html.HTML.HtmlElement;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,7 @@ public class InputWidget extends BaseWidget {
     }
 
     @Override
-    public Element owner() {
+    public HtmlElement owner() {
         return this.divElement;
     }
 
@@ -138,28 +139,35 @@ public class InputWidget extends BaseWidget {
     }
 
     @Override
-    public Element setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
+    public HtmlElement setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
         this.inputElement.setAutoCapitalize(autoCapitalize);
         return this;
     }
 
     @Override
-    public Element setContentEditable(boolean flag) {
+    public HtmlElement setContentEditable(boolean flag) {
         this.inputElement.setContentEditable(flag);
         return this;
     }
 
     @Override
-    public Element setDraggable(boolean flag) {
-        this.inputElement.setDraggable(flag);
+    public HtmlElement setDraggable(boolean flag) {
+        this.divElement.setDraggable(flag);
         return this;
     }
 
     @Override
-    public Element setInputMode(HTML.InputMode inputMode) {
+    public HtmlElement setInputMode(HTML.InputMode inputMode) {
         this.inputElement.setInputMode(inputMode);
         return this;
     }
+
+    @Override
+    public HtmlElement setStyle(HTML.Style style) {
+        this.divElement.setStyle(style);
+        return this;
+    }
+
 
     public void addDatalist(String id, String[] datalist) {
         try {

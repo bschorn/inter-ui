@@ -27,6 +27,6 @@ package org.schorn.ella.ui.core;
  *
  * @author bschorn
  */
-public class Message {
+public interface Message {
 
 }

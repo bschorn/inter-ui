@@ -21,35 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.page;
-
-import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.html.HTML.Element;
-import org.schorn.ella.ui.html.HTML.Render;
+package org.schorn.ella.ui.event;
 
 /**
  *
  * @author bschorn
  */
-public class GenericPage implements Render {
-
-    private final HTML.Page page;
-
-    public GenericPage() throws Exception {
-        this.page = HTML.Page.create();
-    }
-
-    public void addSetting(Element setting) throws HTML.InvalidContentException {
-        this.page.htmlHead().append(setting);
-    }
-
-    public void addContent(Element content) throws HTML.InvalidContentException {
-        this.page.htmlBody().append(content);
-    }
-
-    @Override
-    public String render() {
-        return this.page.render();
-    }
+public interface DataEvent {
 
 }

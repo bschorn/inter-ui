@@ -21,27 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.core;
+package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.ref.EventImpl;
+import java.util.ArrayList;
+import java.util.List;
+import org.schorn.ella.ui.core.Component;
+import org.schorn.ella.ui.core.Event;
 
 /**
  *
  * @author bschorn
  */
-public interface Event {
-    public enum Purpose {
-        SUB, PUB;
+public class ComponentImpl implements Component {
+
+    private Component parent = null;
+    private final List<Component> children = new ArrayList<>();
+
+    @Override
+    public Component setParent(Component parent) {
+        this.parent = parent;
+        return this;
     }
 
-    public Purpose eventFlow();
-
-    static Event pub() {
-        return new EventImpl(Purpose.PUB);
+    @Override
+    public Component append(Component child) {
+        this.children.add(child.setParent(this));
+        return this;
     }
 
-    static Event sub() {
-        return new EventImpl(Purpose.SUB);
+    @Override
+    public boolean test(Event event) {
+        return true;
     }
 
+    @Override
+    public void accept(Event event) {
+        switch (event.eventFlow()) {
+            case SUB:
+                this.children.stream()
+                        .filter(c -> c.test(event))
+                        .forEach(c -> c.accept(event));
+                break;
+            case PUB:
+                this.parent.accept(event);
+                break;
+        }
+    }
 }
