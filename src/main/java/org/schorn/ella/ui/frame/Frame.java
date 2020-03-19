@@ -21,15 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.panel;
+package org.schorn.ella.ui.frame;
 
 /**
- * Different view of the same data
- *
- *
  *
  * @author bschorn
+ * @param <T>
  */
-public interface Aspect extends Panel {
+public interface Frame<T> {
+
+    public void addContent(T t) throws Exception;
 
 }

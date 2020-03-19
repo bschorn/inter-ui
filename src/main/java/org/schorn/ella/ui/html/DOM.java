@@ -28,6 +28,7 @@ package org.schorn.ella.ui.html;
  * @author bschorn
  */
 public enum DOM {
+    NA,
     EventTarget,
     Node,
     Element,

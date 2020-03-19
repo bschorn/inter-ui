@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.schorn.ella.ui.impl.html.HTMLImpl;
+import org.schorn.ella.ui.UIProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +72,7 @@ public enum HTML {
     COL(Col.class, DOM.HTMLElement),
     COLGROUP(Colgroup.class, DOM.HTMLElement),
     COMMAND(Command.class, DOM.HTMLElement),
+    COMMENT(Comment.class, DOM.NA),
     DATAGRID(Datagrid.class, DOM.HTMLElement),
     DATALIST(Datalist.class, DOM.HTMLDataListElement),
     DD(Dd.class, DOM.HTMLElement),
@@ -206,12 +207,15 @@ public enum HTML {
     static final Logger LGR = LoggerFactory.getLogger(HTML.class);
 
     public interface HtmlFactory {
-
         public void register();
         public <T> T createInstance(HTML html, Object... params) throws Exception;
     }
 
-    static final HtmlFactory FACTORY = HTMLImpl.getFactory();
+    static final HtmlFactory FACTORY;
+
+    static {
+        FACTORY = UIProvider.provider().getHTMLFactory();
+    }
 
     public interface AttributeType {
 
@@ -649,6 +653,7 @@ public enum HTML {
         static public Head create(Object... params) throws Exception {
             return HTML.HEAD.create(Head.class, params);
         }
+
     }
 
     public interface Meta extends HtmlElement {
@@ -666,7 +671,7 @@ public enum HTML {
             return HTML.STYLE.create(Style.class, params);
         }
 
-        void append(CSS.Element cssElement);
+        void append(CSS.Block cssElement);
     }
 
     public interface Script extends HtmlElement {
@@ -1102,6 +1107,13 @@ public enum HTML {
 
         static public Command create(Object... params) throws Exception {
             return HTML.COMMAND.create(Command.class, params);
+        }
+    }
+
+    public interface Comment extends HtmlElement {
+
+        static public Comment create(Object... params) throws Exception {
+            return HTML.COMMENT.create(Comment.class, params);
         }
     }
 

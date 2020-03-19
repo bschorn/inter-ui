@@ -21,12 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.panel;
+package org.schorn.ella.ui.ref;
+
+import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.frame.Facet;
+import org.schorn.ella.ui.frame.Page;
+import org.schorn.ella.ui.frame.Panel;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public interface Facet extends Panel {
+public class UIProviderImpl implements UIProvider {
+
+    @Override
+    public HTML.HtmlFactory getHTMLFactory() {
+        return HTMLImpl.getFactory();
+    }
+
+    @Override
+    public CSS.CssFactory getCSSFactory() {
+        return CSSImpl.getFactory();
+    }
+
+    @Override
+    public Page createPage(String panelId, String panelName) {
+        return new PageImpl(panelId, panelName);
+    }
+
+    @Override
+    public Panel createPanel(String id, String name) {
+        return new PanelImpl(id, name);
+    }
+
+    @Override
+    public Facet createFacet(String id, String name) {
+        return new FacetImpl(id, name);
+    }
 
 }

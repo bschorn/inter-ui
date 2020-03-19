@@ -21,12 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.panel;
+package org.schorn.ella.ui.frame;
+
+import org.schorn.ella.ui.UIProvider;
 
 /**
  *
  * @author bschorn
  */
-public interface Page extends Panel {
+public interface Page extends Style, Comment, Build {
 
+    static Page create(String panelId, String panelName) {
+        return UIProvider.provider().createPage(panelId, panelName);
+    }
+
+    public Panel panel();
 }

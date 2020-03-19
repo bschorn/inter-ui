@@ -27,6 +27,7 @@ package org.schorn.ella.ui.html;
  *
  * @author bschorn
  */
+@Deprecated
 public class HtmlHelper {
 
     private final String htmlInterface;

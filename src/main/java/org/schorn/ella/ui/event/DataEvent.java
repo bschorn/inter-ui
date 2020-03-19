@@ -23,10 +23,14 @@
  */
 package org.schorn.ella.ui.event;
 
+import org.schorn.ella.ui.core.Event;
+import org.schorn.ella.ui.model.Data;
+
 /**
  *
  * @author bschorn
  */
-public interface DataEvent {
+public interface DataEvent<T extends Data> extends Event {
 
+    public T data();
 }

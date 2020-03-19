@@ -21,50 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.schorn.ella.ui.core.Component;
-import org.schorn.ella.ui.core.Event;
+package org.schorn.ella.ui.frame;
 
 /**
  *
  * @author bschorn
  */
-public class ComponentImpl implements Component<Event> {
-
-    private Component parent = null;
-    private final List<Component> children = new ArrayList<>();
-
-    @Override
-    public Component setParent(Component parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    @Override
-    public Component append(Component child) {
-        this.children.add(child.setParent(this));
-        return this;
-    }
-
-    @Override
-    public boolean test(Event event) {
-        return true;
-    }
-
-    @Override
-    public void accept(Event event) {
-        switch (event.eventFlow()) {
-            case SUB:
-                this.children.stream()
-                        .filter(c -> c.test(event))
-                        .forEach(c -> c.accept(event));
-                break;
-            case PUB:
-                this.parent.accept(event);
-                break;
-        }
-    }
+public interface Comment {
+    public void addComment(String comment) throws Exception;
 }

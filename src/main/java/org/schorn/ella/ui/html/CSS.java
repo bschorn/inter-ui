@@ -25,8 +25,10 @@ package org.schorn.ella.ui.html;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.StringJoiner;
-import org.schorn.ella.ui.impl.html.CSSImpl;
+import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +57,11 @@ public enum CSS {
         this.implOf = implOf;
     }
 
-    public Element createElement(Object... params) throws Exception {
+    public Class<?> getImpl() {
+        return this.implOf;
+    }
+
+    public Block createBlock(Object... params) throws Exception {
         return createInstance(this, params);
     }
 
@@ -64,8 +70,18 @@ public enum CSS {
     }
 
     static final Logger LGR = LoggerFactory.getLogger(CSS.class);
+
+    public interface CssFactory {
+
+        public void register();
+
+        public <T> T createInstance(CSS css, Object... params) throws Exception;
+    }
+
+    static final CssFactory FACTORY;
+
     static {
-        CSSImpl.register();
+        FACTORY = UIProvider.provider().getCSSFactory();
     }
 
     static private <T> T createInstance(CSS css, Object... params) throws Exception {
@@ -118,45 +134,175 @@ public enum CSS {
         return newInstance;
     }
 
-    public interface Render {
+    public enum Role {
+        BLOCK,
+        SELECTOR,
+        RULE,
+        PROPERTY;
+    }
+
+    public interface Style {
 
         String render();
+
+        Role role();
     }
 
-    public interface Element extends Render {
+    public interface Block extends Style {
 
-        Element append(Element element);
-    }
+        static final Logger LGR = LoggerFactory.getLogger(Block.class);
 
-    public interface Block extends Element {
+        Block append(Selector selector);
 
-        static public Block create() throws Exception {
-            return CSS.BLOCK.create(Block.class);
+        Block append(Rule rule);
+
+        List<Selector> selectors();
+
+        List<Rule> rules();
+
+        @Override
+        default Role role() {
+            return Role.BLOCK;
+        }
+
+        static public Block create() {
+            try {
+                return CSS.BLOCK.create(Block.class);
+            } catch (Exception ex) {
+                LGR.error("{}.create() - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return null;
         }
     }
 
-    public interface Selector extends Element {
+    public interface Selector extends Style {
+        static final Logger LGR = LoggerFactory.getLogger(Selector.class);
+
+        @Override
+        default Role role() {
+            return Role.SELECTOR;
+        }
 
         static public Selector create(String selector) throws Exception {
-            return CSS.SELECTOR.create(Selector.class, selector);
+            try {
+                return CSS.SELECTOR.create(Selector.class, selector);
+            } catch (Exception ex) {
+                LGR.error("{}.create({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        selector,
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createType(HTML type) throws Exception {
+            try {
+                return CSS.SELECTOR.create(Selector.class, type.tag());
+            } catch (Exception ex) {
+                LGR.error("{}.createType({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        type.tag(),
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createClass(String className) throws Exception {
+            try {
+                return CSS.SELECTOR.create(Selector.class, String.format(".%s", className));
+            } catch (Exception ex) {
+                LGR.error("{}.createClass({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        className,
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createID(String id) {
+            try {
+                return CSS.SELECTOR.create(Selector.class, String.format("#%s", id));
+            } catch (Exception ex) {
+                LGR.error("{}.createID({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        id,
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createDescendant(HTML type, HTML descendantType) throws Exception {
+            try {
+                return CSS.SELECTOR.create(Selector.class,
+                        String.format("%s %s", type.tag(), descendantType.tag()));
+            } catch (Exception ex) {
+                LGR.error("{}.createDescendant({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        type.tag(), descendantType.tag(),
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createChild(HTML type, HTML childType) throws Exception {
+            try {
+                return CSS.SELECTOR.create(Selector.class,
+                        String.format("%s > %s", type.tag(), childType.tag()));
+            } catch (Exception ex) {
+                LGR.error("{}.createChild({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        type.tag(), childType.tag(),
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createSibling(HTML type, HTML siblingType) throws Exception {
+            try {
+                return CSS.SELECTOR.create(Selector.class,
+                        String.format("%s ~ %s", type.tag(), siblingType.tag()));
+            } catch (Exception ex) {
+                LGR.error("{}.createSibling({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        type.tag(), siblingType.tag(),
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createAdjacentSibling(HTML type, HTML siblingType) throws Exception {
+            try {
+                return CSS.SELECTOR.create(Selector.class,
+                        String.format("%s + %s", type.tag(), siblingType.tag()));
+            } catch (Exception ex) {
+                LGR.error("{}.createAdjacentSibling({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        type.tag(), siblingType.tag(),
+                        ToString.stackTrace(ex));
+            }
+            return null;
         }
     }
 
-    public interface Property extends Element {
+    public interface Rule extends Style {
 
-        static public Property create(String name, Object params) throws Exception {
-            return CSS.PROPERTY.create(Property.class, name, params);
+        Property property();
+
+        String value();
+
+        default Role role() {
+            return Role.RULE;
         }
-    }
 
-    public interface Rule extends Element {
-
-        static public Rule create(Property property, Object value) throws Exception {
+        static public Rule create(Property property, String value) throws Exception {
             return CSS.RULE.create(Rule.class, property, value);
         }
     }
 
-    public enum Properties implements Property {
+    public enum Property implements Style {
+        align_items,
         background_color,
         border,
         border_bottom,
@@ -164,8 +310,9 @@ public enum CSS {
         border_bottom_style,
         border_bottom_width,
         border_radius,
+        box_sizing,
         color,
-        dipslay,
+        display,
         font,
         font_family,
         font_size,
@@ -190,13 +337,18 @@ public enum CSS {
         width,;
 
         @Override
-        public String render() {
+        public String toString() {
             return this.name().replace("_", "-");
         }
 
         @Override
-        public Element append(Element element) {
-            return this;
+        public String render() {
+            return this.toString();
+        }
+
+        @Override
+        public CSS.Role role() {
+            return Role.PROPERTY;
         }
 
     }

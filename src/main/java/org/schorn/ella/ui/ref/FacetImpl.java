@@ -25,43 +25,48 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.schorn.ella.ui.frame.Page;
-import org.schorn.ella.ui.frame.Panel;
+import org.schorn.ella.ui.frame.Facet;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.widget.Widget;
 
 /**
  *
  * @author bschorn
  */
-class PageImpl implements Page {
+class FacetImpl implements Facet {
 
-    private final HTML.Page page;
-    private final Panel panel;
-    protected final List<CSS.Rule> cssRules = new ArrayList<>();
-    protected final List<CSS.Block> cssBlocks = new ArrayList<>();
+    private final HTML.Div divElement;
+    private final HTML.Form formElement;
+    private final String id;
+    private final String name;
+    private final List<Widget> widgets = new ArrayList<>();
+    private final List<CSS.Rule> cssRules = new ArrayList<>();
+    private final List<CSS.Block> cssBlocks = new ArrayList<>();
 
-    public PageImpl(String id, String name) {
-        HTML.Page page0 = null;
-        Panel panel0 = null;
+    FacetImpl(String id, String name) {
+        this.id = id;
+        this.name = name;
+        HTML.Div divElement0 = null;
+        HTML.Form formElement0 = null;
         try {
-            page0 = HTML.Page.create();
-            panel0 = new PanelImpl(id, name);
+            divElement0 = HTML.Div.create();
+            formElement0 = HTML.Form.create();
+            formElement0.setId(this.id);
+            formElement0.addClass(this.name);
+            divElement0.append(formElement0);
+            /*
+             */
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        this.page = page0;
-        this.panel = panel0;
+        this.divElement = divElement0;
+        this.formElement = formElement0;
     }
 
     @Override
-    public Panel panel() {
-        return this.panel;
-    }
-
-    @Override
-    public void addComment(String comment) throws Exception {
-        this.page.insert(HTML.Comment.create().setTextContent(comment));
+    public void addContent(Widget widget) throws Exception {
+        this.widgets.add(widget);
     }
 
     @Override
@@ -90,11 +95,7 @@ class PageImpl implements Page {
         styles.addAll(this.cssBlocks);
         if (!this.cssRules.isEmpty()) {
             final CSS.Block block = CSS.Block.create();
-            try {
-                block.append(CSS.Selector.createType(HTML.BODY));
-            } catch (Exception ex) {
-
-            }
+            block.append(CSS.Selector.createID(this.id));
             this.cssRules.stream().forEach(r -> block.append(r));
             styles.add(block);
         }
@@ -103,45 +104,9 @@ class PageImpl implements Page {
 
     @Override
     public HTML.Element build() throws Exception {
-        List<CSS.Style> cssStyles = new ArrayList<>();
-        cssStyles.addAll(this.cssBlocks);
-        this.page.htmlBody().append(panel.build());
-        cssStyles.addAll(this.panel.getStyles());
-        HTML.Style style = HTML.Style.create();
-        final CSS.Block cssBlock = CSS.Block.create();
-        cssBlock.append(CSS.Selector.createType(HTML.BODY));
-        this.cssRules.stream()
-                .forEachOrdered(r -> cssBlock.append(r));
-        cssStyles.add(cssBlock);
-        cssStyles.stream()
-                .filter(s -> s instanceof CSS.Block)
-                .map(s -> (CSS.Block) s)
-                .forEachOrdered(b -> style.append(b));
-        this.page.htmlHead().append(style);
-
-        return this.page;
-    }
-
-    /*
-    public String render() {
-        try {
-            List<CSS.Block> cssBlocks0 = new ArrayList<>();
-            cssBlocks0.addAll(this.cssBlocks());
-            for (Panel panel : this.content) {
-                this.page.htmlBody().append(panel.build());
-                cssBlocks0.addAll(panel.styles());
-            }
-            HTML.Style style = HTML.Style.create();
-            final CSS.Block cssBlock = CSS.Block.create();
-            cssBlock.append(CSS.Selector.createType(HTML.BODY));
-            this.cssRules().stream().forEachOrdered(r -> cssBlock.append(r));
-            cssBlocks0.add(cssBlock);
-            cssBlocks0.stream().forEachOrdered(b -> style.append(b));
-            this.page.htmlHead().append(style);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        for (Widget widget : this.widgets) {
+            this.formElement.append(widget);
         }
-        return this.page.render();
+        return this.divElement;
     }
-    */
 }

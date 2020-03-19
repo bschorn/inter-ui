@@ -32,7 +32,7 @@ import org.schorn.ella.ui.html.HTML.HtmlElement;
  *
  * @author bschorn
  */
-public abstract class BaseWidget implements HTML.CustomElement {
+public abstract class BaseWidget implements Widget {
 
     @Override
     public Element setTextContent(String content) {

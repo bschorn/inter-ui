@@ -21,50 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
+package org.schorn.ella.ui.style;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.schorn.ella.ui.core.Component;
-import org.schorn.ella.ui.core.Event;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public class ComponentImpl implements Component<Event> {
+public class StyleFactory {
 
-    private Component parent = null;
-    private final List<Component> children = new ArrayList<>();
-
-    @Override
-    public Component setParent(Component parent) {
-        this.parent = parent;
-        return this;
+    /*
+    input, label {
+        display:block;
     }
+     */
+    static public final CSS.Style LABEL_STYLE_01;
 
-    @Override
-    public Component append(Component child) {
-        this.children.add(child.setParent(this));
-        return this;
-    }
-
-    @Override
-    public boolean test(Event event) {
-        return true;
-    }
-
-    @Override
-    public void accept(Event event) {
-        switch (event.eventFlow()) {
-            case SUB:
-                this.children.stream()
-                        .filter(c -> c.test(event))
-                        .forEach(c -> c.accept(event));
-                break;
-            case PUB:
-                this.parent.accept(event);
-                break;
+    static {
+        CSS.Style labelStyle01 = null;
+        try {
+            labelStyle01 = CSS.Block.create()
+                    .append(CSS.Selector.createType(HTML.INPUT))
+                    .append(CSS.Selector.createType(HTML.LABEL))
+                    .append(CSS.Rule.create(CSS.Property.display, "block"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        LABEL_STYLE_01 = labelStyle01;
     }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.impl.html;
+package org.schorn.ella.ui.ref;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -64,7 +64,7 @@ public class HTMLImpl implements HTML.HtmlFactory {
         for (HTML html : HTML.values()) {
             html.setImpl(HtmlElementImpl.class);
         }
-        HTML.HTML.setImpl(HtmlPageElementImpl.class);
+        HTML.HTML.setImpl(HtmlPageImpl.class);
         HTML.A.setImpl(HtmlAImpl.class);
         HTML.ABBR.setImpl(HtmlAbbrImpl.class);
         //HTML.ACRONYM.setImpl(HtmlAcronymImpl.class);
@@ -92,6 +92,7 @@ public class HTMLImpl implements HTML.HtmlFactory {
         HTML.COL.setImpl(HtmlColImpl.class);
         HTML.COLGROUP.setImpl(HtmlColgroupImpl.class);
         HTML.COMMAND.setImpl(HtmlCommandImpl.class);
+        HTML.COMMENT.setImpl(HtmlCommentImpl.class);
         HTML.DATAGRID.setImpl(HtmlDatagridImpl.class);
         HTML.DATALIST.setImpl(HtmlDatalistImpl.class);
         HTML.DD.setImpl(HtmlDdImpl.class);
@@ -440,6 +441,7 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
             }
         }
+
         protected String renderStartTag() {
             switch (this.tagOmission()) {
                 case EndMustBeOmitted:
@@ -573,20 +575,145 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
     }
 
-    static class HtmlPageElementImpl extends HtmlElementImpl implements HTML.Page {
+    static class HtmlCommentImpl implements HTML.Comment {
+
+        private final String tag = "!--";
+        protected String textContent = "";
+
+        @Override
+        public HTML.TagOmission tagOmission() {
+            return HTML.TagOmission.EndMustBeOmitted;
+        }
+
+        @Override
+        public HtmlElement setTextContent(String content) {
+            this.textContent = content;
+            return this;
+        }
+
+        @Override
+        public HtmlElement setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
+            return this;
+        }
+
+        @Override
+        public HtmlElement setContentEditable(boolean flag) {
+            return this;
+        }
+
+        @Override
+        public HtmlElement setDraggable(boolean flag) {
+            return this;
+        }
+
+        @Override
+        public HtmlElement setHidden(boolean flag) {
+            return this;
+        }
+
+        @Override
+        public HtmlElement setInputMode(HTML.InputMode inputMode) {
+            return this;
+        }
+
+        @Override
+        public HtmlElement setStyle(HTML.Style style) {
+            return this;
+        }
+
+        @Override
+        public String render() {
+            StringBuilder builder = new StringBuilder();
+            builder.append(renderStartTag());
+            builder.append(renderContent());
+            builder.append(renderEndTag());
+            builder.append(renderLinefeed());
+            return builder.toString();
+        }
+
+        protected String renderStartTag() {
+            return "<!-- ";
+        }
+
+        protected String renderEndTag() {
+            return " -->";
+        }
+
+        protected String renderContent() {
+            return this.textContent != null ? this.textContent : "";
+        }
+
+        protected String renderLinefeed() {
+            return ElementImpl.LINEFEED;
+        }
+
+        @Override
+        public Element setId(String value) throws Exception {
+            return this;
+        }
+
+        @Override
+        public String getId() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public String tag() {
+            return this.tag;
+        }
+
+        @Override
+        public Element addAttribute(Attribute attribute) throws HTML.InvalidAttributeException {
+            return this;
+        }
+
+        @Override
+        public List<Attribute> attributes() {
+            return new ArrayList<>(0);
+        }
+
+        @Override
+        public Element addClass(String className) {
+            return this;
+        }
+
+        @Override
+        public Element append(Element element) throws HTML.InvalidContentException {
+            return this;
+        }
+
+        @Override
+        public Element insert(Element element) throws HTML.InvalidContentException {
+            return this;
+        }
+
+        @Override
+        public Element parent() {
+            return this;
+        }
+
+        @Override
+        public List<Element> children() {
+            return new ArrayList<>(0);
+        }
+
+    }
+
+    static class HtmlPageImpl extends HtmlElementImpl implements HTML.Page {
+        private static final Logger LGR = LoggerFactory.getLogger(ElementImpl.class);
 
         private final HTML.Head head;
         private final HTML.Body body;
 
-        HtmlPageElementImpl() {
+        HtmlPageImpl() {
             super("html");
             HTML.Head head0 = null;
             HTML.Body body0 = null;
             try {
                 head0 = HTML.Head.create();
                 body0 = HTML.Body.create();
-                this.append(head0);
-                this.append(body0);
+                super.append(head0);
+                super.append(body0);
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -605,6 +732,17 @@ public class HTMLImpl implements HTML.HtmlFactory {
             return this.body;
         }
 
+        @Override
+        public Element insert(Element element) throws HTML.InvalidContentException {
+            LGR.error("{}.insert() - InvalidOperation", this.getClass().getSimpleName());
+            return this;
+        }
+
+        @Override
+        public Element append(Element element) throws HTML.InvalidContentException {
+            LGR.error("{}.append() - InvalidOperation", this.getClass().getSimpleName());
+            return this;
+        }
     }
 
     static class HtmlAImpl extends HtmlElementImpl implements A {
@@ -976,6 +1114,7 @@ public class HTMLImpl implements HTML.HtmlFactory {
         public HtmlHeadImpl() {
             super("head");
         }
+
     }
 
     static class HtmlHeaderImpl extends HtmlElementImpl implements HTML.Header {
@@ -1345,14 +1484,14 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
     static class HtmlStyleImpl extends HtmlElementImpl implements HTML.Style {
 
-        private final List<CSS.Element> cssElements = new ArrayList<>();
+        private final List<CSS.Block> cssElements = new ArrayList<>();
 
         public HtmlStyleImpl() {
             super("style");
         }
 
         @Override
-        public void append(CSS.Element cssElement) {
+        public void append(CSS.Block cssElement) {
             this.cssElements.add(cssElement);
         }
         @Override

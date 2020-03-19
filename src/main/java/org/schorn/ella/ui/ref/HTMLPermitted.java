@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.impl.html;
+package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.Arrays;

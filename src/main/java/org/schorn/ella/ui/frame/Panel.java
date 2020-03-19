@@ -21,16 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.page;
+package org.schorn.ella.ui.frame;
 
 import java.util.List;
-import org.schorn.ella.ui.html.HTML.Render;
-import org.schorn.ella.ui.panel.Facet;
 
 /**
  *
  * @author bschorn
  */
-public interface Page extends Render {
-    public List<Facet> facets();
+public interface Panel extends Frame<Facet>, Comment, Style, Build {
+
+    public enum Orientation {
+        ROOT, VERTICAL, HORIZONTAL;
+    }
+
+    /*
+    static Panel create(String name) {
+        return UIProvider.provider().createPanel(name);
+    }
+     */
+
+    @Override
+    public void addContent(Facet facet) throws Exception;
+
+    /**
+     * Vertically Splits
+     *
+     * @param widths
+     * @return
+     */
+    public List<Panel> vsplit(int... widths);
+
+    public List<Panel> hsplit(int... heights);
+
+    //public HTML.Element build() throws Exception;
+
+    public Orientation orientation();
+
+    public int width();
+
+    public int height();
+
 }

@@ -21,27 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.panel;
+package org.schorn.ella.ui.frame;
 
-import java.util.List;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel {
-
-    public Panel parent();
-
-    public List<Panel> children();
-
-    public void setWeight(int weight);
-
-    public int getWeight();
-
-    public List<Panel> divide();
-
-    public List<Panel> divide(int... weights);
-
-
+public interface Build {
+    public HTML.Element build() throws Exception;
 }

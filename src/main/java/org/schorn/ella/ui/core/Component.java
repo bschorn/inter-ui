@@ -30,12 +30,12 @@ import java.util.function.Predicate;
  *
  * @author bschorn
  */
-public interface Component extends Consumer<Event>, Predicate<Event> {
+public interface Component<E extends Event> extends Consumer<E>, Predicate<E> {
     public Component setParent(Component parent);
 
     public Component append(Component child);
 
-    public boolean test(Event event);
+    public boolean test(E event);
 
-    public void accept(Event event);
+    public void accept(E event);
 }
