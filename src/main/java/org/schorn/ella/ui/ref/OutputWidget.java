@@ -21,56 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
+package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.html.HTML;
+import java.util.ArrayList;
+import java.util.List;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.widget.Widget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
-public class TitleWidget extends BaseWidget {
+abstract class OutputWidget implements Widget {
 
-    private final String customTag = "form-title";
-    private String title;
-    private final HTML.Div divElement;
+    static final Logger LGR = LoggerFactory.getLogger(OutputWidget.class);
 
-    public TitleWidget(String title) {
-        this.title = title;
-        HTML.Div divElement0 = null;
-        try {
-            divElement0 = HTML.Div.create();
-            divElement0.setTextContent(title);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        this.divElement = divElement0;
+    protected final String customTag;
+    protected final List<CSS.Rule> cssRules = new ArrayList<>();
+    protected final List<CSS.Block> cssBlocks = new ArrayList<>();
+
+    public OutputWidget(String customTag) {
+        this.customTag = customTag;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-        this.divElement.setTextContent(title);
-    }
+    @Override
+    public void addStyle(CSS.Style style) {
 
-    public String getTitle() {
-        return this.title;
     }
-
 
     @Override
     public String customTag() {
         return this.customTag;
-    }
-
-    @Override
-    public HTML.HtmlElement owner() {
-        return this.divElement;
-    }
-
-    @Override
-    public HTML.HtmlElement setStyle(HTML.Style style) {
-        this.divElement.setStyle(style);
-        return this;
     }
 
 }

@@ -21,37 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.ref;
 
 import java.util.List;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Frame<Aspect>, Comment, Style, Build {
+public class TitleImpl extends OutputWidget {
 
-    public enum Orientation {
-        ROOT, VERTICAL, HORIZONTAL;
+    private String title;
+    private final HTML.Div divElement;
+
+    public TitleImpl(String title) {
+        super("view-title");
+        this.title = title;
+        HTML.Div divElement0 = null;
+        try {
+            divElement0 = HTML.Div.create();
+            divElement0.setTextContent(title);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        this.divElement = divElement0;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+        this.divElement.setTextContent(title);
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     @Override
-    public void addContent(Aspect facet) throws Exception;
+    public List<CSS.Style> getStyles() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    /**
-     * Vertically Splits
-     *
-     * @param widths
-     * @return
-     */
-    public List<Panel> vsplit(int... widths);
-
-    public List<Panel> hsplit(int... heights);
-
-    public Orientation orientation();
-
-    public int width();
-
-    public int height();
-
+    @Override
+    public HTML.Element build() throws Exception {
+        return this.divElement;
+    }
 }

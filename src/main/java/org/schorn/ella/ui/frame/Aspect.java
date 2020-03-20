@@ -23,22 +23,15 @@
  */
 package org.schorn.ella.ui.frame;
 
-import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.InputWidget;
-import org.schorn.ella.ui.widget.TitleWidget;
 import org.schorn.ella.ui.widget.Widget;
 
 /**
  *
  * @author bschorn
  */
-public interface Facet extends Frame<Widget>, Style, Build {
+public interface Aspect extends Frame<Widget>, Style, Build {
 
-    static public Facet create(String id, String name) {
-        return UIProvider.provider().createFacet(id, name);
-    }
-
+    /*
     static public TitleWidget createTitle(String parentId, String title) throws HTML.InvalidContentException {
         TitleWidget titleWidget = new TitleWidget(title);
         //titleWidget.setId(parentId);
@@ -61,4 +54,5 @@ public interface Facet extends Frame<Widget>, Style, Build {
         formInput.addDatalist(optionId, options);
         return formInput;
     }
+     */
 }

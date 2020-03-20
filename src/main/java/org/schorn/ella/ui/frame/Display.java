@@ -23,35 +23,10 @@
  */
 package org.schorn.ella.ui.frame;
 
-import java.util.List;
-
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Frame<Aspect>, Comment, Style, Build {
-
-    public enum Orientation {
-        ROOT, VERTICAL, HORIZONTAL;
-    }
-
-    @Override
-    public void addContent(Aspect facet) throws Exception;
-
-    /**
-     * Vertically Splits
-     *
-     * @param widths
-     * @return
-     */
-    public List<Panel> vsplit(int... widths);
-
-    public List<Panel> hsplit(int... heights);
-
-    public Orientation orientation();
-
-    public int width();
-
-    public int height();
+public interface Display extends Aspect {
 
 }

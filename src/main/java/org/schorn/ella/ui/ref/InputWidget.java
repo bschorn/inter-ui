@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
+package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.html.HTML.Element;
-import org.schorn.ella.ui.html.HTML.HtmlElement;
 import org.schorn.ella.ui.util.ToString;
+import org.schorn.ella.ui.widget.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,24 +36,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public class InputWidget extends BaseWidget {
+abstract class InputWidget implements Widget {
 
     static final Logger LGR = LoggerFactory.getLogger(InputWidget.class);
 
-    private final String customTag = "form-input";
-    private final HTML.Div divElement;
-    private final HTML.Label labelElement;
-    private final HTML.Input inputElement;
-    private HTML.Datalist datalistElement;
+    protected final String customTag;
+    protected final List<CSS.Rule> cssRules = new ArrayList<>();
+    protected final List<CSS.Block> cssBlocks = new ArrayList<>();
+    protected final HTML.Div divElement;
+    protected final HTML.Label labelElement;
+    protected final HTML.Input inputElement;
+    protected HTML.Datalist datalistElement;
 
-    /*
-<div class="preference">
-    <label>Do you like cheese?
-        <input type="checkbox" name="cheese" id="cheese">
-    </label>
-</div>
-     */
-    public InputWidget(HTML.Input.Type inputType) {
+    public InputWidget(String customTag, HTML.Input.Type inputType) {
+        this.customTag = customTag;
         HTML.Div divElement0 = null;
         HTML.Label labelElement0 = null;
         HTML.Input inputElement0 = null;
@@ -81,93 +77,18 @@ public class InputWidget extends BaseWidget {
 
     }
 
-    @Override
-    public String customTag() {
-        return this.customTag;
+    public void addLabel(String label) {
+        this.labelElement.setTextContent(label);
     }
 
-    @Override
-    public HtmlElement owner() {
-        return this.divElement;
-    }
-
-    public Element addLabel(String label) {
-        return this.labelElement.setTextContent(label);
-    }
-
-    @Override
-    public Element setTextContent(String content) {
-        this.labelElement.setTextContent(content);
-        return this;
-    }
-
-    @Override
-    public Element addAttribute(HTML.Attribute attribute) throws HTML.InvalidAttributeException {
-        this.inputElement.addAttribute(attribute);
-        return this;
-    }
-
-    @Override
-    public Element setId(String value) throws Exception {
-        this.inputElement.setId(value);
-        return this;
-    }
-
-    @Override
-    public String getId() {
-        return this.inputElement.getId();
-    }
-
-    @Override
-    public List<Element> children() {
-        return new ArrayList<>(0);
-    }
-
-    public Element setName(String name) {
+    public void setName(String name) {
         try {
             HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, name);
             this.inputElement.addAttribute(attribute);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return this;
     }
-
-    @Override
-    public List<HTML.Attribute> attributes() {
-        return this.inputElement.attributes();
-    }
-
-    @Override
-    public HtmlElement setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
-        this.inputElement.setAutoCapitalize(autoCapitalize);
-        return this;
-    }
-
-    @Override
-    public HtmlElement setContentEditable(boolean flag) {
-        this.inputElement.setContentEditable(flag);
-        return this;
-    }
-
-    @Override
-    public HtmlElement setDraggable(boolean flag) {
-        this.divElement.setDraggable(flag);
-        return this;
-    }
-
-    @Override
-    public HtmlElement setInputMode(HTML.InputMode inputMode) {
-        this.inputElement.setInputMode(inputMode);
-        return this;
-    }
-
-    @Override
-    public HtmlElement setStyle(HTML.Style style) {
-        this.divElement.setStyle(style);
-        return this;
-    }
-
 
     public void addDatalist(String id, String[] datalist) {
         try {
@@ -179,11 +100,31 @@ public class InputWidget extends BaseWidget {
             }
             this.inputElement.addAttribute(HTML.Attribute.create("list", id));
             this.datalistElement.setId(id);
-            this.owner().append(this.datalistElement);
+            //this.owner().append(this.datalistElement);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void addStyle(CSS.Style style) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<CSS.Style> getStyles() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public HTML.Element build() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String customTag() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

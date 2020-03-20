@@ -21,37 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.ref;
 
-import java.util.List;
+import org.schorn.ella.ui.frame.Capture;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Frame<Aspect>, Comment, Style, Build {
+class CaptureImpl extends AspectImpl implements Capture {
 
-    public enum Orientation {
-        ROOT, VERTICAL, HORIZONTAL;
+    public CaptureImpl(String id, String name) {
+        super(id, name);
     }
-
-    @Override
-    public void addContent(Aspect facet) throws Exception;
-
-    /**
-     * Vertically Splits
-     *
-     * @param widths
-     * @return
-     */
-    public List<Panel> vsplit(int... widths);
-
-    public List<Panel> hsplit(int... heights);
-
-    public Orientation orientation();
-
-    public int width();
-
-    public int height();
 
 }

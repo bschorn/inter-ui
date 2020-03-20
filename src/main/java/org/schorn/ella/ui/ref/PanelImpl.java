@@ -28,12 +28,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-import org.schorn.ella.ui.frame.Facet;
 import org.schorn.ella.ui.frame.Frame;
 import org.schorn.ella.ui.frame.Panel;
 import org.schorn.ella.ui.frame.Style;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.frame.Aspect;
 
 /**
  *
@@ -169,7 +169,7 @@ class PanelImpl implements Panel {
     }
 
     @Override
-    public void addContent(Facet facet) throws Exception {
+    public void addContent(Aspect facet) throws Exception {
         this.frames.add(facet);
     }
 
@@ -198,8 +198,8 @@ class PanelImpl implements Panel {
         for (Frame frame : this.frames) {
             if (frame instanceof Panel) {
                 this.htmlElement.append(((Panel) frame).build());
-            } else if (frame instanceof Facet) {
-                this.htmlElement.append(((Facet) frame).build());
+            } else if (frame instanceof Aspect) {
+                this.htmlElement.append(((Aspect) frame).build());
             }
         }
         return this.htmlElement;

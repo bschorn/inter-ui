@@ -25,7 +25,7 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.schorn.ella.ui.frame.Facet;
+import org.schorn.ella.ui.frame.Aspect;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.Widget;
@@ -34,7 +34,7 @@ import org.schorn.ella.ui.widget.Widget;
  *
  * @author bschorn
  */
-class FacetImpl implements Facet {
+abstract class AspectImpl implements Aspect {
 
     private final HTML.Div divElement;
     private final HTML.Form formElement;
@@ -44,7 +44,7 @@ class FacetImpl implements Facet {
     private final List<CSS.Rule> cssRules = new ArrayList<>();
     private final List<CSS.Block> cssBlocks = new ArrayList<>();
 
-    FacetImpl(String id, String name) {
+    AspectImpl(String id, String name) {
         this.id = id;
         this.name = name;
         HTML.Div divElement0 = null;
@@ -105,7 +105,7 @@ class FacetImpl implements Facet {
     @Override
     public HTML.Element build() throws Exception {
         for (Widget widget : this.widgets) {
-            this.formElement.append(widget);
+            this.formElement.append(widget.build());
         }
         return this.divElement;
     }

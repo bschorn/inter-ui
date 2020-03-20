@@ -23,12 +23,14 @@
  */
 package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.frame.Build;
+import org.schorn.ella.ui.frame.Style;
 
 /**
  *
  * @author bschorn
  */
-public interface Widget extends HTML.CustomElement {
+public interface Widget extends Style, Build {
 
+    public String customTag();
 }

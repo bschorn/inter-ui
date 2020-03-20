@@ -26,12 +26,14 @@ package org.schorn.ella.ui.sampler;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.schorn.ella.ui.frame.Facet;
+import org.schorn.ella.ui.frame.Aspect;
 import org.schorn.ella.ui.frame.Page;
 import org.schorn.ella.ui.frame.Panel;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.style.StyleFactory;
+import org.schorn.ella.ui.widget.READ;
+import org.schorn.ella.ui.widget.WRITE;
 
 /**
  *
@@ -44,22 +46,24 @@ public class AlphaApp {
     public AlphaApp() {
         try {
             Page page = Page.create("app", "alpha");
-            page.addStyle(CSS.Rule.create(CSS.Property.padding, "20px"));
-            page.addStyle(CSS.Rule.create(CSS.Property.font, "1em Helvetica Neue, Helvetica, Arial, sans-serif"));
+            page.addStyle(CSS.Rule.create(CSS.Property.padding, "10px"));
+            page.addStyle(StyleFactory.BODY_FONT_01);
             page.addStyle(CSS.Block.create().append(CSS.Selector.create("*")).append(CSS.Rule.create(CSS.Property.box_sizing, "border-box")));
             page.addStyle(CSS.Block.create().append(CSS.Selector.create("p")).append(CSS.Rule.create(CSS.Property.margin, "0 0 1em 0")));
             page.addStyle(StyleFactory.LABEL_STYLE_01);
+            //page.addComment("Test Comment for Page");
 
             Panel panel = page.panel();
             //panel.addStyle(CSS.Rule.create(CSS.Property.width, "500px"));
             panel.addStyle(CSS.Rule.create(CSS.Property.display, "grid"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.border, "5px solid rgb(111,41,97)"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.border_radius, ".5em"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.padding, "10px"));
+            panel.addStyle(CSS.Rule.create(CSS.Property.border, "2px solid rgb(111,41,97)"));
+            panel.addStyle(CSS.Rule.create(CSS.Property.border_radius, ".2em"));
+            panel.addStyle(CSS.Rule.create(CSS.Property.padding, "5px"));
+            //panel.addComment("Test Comment for Panel");
 
             CSS.Block itemStyleBlock = CSS.Block.create()
                     //.append(CSS.Rule.create(CSS.Property.width, "100px"))
-                    .append(CSS.Rule.create(CSS.Property.padding, "10px"))
+                    .append(CSS.Rule.create(CSS.Property.padding, "5px"))
                     .append(CSS.Rule.create(CSS.Property.background_color, "rgba(111, 41, 97, .3)"))
                     .append(CSS.Rule.create(CSS.Property.border, "2px solid rgba(111, 41, 97, .5)"))
                     .append(CSS.Rule.create(CSS.Property.display, "inline-block"))
@@ -74,10 +78,12 @@ public class AlphaApp {
 
             String formAddressId = "Form.Address.00";
             String formAddressName = "Address";
-            Facet formAddress = Facet.create(formAddressId, formAddressName);
-            formAddress.addContent(Facet.createTitle(formAddressId, "Customer Address"));
-            formAddress.addContent(Facet.createTextBox(formAddressId, "streetAddress", "Street Address"));
-            formAddress.addContent(Facet.createComboBox(formAddressId, "city", "City", "cities", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
+            Aspect formAddress = Aspect.create().setId(formAddressId).setName(formAddressName);
+            formAddress.addContent(READ.Title.create().setTitle("Customer Address"));
+            //formAddress.addContent(Aspect.createTitle(formAddressId, "Customer Address"));
+            formAddress.addContent(WRITE.TextBox.create().setId("streetAddress").setLabel("Street Address"));
+            //Aspect.createTextBox(formAddressId, "streetAddress", "Street Address"));
+            formAddress.addContent(WRITE.ComboBox.create().setId("city").setLabel("City").setList(new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
             panels.get(1).addContent(formAddress);
 
             HTML.Element pageElement = page.build();

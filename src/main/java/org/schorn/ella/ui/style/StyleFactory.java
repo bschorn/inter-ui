@@ -38,6 +38,7 @@ public class StyleFactory {
     }
      */
     static public final CSS.Style LABEL_STYLE_01;
+    static public final CSS.Style BODY_FONT_01;
 
     static {
         CSS.Style labelStyle01 = null;
@@ -50,5 +51,13 @@ public class StyleFactory {
             ex.printStackTrace();
         }
         LABEL_STYLE_01 = labelStyle01;
+
+        CSS.Rule bodyFont01 = null;
+        try {
+            bodyFont01 = CSS.Rule.create(CSS.Property.font, ".85em Arial, sans-serif");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        BODY_FONT_01 = bodyFont01;
     }
 }

@@ -169,7 +169,7 @@ public enum HTML {
     private final Class<?> interfaceOf;
     private final DOM domInterface;
     private Class<?> implOf = null;
-    private Element instance = null;
+    //private Element instance = null;
 
     HTML(Class<?> interfaceOf, DOM domInterface) {
         this.interfaceOf = interfaceOf;
@@ -200,7 +200,7 @@ public enum HTML {
         return FACTORY.createInstance(this, params);
     }
 
-    private <T> T create(Class<T> classOfT, Object... params) throws Exception {
+    private <T> T create(Object... params) throws Exception {
         return (T) FACTORY.createInstance(this, params);
     }
 
@@ -651,7 +651,7 @@ public enum HTML {
     public interface Head extends HtmlElement {
 
         static public Head create(Object... params) throws Exception {
-            return HTML.HEAD.create(Head.class, params);
+            return HTML.HEAD.create(params);
         }
 
     }
@@ -659,7 +659,7 @@ public enum HTML {
     public interface Meta extends HtmlElement {
 
         static public Meta create(Object... params) throws Exception {
-            return HTML.META.create(Meta.class, params);
+            return HTML.META.create(params);
         }
 
         Meta setCharset(String charset) throws Exception;
@@ -668,7 +668,7 @@ public enum HTML {
     public interface Style extends HtmlElement {
 
         static public Style create(Object... params) throws Exception {
-            return HTML.STYLE.create(Style.class, params);
+            return HTML.STYLE.create(params);
         }
 
         void append(CSS.Block cssElement);
@@ -677,7 +677,7 @@ public enum HTML {
     public interface Script extends HtmlElement {
 
         static public Script create(Object... params) throws Exception {
-            return HTML.SCRIPT.create(Script.class, params);
+            return HTML.SCRIPT.create(params);
         }
 
         void append(String code);
@@ -686,14 +686,14 @@ public enum HTML {
     public interface Body extends HtmlElement {
 
         static public Body create(Object... params) throws Exception {
-            return HTML.BODY.create(Body.class, params);
+            return HTML.BODY.create(params);
         }
     }
 
     public interface Page extends HtmlElement {
 
         static public Page create(Object... params) throws Exception {
-            return HTML.HTML.create(Page.class, params);
+            return HTML.HTML.create(params);
         }
 
         Head htmlHead();
@@ -703,7 +703,7 @@ public enum HTML {
 
     public interface A extends HtmlElement {
         static public A create(Object... params) throws Exception {
-            return HTML.A.create(A.class, params);
+            return HTML.A.create(params);
         }
 
     }
@@ -725,21 +725,21 @@ public enum HTML {
     public interface Abbr extends HtmlElement {
 
         static public Abbr create(Object... params) throws Exception {
-            return HTML.ABBR.create(Abbr.class, params);
+            return HTML.ABBR.create(params);
         }
     }
 
     public interface Address extends HtmlElement {
 
         static public Address create(Object... params) throws Exception {
-            return HTML.ADDRESS.create(Address.class, params);
+            return HTML.ADDRESS.create(params);
         }
     }
 
     public interface Br extends HtmlElement {
 
         static public Br create(Object... params) throws Exception {
-            return HTML.BR.create(Br.class, params);
+            return HTML.BR.create(params);
         }
 
         @Override
@@ -751,71 +751,71 @@ public enum HTML {
     public interface Div extends HtmlElement {
 
         static public Div create(Object... params) throws Exception {
-            return HTML.DIV.create(Div.class, params);
+            return HTML.DIV.create(params);
         }
     }
 
     public interface Table extends HtmlElement {
 
         static public Table create(Object... params) throws Exception {
-            return HTML.TABLE.create(Table.class, params);
+            return HTML.TABLE.create(params);
         }
     }
 
     public interface Tr extends HtmlElement {
 
         static public Tr create(Object... params) throws Exception {
-            return HTML.TR.create(Tr.class, params);
+            return HTML.TR.create(params);
         }
     }
 
     public interface Th extends HtmlElement {
         static public Th create(Object... params) throws Exception {
-            return HTML.TH.create(Th.class, params);
+            return HTML.TH.create(params);
         }
     }
 
     public interface Td extends HtmlElement {
         static public Td create(Object... params) throws Exception {
-            return HTML.TD.create(Td.class, params);
+            return HTML.TD.create(params);
         }
     }
 
     public interface Article extends HtmlElement {
         static public Article create(Object... params) throws Exception {
-            return HTML.ARTICLE.create(Article.class, params);
+            return HTML.ARTICLE.create(params);
         }
     }
 
     public interface Section extends HtmlElement {
         static public Section create(Object... params) throws Exception {
-            return HTML.SECTION.create(Section.class, params);
+            return HTML.SECTION.create(params);
         }
     }
 
     public interface Option extends HtmlElement {
         static public Option create(Object... params) throws Exception {
-            return HTML.OPTION.create(Option.class, params);
+            return HTML.OPTION.create(params);
         }
     }
 
     public interface Fieldset extends HtmlElement {
         static public Fieldset create(Object... params) throws Exception {
-            return HTML.FIELDSET.create(Fieldset.class, params);
+            return HTML.FIELDSET.create(params);
         }
     }
 
     public interface Form extends HtmlElement {
 
         static public Form create(Object... params) throws Exception {
-            return HTML.FORM.create(Form.class, params);
+            return HTML.FORM.create(params);
         }
     }
 
     public interface Input extends HtmlElement {
 
         static public Input create(Object... params) throws Exception {
-            return HTML.INPUT.create(Input.class, params);
+            return HTML.INPUT.create(params);
         }
 
         public Element setName(String name);
@@ -952,182 +952,182 @@ public enum HTML {
     public interface Label extends HtmlElement {
 
         static public Label create(Object... params) throws Exception {
-            return HTML.LABEL.create(Label.class, params);
+            return HTML.LABEL.create(params);
         }
     }
 
     public interface Html extends HtmlElement {
 
         static public Html create(Object... params) throws Exception {
-            return HTML.HTML.create(Html.class, params);
+            return HTML.HTML.create(params);
         }
     }
 
     public interface Acronym extends HtmlElement {
 
         static public Acronym create(Object... params) throws Exception {
-            return HTML.ACRONYM.create(Acronym.class, params);
+            return HTML.ACRONYM.create(params);
         }
     }
 
     public interface Applet extends HtmlElement {
 
         static public Applet create(Object... params) throws Exception {
-            return HTML.APPLET.create(Applet.class, params);
+            return HTML.APPLET.create(params);
         }
     }
 
     public interface Area extends HtmlElement {
 
         static public Area create(Object... params) throws Exception {
-            return HTML.AREA.create(Area.class, params);
+            return HTML.AREA.create(params);
         }
     }
 
     public interface Aside extends HtmlElement {
 
         static public Aside create(Object... params) throws Exception {
-            return HTML.ASIDE.create(Aside.class, params);
+            return HTML.ASIDE.create(params);
         }
     }
 
     public interface Audio extends HtmlElement {
 
         static public Audio create(Object... params) throws Exception {
-            return HTML.AUDIO.create(Audio.class, params);
+            return HTML.AUDIO.create(params);
         }
     }
 
     public interface B extends HtmlElement {
 
         static public B create(Object... params) throws Exception {
-            return HTML.B.create(B.class, params);
+            return HTML.B.create(params);
         }
     }
 
     public interface Base extends HtmlElement {
 
         static public Base create(Object... params) throws Exception {
-            return HTML.BASE.create(Base.class, params);
+            return HTML.BASE.create(params);
         }
     }
 
     public interface Basefont extends HtmlElement {
 
         static public Basefont create(Object... params) throws Exception {
-            return HTML.BASEFONT.create(Basefont.class, params);
+            return HTML.BASEFONT.create(params);
         }
     }
 
     public interface Bb extends HtmlElement {
 
         static public Bb create(Object... params) throws Exception {
-            return HTML.BB.create(Bb.class, params);
+            return HTML.BB.create(params);
         }
     }
 
     public interface Bdo extends HtmlElement {
 
         static public Bdo create(Object... params) throws Exception {
-            return HTML.BDO.create(Bdo.class, params);
+            return HTML.BDO.create(params);
         }
     }
 
     public interface Big extends HtmlElement {
 
         static public Big create(Object... params) throws Exception {
-            return HTML.BIG.create(Big.class, params);
+            return HTML.BIG.create(params);
         }
     }
 
     public interface Blockquote extends HtmlElement {
 
         static public Blockquote create(Object... params) throws Exception {
-            return HTML.BLOCKQUOTE.create(Blockquote.class, params);
+            return HTML.BLOCKQUOTE.create(params);
         }
     }
 
     public interface Button extends HtmlElement {
 
         static public Button create(Object... params) throws Exception {
-            return HTML.BUTTON.create(Button.class, params);
+            return HTML.BUTTON.create(params);
         }
     }
 
     public interface Canvas extends HtmlElement {
 
         static public Canvas create(Object... params) throws Exception {
-            return HTML.CANVAS.create(Canvas.class, params);
+            return HTML.CANVAS.create(params);
         }
     }
 
     public interface Caption extends HtmlElement {
 
         static public Caption create(Object... params) throws Exception {
-            return HTML.CAPTION.create(Caption.class, params);
+            return HTML.CAPTION.create(params);
         }
     }
 
     public interface Center extends HtmlElement {
 
         static public Center create(Object... params) throws Exception {
-            return HTML.CENTER.create(Center.class, params);
+            return HTML.CENTER.create(params);
         }
     }
 
     public interface Cite extends HtmlElement {
 
         static public Cite create(Object... params) throws Exception {
-            return HTML.CITE.create(Cite.class, params);
+            return HTML.CITE.create(params);
         }
     }
 
     public interface Code extends HtmlElement {
 
         static public Code create(Object... params) throws Exception {
-            return HTML.CODE.create(Code.class, params);
+            return HTML.CODE.create(params);
         }
     }
 
     public interface Col extends HtmlElement {
 
         static public Col create(Object... params) throws Exception {
-            return HTML.COL.create(Col.class, params);
+            return HTML.COL.create(params);
         }
     }
 
     public interface Colgroup extends HtmlElement {
 
         static public Colgroup create(Object... params) throws Exception {
-            return HTML.COLGROUP.create(Colgroup.class, params);
+            return HTML.COLGROUP.create(params);
         }
     }
 
     public interface Command extends HtmlElement {
 
         static public Command create(Object... params) throws Exception {
-            return HTML.COMMAND.create(Command.class, params);
+            return HTML.COMMAND.create(params);
         }
     }
 
     public interface Comment extends HtmlElement {
 
         static public Comment create(Object... params) throws Exception {
-            return HTML.COMMENT.create(Comment.class, params);
+            return HTML.COMMENT.create(params);
         }
     }
 
     public interface Datagrid extends HtmlElement {
 
         static public Datagrid create(Object... params) throws Exception {
-            return HTML.DATAGRID.create(Datagrid.class, params);
+            return HTML.DATAGRID.create(params);
         }
     }
 
     public interface Datalist extends HtmlElement {
 
         static public Datalist create(Object... params) throws Exception {
-            return HTML.DATALIST.create(Datalist.class, params);
+            return HTML.DATALIST.create(params);
         }
 
     }
@@ -1135,518 +1135,518 @@ public enum HTML {
     public interface Dd extends HtmlElement {
 
         static public Dd create(Object... params) throws Exception {
-            return HTML.DD.create(Dd.class, params);
+            return HTML.DD.create(params);
         }
     }
 
     public interface Del extends HtmlElement {
 
         static public Del create(Object... params) throws Exception {
-            return HTML.DEL.create(Del.class, params);
+            return HTML.DEL.create(params);
         }
     }
 
     public interface Details extends HtmlElement {
 
         static public Details create(Object... params) throws Exception {
-            return HTML.DETAILS.create(Details.class, params);
+            return HTML.DETAILS.create(params);
         }
     }
 
     public interface Dialog extends HtmlElement {
 
         static public Dialog create(Object... params) throws Exception {
-            return HTML.DIALOG.create(Dialog.class, params);
+            return HTML.DIALOG.create(params);
         }
     }
 
     public interface Dir extends HtmlElement {
 
         static public Dir create(Object... params) throws Exception {
-            return HTML.DIR.create(Dir.class, params);
+            return HTML.DIR.create(params);
         }
     }
 
     public interface Dfn extends HtmlElement {
 
         static public Dfn create(Object... params) throws Exception {
-            return HTML.DFN.create(Dfn.class, params);
+            return HTML.DFN.create(params);
         }
     }
 
     public interface Dl extends HtmlElement {
 
         static public Dl create(Object... params) throws Exception {
-            return HTML.DL.create(Dl.class, params);
+            return HTML.DL.create(params);
         }
     }
 
     public interface Dt extends HtmlElement {
 
         static public Dt create(Object... params) throws Exception {
-            return HTML.DT.create(Dt.class, params);
+            return HTML.DT.create(params);
         }
     }
 
     public interface Em extends HtmlElement {
 
         static public Em create(Object... params) throws Exception {
-            return HTML.EM.create(Em.class, params);
+            return HTML.EM.create(params);
         }
     }
 
     public interface Embed extends HtmlElement {
 
         static public Embed create(Object... params) throws Exception {
-            return HTML.EMBED.create(Embed.class, params);
+            return HTML.EMBED.create(params);
         }
     }
 
     public interface Figure extends HtmlElement {
 
         static public Figure create(Object... params) throws Exception {
-            return HTML.FIGURE.create(Figure.class, params);
+            return HTML.FIGURE.create(params);
         }
     }
 
     public interface Font extends HtmlElement {
 
         static public Font create(Object... params) throws Exception {
-            return HTML.FONT.create(Font.class, params);
+            return HTML.FONT.create(params);
         }
     }
 
     public interface Footer extends HtmlElement {
 
         static public Footer create(Object... params) throws Exception {
-            return HTML.FOOTER.create(Footer.class, params);
+            return HTML.FOOTER.create(params);
         }
     }
 
     public interface Frame extends HtmlElement {
 
         static public Frame create(Object... params) throws Exception {
-            return HTML.FRAME.create(Frame.class, params);
+            return HTML.FRAME.create(params);
         }
     }
 
     public interface Frameset extends HtmlElement {
 
         static public Frameset create(Object... params) throws Exception {
-            return HTML.FRAMESET.create(Frameset.class, params);
+            return HTML.FRAMESET.create(params);
         }
     }
 
     public interface H1 extends HtmlElement {
 
         static public H1 create(Object... params) throws Exception {
-            return HTML.H1.create(H1.class, params);
+            return HTML.H1.create(params);
         }
     }
 
     public interface H2 extends HtmlElement {
 
         static public H2 create(Object... params) throws Exception {
-            return HTML.H2.create(H2.class, params);
+            return HTML.H2.create(params);
         }
     }
 
     public interface H3 extends HtmlElement {
 
         static public H3 create(Object... params) throws Exception {
-            return HTML.H3.create(H3.class, params);
+            return HTML.H3.create(params);
         }
     }
 
     public interface H4 extends HtmlElement {
 
         static public H4 create(Object... params) throws Exception {
-            return HTML.H4.create(H4.class, params);
+            return HTML.H4.create(params);
         }
     }
 
     public interface H5 extends HtmlElement {
 
         static public H5 create(Object... params) throws Exception {
-            return HTML.H5.create(H5.class, params);
+            return HTML.H5.create(params);
         }
     }
 
     public interface H6 extends HtmlElement {
 
         static public H6 create(Object... params) throws Exception {
-            return HTML.H6.create(H6.class, params);
+            return HTML.H6.create(params);
         }
     }
 
     public interface Header extends HtmlElement {
 
         static public Header create(Object... params) throws Exception {
-            return HTML.HEADER.create(Header.class, params);
+            return HTML.HEADER.create(params);
         }
     }
 
     public interface Hgroup extends HtmlElement {
 
         static public Hgroup create(Object... params) throws Exception {
-            return HTML.HGROUP.create(Hgroup.class, params);
+            return HTML.HGROUP.create(params);
         }
     }
 
     public interface Hr extends HtmlElement {
 
         static public Hr create(Object... params) throws Exception {
-            return HTML.HR.create(Hr.class, params);
+            return HTML.HR.create(params);
         }
     }
 
     public interface I extends HtmlElement {
 
         static public I create(Object... params) throws Exception {
-            return HTML.I.create(I.class, params);
+            return HTML.I.create(params);
         }
     }
 
     public interface Iframe extends HtmlElement {
 
         static public Iframe create(Object... params) throws Exception {
-            return HTML.IFRAME.create(Iframe.class, params);
+            return HTML.IFRAME.create(params);
         }
     }
 
     public interface Img extends HtmlElement {
 
         static public Img create(Object... params) throws Exception {
-            return HTML.IMG.create(Img.class, params);
+            return HTML.IMG.create(params);
         }
     }
 
     public interface Ins extends HtmlElement {
 
         static public Ins create(Object... params) throws Exception {
-            return HTML.INS.create(Ins.class, params);
+            return HTML.INS.create(params);
         }
     }
 
     public interface Isindex extends HtmlElement {
 
         static public Isindex create(Object... params) throws Exception {
-            return HTML.ISINDEX.create(Isindex.class, params);
+            return HTML.ISINDEX.create(params);
         }
     }
 
     public interface Kdb extends HtmlElement {
 
         static public Kdb create(Object... params) throws Exception {
-            return HTML.KDB.create(Kdb.class, params);
+            return HTML.KDB.create(params);
         }
     }
 
     public interface Legend extends HtmlElement {
 
         static public Legend create(Object... params) throws Exception {
-            return HTML.LEGEND.create(Legend.class, params);
+            return HTML.LEGEND.create(params);
         }
     }
 
     public interface Li extends HtmlElement {
 
         static public Li create(Object... params) throws Exception {
-            return HTML.LI.create(Li.class, params);
+            return HTML.LI.create(params);
         }
     }
 
     public interface Link extends HtmlElement {
 
         static public Link create(Object... params) throws Exception {
-            return HTML.LINK.create(Link.class, params);
+            return HTML.LINK.create(params);
         }
     }
 
     public interface Mark extends HtmlElement {
 
         static public Mark create(Object... params) throws Exception {
-            return HTML.MARK.create(Mark.class, params);
+            return HTML.MARK.create(params);
         }
     }
 
     public interface Map extends HtmlElement {
 
         static public Map create(Object... params) throws Exception {
-            return HTML.MAP.create(Map.class, params);
+            return HTML.MAP.create(params);
         }
     }
 
     public interface Menu extends HtmlElement {
 
         static public Menu create(Object... params) throws Exception {
-            return HTML.MENU.create(Menu.class, params);
+            return HTML.MENU.create(params);
         }
     }
 
     public interface Meter extends HtmlElement {
 
         static public Meter create(Object... params) throws Exception {
-            return HTML.METER.create(Meter.class, params);
+            return HTML.METER.create(params);
         }
     }
 
     public interface Nav extends HtmlElement {
 
         static public Nav create(Object... params) throws Exception {
-            return HTML.NAV.create(Nav.class, params);
+            return HTML.NAV.create(params);
         }
     }
 
     public interface Noframes extends HtmlElement {
 
         static public Noframes create(Object... params) throws Exception {
-            return HTML.NOFRAMES.create(Noframes.class, params);
+            return HTML.NOFRAMES.create(params);
         }
     }
 
     public interface Noscript extends HtmlElement {
 
         static public Noscript create(Object... params) throws Exception {
-            return HTML.NOSCRIPT.create(Noscript.class, params);
+            return HTML.NOSCRIPT.create(params);
         }
     }
 
     public interface Object extends HtmlElement {
 
         static public Object create(Object... params) throws Exception {
-            return HTML.OBJECT.create(Object.class, params);
+            return HTML.OBJECT.create(params);
         }
     }
 
     public interface Ol extends HtmlElement {
 
         static public Ol create(Object... params) throws Exception {
-            return HTML.OL.create(Ol.class, params);
+            return HTML.OL.create(params);
         }
     }
 
     public interface Optgroup extends HtmlElement {
 
         static public Optgroup create(Object... params) throws Exception {
-            return HTML.OPTGROUP.create(Optgroup.class, params);
+            return HTML.OPTGROUP.create(params);
         }
     }
 
     public interface Output extends HtmlElement {
 
         static public Output create(Object... params) throws Exception {
-            return HTML.OUTPUT.create(Output.class, params);
+            return HTML.OUTPUT.create(params);
         }
     }
 
     public interface P extends HtmlElement {
 
         static public P create(Object... params) throws Exception {
-            return HTML.P.create(P.class, params);
+            return HTML.P.create(params);
         }
     }
 
     public interface Param extends HtmlElement {
 
         static public Param create(Object... params) throws Exception {
-            return HTML.PARAM.create(Param.class, params);
+            return HTML.PARAM.create(params);
         }
     }
 
     public interface Pre extends HtmlElement {
 
         static public Pre create(Object... params) throws Exception {
-            return HTML.PRE.create(Pre.class, params);
+            return HTML.PRE.create(params);
         }
     }
 
     public interface Progress extends HtmlElement {
 
         static public Progress create(Object... params) throws Exception {
-            return HTML.PROGRESS.create(Progress.class, params);
+            return HTML.PROGRESS.create(params);
         }
     }
 
     public interface Q extends HtmlElement {
 
         static public Q create(Object... params) throws Exception {
-            return HTML.Q.create(Q.class, params);
+            return HTML.Q.create(params);
         }
     }
 
     public interface Ruby extends HtmlElement {
 
         static public Ruby create(Object... params) throws Exception {
-            return HTML.RUBY.create(Ruby.class, params);
+            return HTML.RUBY.create(params);
         }
     }
 
     public interface Rp extends HtmlElement {
 
         static public Rp create(Object... params) throws Exception {
-            return HTML.RP.create(Rp.class, params);
+            return HTML.RP.create(params);
         }
     }
 
     public interface Rt extends HtmlElement {
 
         static public Rt create(Object... params) throws Exception {
-            return HTML.RT.create(Rt.class, params);
+            return HTML.RT.create(params);
         }
     }
 
     public interface S extends HtmlElement {
 
         static public S create(Object... params) throws Exception {
-            return HTML.S.create(S.class, params);
+            return HTML.S.create(params);
         }
     }
 
     public interface Samp extends HtmlElement {
 
         static public Samp create(Object... params) throws Exception {
-            return HTML.SAMP.create(Samp.class, params);
+            return HTML.SAMP.create(params);
         }
     }
 
     public interface Select extends HtmlElement {
 
         static public Select create(Object... params) throws Exception {
-            return HTML.SELECT.create(Select.class, params);
+            return HTML.SELECT.create(params);
         }
     }
 
     public interface Small extends HtmlElement {
 
         static public Small create(Object... params) throws Exception {
-            return HTML.SMALL.create(Small.class, params);
+            return HTML.SMALL.create(params);
         }
     }
 
     public interface Source extends HtmlElement {
 
         static public Source create(Object... params) throws Exception {
-            return HTML.SOURCE.create(Source.class, params);
+            return HTML.SOURCE.create(params);
         }
     }
 
     public interface Span extends HtmlElement {
 
         static public Span create(Object... params) throws Exception {
-            return HTML.SPAN.create(Span.class, params);
+            return HTML.SPAN.create(params);
         }
     }
 
     public interface Strike extends HtmlElement {
 
         static public Strike create(Object... params) throws Exception {
-            return HTML.STRIKE.create(Strike.class, params);
+            return HTML.STRIKE.create(params);
         }
     }
 
     public interface Strong extends HtmlElement {
 
         static public Strong create(Object... params) throws Exception {
-            return HTML.STRONG.create(Strong.class, params);
+            return HTML.STRONG.create(params);
         }
     }
 
     public interface Sub extends HtmlElement {
 
         static public Sub create(Object... params) throws Exception {
-            return HTML.SUB.create(Sub.class, params);
+            return HTML.SUB.create(params);
         }
     }
 
     public interface Sup extends HtmlElement {
 
         static public Sup create(Object... params) throws Exception {
-            return HTML.SUP.create(Sup.class, params);
+            return HTML.SUP.create(params);
         }
     }
 
     public interface Tbody extends HtmlElement {
 
         static public Tbody create(Object... params) throws Exception {
-            return HTML.TBODY.create(Tbody.class, params);
+            return HTML.TBODY.create(params);
         }
     }
 
     public interface Textarea extends HtmlElement {
 
         static public Textarea create(Object... params) throws Exception {
-            return HTML.TEXTAREA.create(Textarea.class, params);
+            return HTML.TEXTAREA.create(params);
         }
     }
 
     public interface Tfoot extends HtmlElement {
 
         static public Tfoot create(Object... params) throws Exception {
-            return HTML.TFOOT.create(Tfoot.class, params);
+            return HTML.TFOOT.create(params);
         }
     }
 
     public interface Thead extends HtmlElement {
 
         static public Thead create(Object... params) throws Exception {
-            return HTML.THEAD.create(Thead.class, params);
+            return HTML.THEAD.create(params);
         }
     }
 
     public interface Time extends HtmlElement {
 
         static public Time create(Object... params) throws Exception {
-            return HTML.TIME.create(Time.class, params);
+            return HTML.TIME.create(params);
         }
     }
 
     public interface Title extends HtmlElement {
 
         static public Title create(Object... params) throws Exception {
-            return HTML.TITLE.create(Title.class, params);
+            return HTML.TITLE.create(params);
         }
     }
 
     public interface Tt extends HtmlElement {
 
         static public Tt create(Object... params) throws Exception {
-            return HTML.TT.create(Tt.class, params);
+            return HTML.TT.create(params);
         }
     }
 
     public interface U extends HtmlElement {
 
         static public U create(Object... params) throws Exception {
-            return HTML.U.create(U.class, params);
+            return HTML.U.create(params);
         }
     }
 
     public interface Ul extends HtmlElement {
 
         static public Ul create(Object... params) throws Exception {
-            return HTML.UL.create(Ul.class, params);
+            return HTML.UL.create(params);
         }
     }
 
     public interface Var extends HtmlElement {
 
         static public Var create(Object... params) throws Exception {
-            return HTML.VAR.create(Var.class, params);
+            return HTML.VAR.create(params);
         }
     }
 
     public interface Video extends HtmlElement {
 
         static public Video create(Object... params) throws Exception {
-            return HTML.VIDEO.create(Video.class, params);
+            return HTML.VIDEO.create(params);
         }
     }
 
     public interface Xmp extends HtmlElement {
 
         static public Xmp create(Object... params) throws Exception {
-            return HTML.XMP.create(Xmp.class, params);
+            return HTML.XMP.create(params);
         }
     }
 

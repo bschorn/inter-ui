@@ -47,15 +47,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public class HTMLImpl implements HTML.HtmlFactory {
+public class HtmlFactoryImpl implements HTML.HtmlFactory {
 
-    static private final HTMLImpl INSTANCE = new HTMLImpl();
+    static private final HtmlFactoryImpl INSTANCE = new HtmlFactoryImpl();
 
     static public HTML.HtmlFactory getFactory() {
         return INSTANCE;
     }
 
-    private HTMLImpl() {
+    private HtmlFactoryImpl() {
         this.register();
     }
 
@@ -575,10 +575,17 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
     }
 
-    static class HtmlCommentImpl implements HTML.Comment {
+    static class HtmlCommentImpl extends ElementImpl implements HTML.Comment {
 
         private final String tag = "!--";
         protected String textContent = "";
+
+        public HtmlCommentImpl() {
+            super("!--");
+        }
+        public HtmlCommentImpl(String tag) {
+            super(tag);
+        }
 
         @Override
         public HTML.TagOmission tagOmission() {
@@ -659,7 +666,7 @@ public class HTMLImpl implements HTML.HtmlFactory {
 
         @Override
         public String tag() {
-            return this.tag;
+            return "--";
         }
 
         @Override

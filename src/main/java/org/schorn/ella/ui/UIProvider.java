@@ -24,11 +24,14 @@
 package org.schorn.ella.ui;
 
 import java.util.Properties;
-import org.schorn.ella.ui.frame.Facet;
+import org.schorn.ella.ui.frame.Capture;
+import org.schorn.ella.ui.frame.Display;
 import org.schorn.ella.ui.frame.Page;
 import org.schorn.ella.ui.frame.Panel;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.widget.READ;
+import org.schorn.ella.ui.widget.WRITE;
 
 /**
  *
@@ -40,11 +43,17 @@ public interface UIProvider {
 
     public CSS.CssFactory getCSSFactory();
 
+    public WRITE.WriteFactory getInputFactory();
+
+    public READ.ReadFactory getOutputFactory();
+
     public Page createPage(String panelId, String panelName);
 
     public Panel createPanel(String id, String name);
 
-    public Facet createFacet(String id, String name);
+    public Display createDisplay(String id, String name);
+
+    public Capture createCapture(String id, String name);
 
     /**
      * Gets a new instance of the UIProvider's implementation as found by the

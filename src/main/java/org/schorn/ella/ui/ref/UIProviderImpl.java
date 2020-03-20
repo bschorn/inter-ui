@@ -24,11 +24,14 @@
 package org.schorn.ella.ui.ref;
 
 import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.frame.Facet;
+import org.schorn.ella.ui.frame.Capture;
+import org.schorn.ella.ui.frame.Display;
 import org.schorn.ella.ui.frame.Page;
 import org.schorn.ella.ui.frame.Panel;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.widget.READ;
+import org.schorn.ella.ui.widget.WRITE;
 
 /**
  *
@@ -38,12 +41,22 @@ public class UIProviderImpl implements UIProvider {
 
     @Override
     public HTML.HtmlFactory getHTMLFactory() {
-        return HTMLImpl.getFactory();
+        return HtmlFactoryImpl.getFactory();
     }
 
     @Override
     public CSS.CssFactory getCSSFactory() {
-        return CSSImpl.getFactory();
+        return CssFactoryImpl.getFactory();
+    }
+
+    @Override
+    public WRITE.WriteFactory getInputFactory() {
+        return WriteFactoryImpl.getFactory();
+    }
+
+    @Override
+    public READ.ReadFactory getOutputFactory() {
+        return ReadFactoryImpl.getFactory();
     }
 
     @Override
@@ -57,8 +70,13 @@ public class UIProviderImpl implements UIProvider {
     }
 
     @Override
-    public Facet createFacet(String id, String name) {
-        return new FacetImpl(id, name);
+    public Display createDisplay(String id, String name) {
+        return new DisplayImpl(id, name);
+    }
+
+    @Override
+    public Capture createCapture(String id, String name) {
+        return new CaptureImpl(id, name);
     }
 
 }

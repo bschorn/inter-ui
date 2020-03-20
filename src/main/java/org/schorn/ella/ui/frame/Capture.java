@@ -21,37 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
-
-import org.schorn.ella.ui.html.HTML;
+package org.schorn.ella.ui.frame;
 
 /**
  *
  * @author bschorn
  */
-public class Button extends BaseWidget {
-
-    private final String customTag = "form-button";
-    private final HTML.Div owner;
-
-    Button() {
-        HTML.Div owner0 = null;
-        try {
-            owner0 = HTML.Div.create();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        this.owner = owner0;
-    }
-
-    @Override
-    public HTML.HtmlElement owner() {
-        return this.owner;
-    }
-
-    @Override
-    public String customTag() {
-        return this.customTag;
-    }
+public interface Capture extends Aspect {
 
 }

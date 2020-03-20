@@ -35,14 +35,14 @@ import org.schorn.ella.ui.html.CSS;
  *
  * @author bschorn
  */
-public class CSSImpl implements CSS.CssFactory {
-    static private final CSSImpl INSTANCE = new CSSImpl();
+public class CssFactoryImpl implements CSS.CssFactory {
+    static private final CssFactoryImpl INSTANCE = new CssFactoryImpl();
 
     static public CSS.CssFactory getFactory() {
         return INSTANCE;
     }
 
-    private CSSImpl() {
+    private CssFactoryImpl() {
         this.register();
     }
 

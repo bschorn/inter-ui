@@ -35,5 +35,14 @@ public interface Page extends Style, Comment, Build {
         return UIProvider.provider().createPage(panelId, panelName);
     }
 
+    /**
+     * The root panel which then can be horizontally or vertically split which
+     * returns a list of panels and each of those can be further split and again
+     * and again.
+     *
+     *
+     *
+     * @return
+     */
     public Panel panel();
 }
