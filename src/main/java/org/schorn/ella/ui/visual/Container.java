@@ -21,14 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.visual;
 
-import org.schorn.ella.ui.html.HTML;
+import java.util.List;
 
 /**
  *
  * @author bschorn
+ * @param <T>
  */
-public interface Build {
-    public HTML.Element build() throws Exception;
+public interface Container<T> {
+
+    public void addContent(T t) throws Exception;
+
+    public List<T> contents();
 }

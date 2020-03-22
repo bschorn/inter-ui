@@ -24,10 +24,10 @@
 package org.schorn.ella.ui;
 
 import java.util.Properties;
-import org.schorn.ella.ui.frame.Capture;
-import org.schorn.ella.ui.frame.Display;
-import org.schorn.ella.ui.frame.Page;
-import org.schorn.ella.ui.frame.Panel;
+import org.schorn.ella.ui.visual.Capture;
+import org.schorn.ella.ui.visual.Display;
+import org.schorn.ella.ui.visual.Page;
+import org.schorn.ella.ui.visual.Panel;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.READ;

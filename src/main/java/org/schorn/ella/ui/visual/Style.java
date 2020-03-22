@@ -21,37 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.visual;
 
 import java.util.List;
+import org.schorn.ella.ui.html.CSS;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Frame<Aspect>, Comment, Style, Build {
+public interface Style {
 
-    public enum Orientation {
-        ROOT, VERTICAL, HORIZONTAL;
-    }
+    public void addStyle(CSS.Style style);
 
-    @Override
-    public void addContent(Aspect facet) throws Exception;
-
-    /**
-     * Vertically Splits
-     *
-     * @param widths
-     * @return
-     */
-    public List<Panel> vsplit(int... widths);
-
-    public List<Panel> hsplit(int... heights);
-
-    public Orientation orientation();
-
-    public int width();
-
-    public int height();
-
+    public List<CSS.Style> styles();
 }

@@ -51,7 +51,7 @@ public class ReadFactoryImpl implements READ.ReadFactory {
         //READ.PROGRESS.setImpl(ProgressImpl.class);
         //READ.SCROLL.setImpl(ScrollImpl.class);
         //READ.TEXT.setImpl(TextImpl.class);
-        //READ.TITLE.setImpl(TitleImpl.class);
+        READ.TITLE.setImpl(TitleImpl.class);
     }
 
     @Override

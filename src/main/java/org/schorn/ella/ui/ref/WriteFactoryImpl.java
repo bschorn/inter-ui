@@ -48,12 +48,12 @@ public class WriteFactoryImpl implements WRITE.WriteFactory {
     public void register() {
         //WRITE.BUTTON.setImpl(ButtonImpl.class);
         //WRITE.CHECKBOXGROUP.setImpl(CheckBoxGroupImpl.class);
-        //WRITE.COMBOBOX.setImpl(ComboBoxImpl.class);
+        WRITE.COMBOBOX.setImpl(ComboBoxImpl.class);
         //WRITE.DATAGRID.setImpl(DataGridImpl.class);
         //WRITE.DATEPICKER.setImpl(DatePickerImpl.class);
         //WRITE.DATERANGEPICKER.setImpl(DateRangePickerImpl.class);
         //WRITE.RADIOBOXGROUP.setImpl(RadioBoxGroupImpl.class);
-        //WRITE.TEXTBOX.setImpl(TextBoxImpl.class);
+        WRITE.TEXTBOX.setImpl(TextBoxImpl.class);
     }
 
     @Override

@@ -23,7 +23,7 @@
  */
 package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.frame.Capture;
+import org.schorn.ella.ui.visual.Capture;
 
 /**
  *
@@ -31,7 +31,7 @@ import org.schorn.ella.ui.frame.Capture;
  */
 class CaptureImpl extends AspectImpl implements Capture {
 
-    public CaptureImpl(String id, String name) {
+    CaptureImpl(String id, String name) {
         super(id, name);
     }
 

@@ -21,18 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
+package org.schorn.ella.ui.visual;
 
-import org.schorn.ella.ui.visual.Display;
+import org.schorn.ella.ui.UIProvider;
 
 /**
  *
  * @author bschorn
  */
-public class DisplayImpl extends AspectImpl implements Display {
+public interface Page extends Control, Style, Build {
 
-    public DisplayImpl(String id, String name) {
-        super(id, name);
+    static Page create(String id, String name) {
+        return UIProvider.provider().createPage(id, name);
     }
 
+    public Panel panel();
 }

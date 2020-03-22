@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.visual;
+
+import org.schorn.ella.ui.UIProvider;
 
 /**
  *
  * @author bschorn
- * @param <T>
  */
-public interface Frame<T> {
-
-    public void addContent(T t) throws Exception;
+public interface Capture extends Aspect {
+    static Capture create(String captureId, String captureName) {
+        return UIProvider.provider().createCapture(captureId, captureName);
+    }
 
 }

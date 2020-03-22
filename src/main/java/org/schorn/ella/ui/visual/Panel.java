@@ -21,28 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.visual;
 
-import org.schorn.ella.ui.UIProvider;
+import java.util.List;
 
 /**
  *
  * @author bschorn
  */
-public interface Page extends Style, Comment, Build {
+public interface Panel extends Control, Style, Build, Container<Aspect> {
 
-    static Page create(String panelId, String panelName) {
-        return UIProvider.provider().createPage(panelId, panelName);
+    public enum Orientation {
+        PAGE, VERTICAL, HORIZONTAL;
     }
 
-    /**
-     * The root panel which then can be horizontally or vertically split which
-     * returns a list of panels and each of those can be further split and again
-     * and again.
-     *
-     *
-     *
-     * @return
-     */
+    @Override
+    public void addContent(Aspect aspect);
+
+    @Override
+    public List<Aspect> contents();
+
+    public List<Panel> split(Orientation orientation, int... units);
+
     public Panel panel();
+
+    public Orientation orientation();
+
+    public int width();
+
+    public int height();
+
 }

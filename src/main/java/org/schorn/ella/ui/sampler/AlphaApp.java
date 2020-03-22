@@ -26,9 +26,9 @@ package org.schorn.ella.ui.sampler;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.schorn.ella.ui.frame.Aspect;
-import org.schorn.ella.ui.frame.Page;
-import org.schorn.ella.ui.frame.Panel;
+import org.schorn.ella.ui.visual.Capture;
+import org.schorn.ella.ui.visual.Page;
+import org.schorn.ella.ui.visual.Panel;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.style.StyleFactory;
@@ -78,12 +78,10 @@ public class AlphaApp {
 
             String formAddressId = "Form.Address.00";
             String formAddressName = "Address";
-            Aspect formAddress = Aspect.create().setId(formAddressId).setName(formAddressName);
-            formAddress.addContent(READ.Title.create().setTitle("Customer Address"));
-            //formAddress.addContent(Aspect.createTitle(formAddressId, "Customer Address"));
-            formAddress.addContent(WRITE.TextBox.create().setId("streetAddress").setLabel("Street Address"));
-            //Aspect.createTextBox(formAddressId, "streetAddress", "Street Address"));
-            formAddress.addContent(WRITE.ComboBox.create().setId("city").setLabel("City").setList(new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
+            Capture formAddress = Capture.create(formAddressId, formAddressName);
+            formAddress.addContent(READ.Title.create("customerAddress", "Customer Address"));
+            formAddress.addContent(WRITE.TextBox.create("streetAddress", "Street Address"));
+            formAddress.addContent(WRITE.ComboBox.create("city", "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
             panels.get(1).addContent(formAddress);
 
             HTML.Element pageElement = page.build();

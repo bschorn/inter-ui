@@ -21,16 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
+package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.frame.Build;
-import org.schorn.ella.ui.frame.Style;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.widget.WRITE;
 
 /**
  *
  * @author bschorn
  */
-public interface Widget extends Style, Build {
+public class ComboBoxImpl extends InputWidget implements WRITE.ComboBox {
 
-    public String customTag();
+    public ComboBoxImpl(String id, String name, String[] datalist) {
+        super("inter-combobox", HTML.Input.Type.TEXT, id, name);
+        this.addDatalist(datalist);
+    }
+
 }

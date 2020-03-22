@@ -25,10 +25,10 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.schorn.ella.ui.frame.Page;
-import org.schorn.ella.ui.frame.Panel;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.visual.Page;
+import org.schorn.ella.ui.visual.Panel;
 
 /**
  *
@@ -36,32 +36,17 @@ import org.schorn.ella.ui.html.HTML;
  */
 class PageImpl implements Page {
 
-    private final HTML.Page page;
     private final Panel panel;
     protected final List<CSS.Rule> cssRules = new ArrayList<>();
     protected final List<CSS.Block> cssBlocks = new ArrayList<>();
 
     public PageImpl(String id, String name) {
-        HTML.Page page0 = null;
-        Panel panel0 = null;
-        try {
-            page0 = HTML.Page.create();
-            panel0 = new PanelImpl(id, name);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        this.page = page0;
-        this.panel = panel0;
+        this.panel = new PanelImpl(id, name);
     }
 
     @Override
     public Panel panel() {
         return this.panel;
-    }
-
-    @Override
-    public void addComment(String comment) throws Exception {
-        this.page.insert(HTML.Comment.create().setTextContent(comment));
     }
 
     @Override
@@ -85,7 +70,7 @@ class PageImpl implements Page {
     }
 
     @Override
-    public List<CSS.Style> getStyles() {
+    public List<CSS.Style> styles() {
         List<CSS.Style> styles = new ArrayList<>();
         styles.addAll(this.cssBlocks);
         if (!this.cssRules.isEmpty()) {
@@ -93,7 +78,7 @@ class PageImpl implements Page {
             try {
                 block.append(CSS.Selector.createType(HTML.BODY));
             } catch (Exception ex) {
-
+                ex.printStackTrace();
             }
             this.cssRules.stream().forEach(r -> block.append(r));
             styles.add(block);
@@ -103,10 +88,11 @@ class PageImpl implements Page {
 
     @Override
     public HTML.Element build() throws Exception {
+        HTML.Page page = HTML.Page.create();
+
         List<CSS.Style> cssStyles = new ArrayList<>();
         cssStyles.addAll(this.cssBlocks);
-        this.page.htmlBody().append(panel.build());
-        cssStyles.addAll(this.panel.getStyles());
+        cssStyles.addAll(this.panel.styles());
         HTML.Style style = HTML.Style.create();
         final CSS.Block cssBlock = CSS.Block.create();
         cssBlock.append(CSS.Selector.createType(HTML.BODY));
@@ -117,31 +103,21 @@ class PageImpl implements Page {
                 .filter(s -> s instanceof CSS.Block)
                 .map(s -> (CSS.Block) s)
                 .forEachOrdered(b -> style.append(b));
-        this.page.htmlHead().append(style);
 
-        return this.page;
+        page.htmlBody().append(this.panel.build());
+        page.htmlHead().append(style);
+
+        return page;
     }
 
-    /*
-    public String render() {
-        try {
-            List<CSS.Block> cssBlocks0 = new ArrayList<>();
-            cssBlocks0.addAll(this.cssBlocks());
-            for (Panel panel : this.content) {
-                this.page.htmlBody().append(panel.build());
-                cssBlocks0.addAll(panel.styles());
-            }
-            HTML.Style style = HTML.Style.create();
-            final CSS.Block cssBlock = CSS.Block.create();
-            cssBlock.append(CSS.Selector.createType(HTML.BODY));
-            this.cssRules().stream().forEachOrdered(r -> cssBlock.append(r));
-            cssBlocks0.add(cssBlock);
-            cssBlocks0.stream().forEachOrdered(b -> style.append(b));
-            this.page.htmlHead().append(style);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return this.page.render();
+    @Override
+    public String id() {
+        return this.panel.id();
     }
-    */
+
+    @Override
+    public String name() {
+        return this.panel.name();
+    }
+
 }

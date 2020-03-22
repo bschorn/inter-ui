@@ -24,16 +24,19 @@
 package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-import org.schorn.ella.ui.frame.Frame;
-import org.schorn.ella.ui.frame.Panel;
-import org.schorn.ella.ui.frame.Style;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.frame.Aspect;
+import org.schorn.ella.ui.visual.Aspect;
+import org.schorn.ella.ui.visual.Container;
+import org.schorn.ella.ui.visual.Panel;
+import org.schorn.ella.ui.visual.Style;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -41,26 +44,28 @@ import org.schorn.ella.ui.frame.Aspect;
  */
 class PanelImpl implements Panel {
 
-    protected final HTML.Div htmlElement;
+    static final Logger LGR = LoggerFactory.getLogger(PanelImpl.class);
+
+    protected String id;
+    protected String name;
     protected final List<CSS.Rule> cssRules = new ArrayList<>();
     protected final List<CSS.Block> cssBlocks = new ArrayList<>();
-    protected final int idx;
-    protected final String id;
-    protected final String name;
-    protected final PanelImpl parent;
+    protected int idx;
+    protected PanelImpl parent;
     protected final Orientation orientation;
-    protected final List<Frame> frames = new ArrayList<>();
+    protected final List<Aspect> aspects = new ArrayList<>();
     protected int width;
     protected int height;
 
     PanelImpl(String id, String name) {
-        this.orientation = Orientation.ROOT;
+        this.orientation = Orientation.PAGE;
         this.id = id;
         this.name = name;
         this.idx = 0;
         this.parent = null;
-        this.width = 1000;
-        this.height = 1000;
+        this.width = 100;
+        this.height = 100;
+        /*
         HTML.Div htmlElement0 = null;
         try {
             htmlElement0 = HTML.Div.create();
@@ -70,16 +75,18 @@ class PanelImpl implements Panel {
             ex.printStackTrace();
         }
         this.htmlElement = htmlElement0;
+         */
     }
 
-    private PanelImpl(Orientation orientation, Panel parent, int idx, int width, int height) {
-        this.orientation = orientation;
+    private PanelImpl(Panel parent, Orientation orientation, int idx, int width, int height) {
         this.parent = (PanelImpl) parent;
+        this.orientation = orientation;
         this.idx = idx;
         this.width = width;
         this.height = height;
         this.id = String.format("%s_%d", this.parent.id, this.idx);
         this.name = String.format("%s_%d", this.parent.name, this.idx);
+        /*
         HTML.Div htmlElement0 = null;
         try {
             htmlElement0 = HTML.Div.create();
@@ -90,6 +97,7 @@ class PanelImpl implements Panel {
             ex.printStackTrace();
         }
         this.htmlElement = htmlElement0;
+         */
     }
 
     @Override
@@ -113,7 +121,7 @@ class PanelImpl implements Panel {
     }
 
     @Override
-    public List<CSS.Style> getStyles() {
+    public List<CSS.Style> styles() {
         List<CSS.Style> styles = new ArrayList<>();
         styles.addAll(this.cssBlocks);
         final CSS.Block block = CSS.Block.create();
@@ -123,14 +131,13 @@ class PanelImpl implements Panel {
             styles.add(block);
         }
         final Map<PanelImpl, Integer> panelPct = new HashMap<>();
-        this.frames.stream()
-                .filter(f -> f instanceof PanelImpl)
-                .map(f -> (PanelImpl) f)
+        this.aspects.stream()
+                .filter(a -> a.panel() != null)
+                .map(a -> (PanelImpl) a.panel())
                 .forEachOrdered(p -> {
                     Double pct = p.orientation().equals(Orientation.HORIZONTAL)
-                    ? (p.height() / Integer.valueOf(this.height).doubleValue() * 100)
-                    : (p.width() / Integer.valueOf(this.height).doubleValue() * 100);
-            System.out.println(pct);
+                            ? (p.height() / Integer.valueOf(this.height).doubleValue() * 100)
+                            : (p.width() / Integer.valueOf(this.height).doubleValue() * 100);
                     panelPct.put(p, pct.intValue());
                 });
         if (!panelPct.isEmpty()) {
@@ -138,7 +145,7 @@ class PanelImpl implements Panel {
             for (PanelImpl panel : panelPct.keySet()) {
                 fitContent.add(String.format("fit-content(%d%%)", panelPct.get(panel)));
             }
-            if (this.frames.stream()
+            if (this.aspects.stream()
                     .filter(f -> f instanceof Panel)
                     .map(f -> (Panel) f)
                     .map(p -> p.orientation())
@@ -152,10 +159,10 @@ class PanelImpl implements Panel {
                 }
             }
         }
-        this.frames.stream()
+        this.aspects.stream()
                 .filter(f -> f instanceof Style)
                 .map(f -> (Style) f)
-                .map(s -> s.getStyles())
+                .map(s -> s.styles())
                 .filter(ls -> ls != null)
                 .forEachOrdered(ls -> styles.addAll(ls));
 
@@ -169,40 +176,13 @@ class PanelImpl implements Panel {
     }
 
     @Override
-    public void addContent(Aspect facet) throws Exception {
-        this.frames.add(facet);
+    public void addContent(Aspect aspect) {
+        this.aspects.add(aspect);
     }
 
     @Override
-    public void addComment(String comment) throws Exception {
-        this.htmlElement.insert(HTML.Comment.create().setTextContent(comment));
-    }
-
-    @Override
-    public HTML.Element build() throws Exception {
-        this.htmlElement.setId(this.id);
-        switch (this.orientation) {
-            case ROOT:
-                this.htmlElement.addClass("panel");
-                this.htmlElement.addClass("root");
-                break;
-            case VERTICAL:
-                this.htmlElement.addClass("panel");
-                this.htmlElement.addClass("vertical");
-                break;
-            case HORIZONTAL:
-                this.htmlElement.addClass("panel");
-                this.htmlElement.addClass("horizontal");
-                break;
-        }
-        for (Frame frame : this.frames) {
-            if (frame instanceof Panel) {
-                this.htmlElement.append(((Panel) frame).build());
-            } else if (frame instanceof Aspect) {
-                this.htmlElement.append(((Aspect) frame).build());
-            }
-        }
-        return this.htmlElement;
+    public List<Aspect> contents() {
+        return Collections.unmodifiableList(this.aspects);
     }
 
     @Override
@@ -211,7 +191,57 @@ class PanelImpl implements Panel {
     }
 
     @Override
-    public List<Panel> vsplit(int... widths) {
+    public List<Panel> split(Orientation orientation, int... units) {
+        switch (orientation) {
+            case HORIZONTAL:
+                return this.hsplit(units);
+            case VERTICAL:
+                return this.vsplit(units);
+            default:
+                LGR.error("{}.split() - unable to split with this {} orientation",
+                        this.getClass().getSimpleName(),
+                        orientation.name());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public HTML.Element build() throws Exception {
+        HTML.Div htmlElement = HTML.Div.create();
+        htmlElement.setId(this.id);
+        switch (this.orientation) {
+            case PAGE:
+                htmlElement.addClass("panel");
+                htmlElement.addClass("page");
+                break;
+            case VERTICAL:
+                htmlElement.addClass("panel");
+                htmlElement.addClass("vertical");
+                break;
+            case HORIZONTAL:
+                htmlElement.addClass("panel");
+                htmlElement.addClass("horizontal");
+                break;
+        }
+        for (Container frame : this.aspects) {
+            if (frame instanceof Panel) {
+                htmlElement.append(((Panel) frame).build());
+            } else if (frame instanceof Aspect) {
+                htmlElement.append(((Aspect) frame).build());
+            }
+        }
+        return htmlElement;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s - w(%d) x h(%d)",
+                this.id,
+                this.width,
+                this.height);
+    }
+
+    protected List<Panel> vsplit(int... widths) {
         if (widths.length == 0) {
             widths = new int[2];
             widths[0] = 50;
@@ -228,8 +258,7 @@ class PanelImpl implements Panel {
         return panels;
     }
 
-    @Override
-    public List<Panel> hsplit(int... heights) {
+    protected List<Panel> hsplit(int... heights) {
         if (heights.length == 0) {
             heights = new int[2];
             heights[0] = 50;
@@ -246,59 +275,18 @@ class PanelImpl implements Panel {
         return panels;
     }
 
-    /*
-    @Override
-    public Panel owner() {
-        return this.parent;
-    }
-    */
-
- /*
-    @Override
-    public List<Panel> panels() {
-        return Collections.unmodifiableList(this.panels);
-    }
-     */
-
-    //@Override
-    /*
-    public void addItemStyle(CSS.Style cssStyle) {
-        switch (cssStyle.role()) {
-            case BLOCK:
-                CSS.Block block = (CSS.Block) cssStyle;
-                block.rules().forEach(r -> this.itemRules.add(r));
-                break;
-            case RULE:
-                this.itemRules.add((CSS.Rule) cssStyle);
-                break;
-            default:
-                //LGR.error("error");
-                break;
-        }
-    }
-     */
-
-    @Override
-    public String toString() {
-        return String.format("%s - w(%d) x h(%d)",
-                this.id,
-                this.width,
-                this.height);
-    }
-
     protected Panel createPanel(Orientation orientation, int idx, double percent) {
         Panel panel = null;
         switch (orientation) {
             case VERTICAL:
-                panel = new PanelImpl(orientation, this, idx,
+                panel = new PanelImpl(this, orientation, idx,
                         Double.valueOf(percent * this.width).intValue(), this.height);
                 break;
             case HORIZONTAL:
-                panel = new PanelImpl(orientation, this, idx, this.width,
+                panel = new PanelImpl(this, orientation, idx, this.width,
                         Double.valueOf(percent * this.height).intValue());
                 break;
         }
-        this.frames.add(panel);
         return panel;
     }
 

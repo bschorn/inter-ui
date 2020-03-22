@@ -21,38 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.visual;
 
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.html.CSS.Style;
 
 /**
  *
  * @author bschorn
  */
-public interface Aspect extends Frame<Widget>, Style, Build {
+public interface Widget extends Style, Build {
 
-    /*
-    static public TitleWidget createTitle(String parentId, String title) throws HTML.InvalidContentException {
-        TitleWidget titleWidget = new TitleWidget(title);
-        //titleWidget.setId(parentId);
-        return titleWidget;
-    }
+    public String customTag();
 
-    static public InputWidget createTextBox(String parentId, String name, String label) throws Exception {
-        InputWidget formInput = new InputWidget(HTML.Input.Type.TEXT);
-        formInput.setId(String.format("%s.%s", parentId, name));
-        formInput.addLabel(label);
-        formInput.setName(name);
-        return formInput;
-    }
-
-    static public InputWidget createComboBox(String parentId, String name, String label, String optionId, String[] options) throws Exception {
-        InputWidget formInput = new InputWidget(HTML.Input.Type.TEXT);
-        formInput.setId(String.format("%s.%s", parentId, name));
-        formInput.addLabel(label);
-        formInput.setName(name);
-        formInput.addDatalist(optionId, options);
-        return formInput;
-    }
-     */
+    public Container<?> owner();
 }

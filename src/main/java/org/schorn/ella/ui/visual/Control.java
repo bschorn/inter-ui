@@ -21,18 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
-
-import java.util.List;
-import org.schorn.ella.ui.html.CSS;
+package org.schorn.ella.ui.visual;
 
 /**
  *
  * @author bschorn
  */
-public interface Style {
+public interface Control {
+    public String id();
 
-    public void addStyle(CSS.Style style);
-
-    public List<CSS.Style> getStyles();
+    public String name();
 }

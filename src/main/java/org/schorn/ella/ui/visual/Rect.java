@@ -21,18 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
-
-import org.schorn.ella.ui.visual.Display;
+package org.schorn.ella.ui.visual;
 
 /**
  *
  * @author bschorn
  */
-public class DisplayImpl extends AspectImpl implements Display {
+public class Rect {
 
-    public DisplayImpl(String id, String name) {
-        super(id, name);
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
+
+    public Rect(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
+    public int x() {
+        return this.x;
+    }
+
+    public int y() {
+        return this.y;
+    }
+
+    public int width() {
+        return this.width;
+    }
+
+    public int height() {
+        return this.height;
+    }
+
+    public String toString() {
+        return String.format("x: %d, y: %d, width: %d, height: %d",
+                this.x, this.y, this.width, this.height);
+    }
 }

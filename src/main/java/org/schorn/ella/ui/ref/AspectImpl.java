@@ -25,16 +25,20 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.schorn.ella.ui.frame.Aspect;
+import org.schorn.ella.ui.visual.Aspect;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.visual.Widget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
 abstract class AspectImpl implements Aspect {
+
+    static final Logger LGR = LoggerFactory.getLogger(AspectImpl.class);
 
     private final HTML.Div divElement;
     private final HTML.Form formElement;
@@ -66,7 +70,12 @@ abstract class AspectImpl implements Aspect {
 
     @Override
     public void addContent(Widget widget) throws Exception {
-        this.widgets.add(widget);
+        if (widget != null) {
+            this.widgets.add(widget);
+        } else {
+            LGR.error("{}.addContent() - skipped null widget",
+                    this.getClass().getSimpleName());
+        }
     }
 
     @Override
@@ -90,7 +99,7 @@ abstract class AspectImpl implements Aspect {
     }
 
     @Override
-    public List<CSS.Style> getStyles() {
+    public List<CSS.Style> styles() {
         List<CSS.Style> styles = new ArrayList<>();
         styles.addAll(this.cssBlocks);
         if (!this.cssRules.isEmpty()) {

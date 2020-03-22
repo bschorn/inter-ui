@@ -24,11 +24,11 @@
 package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.util.ToString;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.visual.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,70 +41,28 @@ abstract class InputWidget implements Widget {
     static final Logger LGR = LoggerFactory.getLogger(InputWidget.class);
 
     protected final String customTag;
+    protected final HTML.Input.Type inputType;
+    protected final String id;
+    protected final String name;
     protected final List<CSS.Rule> cssRules = new ArrayList<>();
     protected final List<CSS.Block> cssBlocks = new ArrayList<>();
-    protected final HTML.Div divElement;
-    protected final HTML.Label labelElement;
-    protected final HTML.Input inputElement;
-    protected HTML.Datalist datalistElement;
+    protected final List<String> datalist = new ArrayList<>();
 
-    public InputWidget(String customTag, HTML.Input.Type inputType) {
+    protected String label = null;
+
+    InputWidget(String customTag, HTML.Input.Type inputType, String id, String name) {
         this.customTag = customTag;
-        HTML.Div divElement0 = null;
-        HTML.Label labelElement0 = null;
-        HTML.Input inputElement0 = null;
-        try {
-            divElement0 = HTML.Div.create();
-            labelElement0 = HTML.Label.create();
-            inputElement0 = HTML.Input.create();
-            inputElement0.addAttribute(inputType.asAttribute());
-        } catch (Exception ex) {
-            LGR.error("{}.ctor() - Caught Exception: {}",
-                    this.getClass().getSimpleName(),
-                    ToString.stackTrace(ex));
-        }
-        this.divElement = divElement0;
-        this.labelElement = labelElement0;
-        this.inputElement = inputElement0;
-        try {
-            this.divElement.append(this.labelElement);
-            this.labelElement.append(this.inputElement);
-        } catch (HTML.InvalidContentException ex) {
-            LGR.error("{}.ctor() - Caught InvalidContentException: {}",
-                    this.getClass().getSimpleName(),
-                    ToString.stackTrace(ex));
-        }
-
+        this.inputType = inputType;
+        this.id = id;
+        this.name = name;
     }
 
     public void addLabel(String label) {
-        this.labelElement.setTextContent(label);
+        this.label = label;
     }
 
-    public void setName(String name) {
-        try {
-            HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, name);
-            this.inputElement.addAttribute(attribute);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void addDatalist(String id, String[] datalist) {
-        try {
-            this.datalistElement = HTML.Datalist.create();
-            for (String optionStr : datalist) {
-                HTML.Option option = HTML.Option.create();
-                option.addAttribute(HTML.Attribute.create("value", optionStr));
-                this.datalistElement.append(option);
-            }
-            this.inputElement.addAttribute(HTML.Attribute.create("list", id));
-            this.datalistElement.setId(id);
-            //this.owner().append(this.datalistElement);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+    public void addDatalist(String[] datalist) {
+        this.datalist.addAll(Arrays.asList(datalist));
     }
 
     @Override
@@ -119,12 +77,39 @@ abstract class InputWidget implements Widget {
 
     @Override
     public HTML.Element build() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        HTML.Div divElement = HTML.Div.create();
+        HTML.Input inputElement = HTML.Input.create();
+        inputElement.addAttribute(this.inputType.asAttribute());
+        HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, this.name);
+        inputElement.addAttribute(attribute);
+        if (!this.datalist.isEmpty()) {
+            String datalistId = String.format("%s-list", this.id);
+            HTML.Datalist datalistElement = HTML.Datalist.create();
+            datalistElement.setId(datalistId);
+            for (String optionStr : this.datalist) {
+                HTML.Option option = HTML.Option.create();
+                option.addAttribute(HTML.Attribute.create("value", optionStr));
+                datalistElement.append(option);
+            }
+            inputElement.addAttribute(HTML.Attribute.create("list", datalistId));
+            inputElement.append(datalistElement);
+        }
+        if (this.label != null) {
+            HTML.Label labelElement = HTML.Label.create();
+            labelElement.append(inputElement);
+            labelElement.setTextContent(this.label);
+            labelElement.append(inputElement);
+            divElement.append(labelElement);
+        } else {
+            divElement.append(inputElement);
+        }
+
+        return divElement;
     }
 
     @Override
     public String customTag() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.customTag;
     }
 
 }

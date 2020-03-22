@@ -26,7 +26,7 @@ package org.schorn.ella.ui.ref;
 import java.util.ArrayList;
 import java.util.List;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.visual.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

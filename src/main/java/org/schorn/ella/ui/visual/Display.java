@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.frame;
+package org.schorn.ella.ui.visual;
 
 /**
  *
  * @author bschorn
  */
-public interface Comment {
-    public void addComment(String comment) throws Exception;
+public interface Display extends Aspect {
+
 }

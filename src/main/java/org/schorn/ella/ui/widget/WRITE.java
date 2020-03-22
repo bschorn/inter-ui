@@ -23,6 +23,7 @@
  */
 package org.schorn.ella.ui.widget;
 
+import org.schorn.ella.ui.visual.Widget;
 import org.schorn.ella.ui.UIProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
