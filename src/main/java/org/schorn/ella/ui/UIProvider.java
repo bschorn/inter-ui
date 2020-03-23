@@ -24,12 +24,13 @@
 package org.schorn.ella.ui;
 
 import java.util.Properties;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.visual.Capture;
 import org.schorn.ella.ui.visual.Display;
 import org.schorn.ella.ui.visual.Page;
 import org.schorn.ella.ui.visual.Panel;
-import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.READ;
 import org.schorn.ella.ui.widget.WRITE;
 
@@ -47,7 +48,9 @@ public interface UIProvider {
 
     public READ.ReadFactory getOutputFactory();
 
-    public Page createPage(String panelId, String panelName);
+    public Frame createFrame();
+
+    public Page createPage(String title);
 
     public Panel createPanel(String id, String name);
 

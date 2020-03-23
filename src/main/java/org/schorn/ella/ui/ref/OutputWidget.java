@@ -25,6 +25,7 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.visual.Widget;
 import org.slf4j.Logger;
@@ -39,16 +40,37 @@ abstract class OutputWidget implements Widget {
     static final Logger LGR = LoggerFactory.getLogger(OutputWidget.class);
 
     protected final String customTag;
-    protected final List<CSS.Rule> cssRules = new ArrayList<>();
-    protected final List<CSS.Block> cssBlocks = new ArrayList<>();
+    protected final String id;
+    protected final String name;
+    protected final List<CSS.Style> styles = new ArrayList<>();
 
-    public OutputWidget(String customTag) {
+    public OutputWidget(String customTag, String id, String name) {
         this.customTag = customTag;
+        this.id = id;
+        this.name = name;
     }
 
     @Override
     public void addStyle(CSS.Style style) {
+        this.styles.add(style);
+    }
 
+    @Override
+    public List<CSS.Style> styles() {
+        List<CSS.Style> cssStyles = new ArrayList<>();
+        cssStyles.addAll(this.styles.stream()
+                .filter(css -> css instanceof CSS.Block)
+                .collect(Collectors.toList()));
+
+        final CSS.Block cssBlock = CSS.Block.create();
+        cssBlock.append(CSS.Selector.createID(this.id));
+        this.styles.stream()
+                .filter(css -> css instanceof CSS.Rule)
+                .map(css -> (CSS.Rule) css)
+                .forEachOrdered(cssr -> cssBlock.append(cssr));
+        cssStyles.add(cssBlock);
+
+        return cssStyles;
     }
 
     @Override

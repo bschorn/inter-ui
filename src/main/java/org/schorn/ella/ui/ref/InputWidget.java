@@ -26,6 +26,7 @@ package org.schorn.ella.ui.ref;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.visual.Widget;
@@ -44,8 +45,7 @@ abstract class InputWidget implements Widget {
     protected final HTML.Input.Type inputType;
     protected final String id;
     protected final String name;
-    protected final List<CSS.Rule> cssRules = new ArrayList<>();
-    protected final List<CSS.Block> cssBlocks = new ArrayList<>();
+    protected final List<CSS.Style> styles = new ArrayList<>();
     protected final List<String> datalist = new ArrayList<>();
 
     protected String label = null;
@@ -67,12 +67,25 @@ abstract class InputWidget implements Widget {
 
     @Override
     public void addStyle(CSS.Style style) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.styles.add(style);
     }
 
     @Override
-    public List<CSS.Style> getStyles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<CSS.Style> styles() {
+        List<CSS.Style> cssStyles = new ArrayList<>();
+        cssStyles.addAll(this.styles.stream()
+                .filter(css -> css instanceof CSS.Block)
+                .collect(Collectors.toList()));
+
+        final CSS.Block cssBlock = CSS.Block.create();
+        cssBlock.append(CSS.Selector.createID(this.id));
+        this.styles.stream()
+                .filter(css -> css instanceof CSS.Rule)
+                .map(css -> (CSS.Rule) css)
+                .forEachOrdered(cssr -> cssBlock.append(cssr));
+        cssStyles.add(cssBlock);
+
+        return cssStyles;
     }
 
     @Override

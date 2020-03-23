@@ -24,12 +24,13 @@
 package org.schorn.ella.ui.ref;
 
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.visual.Capture;
 import org.schorn.ella.ui.visual.Display;
 import org.schorn.ella.ui.visual.Page;
 import org.schorn.ella.ui.visual.Panel;
-import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.READ;
 import org.schorn.ella.ui.widget.WRITE;
 
@@ -60,8 +61,13 @@ public class UIProviderImpl implements UIProvider {
     }
 
     @Override
-    public Page createPage(String panelId, String panelName) {
-        return new PageImpl(panelId, panelName);
+    public Frame createFrame() {
+        return new FrameImpl();
+    }
+
+    @Override
+    public Page createPage(String title) {
+        return new PageImpl(title);
     }
 
     @Override

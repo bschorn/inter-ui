@@ -29,10 +29,15 @@ import org.schorn.ella.ui.visual.Display;
  *
  * @author bschorn
  */
-public class DisplayImpl extends AspectImpl implements Display {
+class DisplayImpl extends AspectImpl implements Display {
 
     public DisplayImpl(String id, String name) {
         super(id, name);
+    }
+
+    @Override
+    public String customTag() {
+        return "inter-display";
     }
 
 }

@@ -25,13 +25,13 @@ package org.schorn.ella.ui.sampler;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import org.schorn.ella.ui.visual.Capture;
-import org.schorn.ella.ui.visual.Page;
-import org.schorn.ella.ui.visual.Panel;
+import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.style.StyleFactory;
+import org.schorn.ella.ui.visual.Capture;
+import org.schorn.ella.ui.visual.Page;
 import org.schorn.ella.ui.widget.READ;
 import org.schorn.ella.ui.widget.WRITE;
 
@@ -45,44 +45,56 @@ public class AlphaApp {
 
     public AlphaApp() {
         try {
-            Page page = Page.create("app", "alpha");
+            Frame frame = UIProvider.provider().createFrame();
+            frame.hsplit(20, 80).get(1).vsplit(40, 60).get(1).hsplit(50, 50);
+
+            frame.setName("0.0", "menu");
+            frame.setName("0.1.0", "nav");
+            frame.setName("0.1.1.0", "viewer");
+            frame.setName("0.1.1.1", "editor");
+
+            Page page = Page.create("AlphaApp");
+            frame.frames().forEach(page);
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "menu");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "nav");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "viewer");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "editor");
             page.addStyle(CSS.Rule.create(CSS.Property.padding, "10px"));
             page.addStyle(StyleFactory.BODY_FONT_01);
-            page.addStyle(CSS.Block.create().append(CSS.Selector.create("*")).append(CSS.Rule.create(CSS.Property.box_sizing, "border-box")));
+            page.addStyle(StyleFactory.GLOBAL_BORDER_BOX);
             page.addStyle(CSS.Block.create().append(CSS.Selector.create("p")).append(CSS.Rule.create(CSS.Property.margin, "0 0 1em 0")));
             page.addStyle(StyleFactory.LABEL_STYLE_01);
             //page.addComment("Test Comment for Page");
 
-            Panel panel = page.panel();
+            //Panel panel = page.panel();
             //panel.addStyle(CSS.Rule.create(CSS.Property.width, "500px"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.display, "grid"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.border, "2px solid rgb(111,41,97)"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.border_radius, ".2em"));
-            panel.addStyle(CSS.Rule.create(CSS.Property.padding, "5px"));
+            //panel.addStyle(CSS.Rule.create(CSS.Property.display, "grid"));
+            //panel.addStyle(CSS.Rule.create(CSS.Property.border, "2px solid rgb(111,41,97)"));
+            //panel.addStyle(CSS.Rule.create(CSS.Property.border_radius, ".2em"));
+            //panel.addStyle(CSS.Rule.create(CSS.Property.padding, "5px"));
             //panel.addComment("Test Comment for Panel");
-
-            CSS.Block itemStyleBlock = CSS.Block.create()
+            //CSS.Block itemStyleBlock = CSS.Block.create()
                     //.append(CSS.Rule.create(CSS.Property.width, "100px"))
-                    .append(CSS.Rule.create(CSS.Property.padding, "5px"))
-                    .append(CSS.Rule.create(CSS.Property.background_color, "rgba(111, 41, 97, .3)"))
-                    .append(CSS.Rule.create(CSS.Property.border, "2px solid rgba(111, 41, 97, .5)"))
-                    .append(CSS.Rule.create(CSS.Property.display, "inline-block"))
-                    .append(CSS.Rule.create(CSS.Property.vertical_align, "middle"));
+                    //.append(CSS.Rule.create(CSS.Property.padding, "5px"))
+            //.append(CSS.Rule.create(CSS.Property.background_color, "rgba(111, 41, 97, .3)"))
+            //.append(CSS.Rule.create(CSS.Property.border, "2px solid rgba(111, 41, 97, .5)"))
+            //.append(CSS.Rule.create(CSS.Property.display, "inline-block"))
+            //.append(CSS.Rule.create(CSS.Property.vertical_align, "middle"));
 
             //panel.addItemStyle(itemStyleBlock);
             /*
 
              */
-            List<Panel> panels = panel.hsplit(33, 33, 33);
-            panels.stream().forEach(p -> p.addStyle(itemStyleBlock));
+            //List<Panel> panels = panel.hsplit(33, 33, 33);
+            //panels.stream().forEach(p -> p.addStyle(itemStyleBlock));
 
             String formAddressId = "Form.Address.00";
             String formAddressName = "Address";
             Capture formAddress = Capture.create(formAddressId, formAddressName);
-            formAddress.addContent(READ.Title.create("customerAddress", "Customer Address"));
-            formAddress.addContent(WRITE.TextBox.create("streetAddress", "Street Address"));
-            formAddress.addContent(WRITE.ComboBox.create("city", "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
-            panels.get(1).addContent(formAddress);
+            formAddress.accept(READ.Title.create("customerAddress", "Customer Address"));
+            formAddress.accept(WRITE.TextBox.create("streetAddress", "Street Address"));
+            formAddress.accept(WRITE.ComboBox.create("city", "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
+
 
             HTML.Element pageElement = page.build();
             Files.write(Paths.get(OUTFILE), pageElement.render().getBytes());

@@ -23,8 +23,6 @@
  */
 package org.schorn.ella.ui.visual;
 
-import org.schorn.ella.ui.html.CSS.Style;
-
 /**
  *
  * @author bschorn
@@ -33,5 +31,4 @@ public interface Widget extends Style, Build {
 
     public String customTag();
 
-    public Container<?> owner();
 }

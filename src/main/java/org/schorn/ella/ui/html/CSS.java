@@ -853,6 +853,11 @@ public enum CSS {
             this.atRule = atRule;
         }
 
+        Property() {
+            this.propertyName = this.name().replace("__", "").replace("_", "-");
+            this.atRule = null;
+        }
+
         @Override
         public String toString() {
             return this.propertyName;

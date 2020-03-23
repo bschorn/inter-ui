@@ -21,15 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.visual;
+package org.schorn.ella.ui.layout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.visual.Control;
+import org.schorn.ella.ui.visual.Rect;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Control, Style, Build, Container<Aspect> {
+public interface Frame extends Control, Comparable<Frame> {
 
-    @Override
-    public void accept(Aspect aspect);
+    /**
+     *
+     */
+    public interface Styler extends Function<Frame, CSS.Block> {
+
+        static final Map<Thread, Exception> EXCEPTIONS = new HashMap<>();
+
+        default void throwException() throws Exception {
+            Exception exception = EXCEPTIONS.get(Thread.currentThread());
+            if (exception != null) {
+                throw EXCEPTIONS.remove(Thread.currentThread());
+            }
+        }
+
+        default void catchException(Exception exception) {
+            EXCEPTIONS.put(Thread.currentThread(), exception);
+        }
+
+        @Override
+        public CSS.Block apply(Frame frame);
+    }
+
+
+    public void setName(String id, String name);
+
+    public List<Frame> frames();
+
+    public Rect rect();
+
+    public List<Frame> vsplit(int... widths);
+
+    public List<Frame> hsplit(int... heights);
 
 }

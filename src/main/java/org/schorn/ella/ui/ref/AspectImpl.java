@@ -25,9 +25,10 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.schorn.ella.ui.visual.Aspect;
+import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.visual.Aspect;
 import org.schorn.ella.ui.visual.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,82 +41,70 @@ abstract class AspectImpl implements Aspect {
 
     static final Logger LGR = LoggerFactory.getLogger(AspectImpl.class);
 
-    private final HTML.Div divElement;
-    private final HTML.Form formElement;
     private final String id;
     private final String name;
     private final List<Widget> widgets = new ArrayList<>();
-    private final List<CSS.Rule> cssRules = new ArrayList<>();
-    private final List<CSS.Block> cssBlocks = new ArrayList<>();
+    private final List<CSS.Style> styles = new ArrayList<>();
 
     AspectImpl(String id, String name) {
         this.id = id;
         this.name = name;
-        HTML.Div divElement0 = null;
-        HTML.Form formElement0 = null;
-        try {
-            divElement0 = HTML.Div.create();
-            formElement0 = HTML.Form.create();
-            formElement0.setId(this.id);
-            formElement0.addClass(this.name);
-            divElement0.append(formElement0);
-            /*
-             */
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        this.divElement = divElement0;
-        this.formElement = formElement0;
     }
 
     @Override
-    public void addContent(Widget widget) throws Exception {
-        if (widget != null) {
-            this.widgets.add(widget);
-        } else {
-            LGR.error("{}.addContent() - skipped null widget",
-                    this.getClass().getSimpleName());
-        }
+    public String id() {
+        return this.id;
+    }
+
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    @Override
+    public void accept(Widget widget) {
+        this.widgets.add(widget);
     }
 
     @Override
     public void addStyle(CSS.Style cssStyle) {
-        switch (cssStyle.role()) {
-            case BLOCK:
-                CSS.Block cssBlock = (CSS.Block) cssStyle;
-                if (cssBlock.selectors().isEmpty()) {
-                    cssBlock.rules().stream().forEachOrdered(r -> this.cssRules.add((CSS.Rule) r));
-                } else {
-                    this.cssBlocks.add((CSS.Block) cssStyle);
-                }
-                break;
-            case RULE:
-                this.cssRules.add((CSS.Rule) cssStyle);
-                break;
-            default:
-                //LGR.error("error");
-                break;
-        }
+        this.styles.add(cssStyle);
     }
 
     @Override
     public List<CSS.Style> styles() {
-        List<CSS.Style> styles = new ArrayList<>();
-        styles.addAll(this.cssBlocks);
-        if (!this.cssRules.isEmpty()) {
-            final CSS.Block block = CSS.Block.create();
-            block.append(CSS.Selector.createID(this.id));
-            this.cssRules.stream().forEach(r -> block.append(r));
-            styles.add(block);
+        List<CSS.Style> cssStyles = new ArrayList<>();
+        cssStyles.addAll(this.styles.stream()
+                .filter(css -> css instanceof CSS.Block)
+                .collect(Collectors.toList()));
+
+        final CSS.Block cssBlock = CSS.Block.create();
+        cssBlock.append(CSS.Selector.createID(this.id));
+        this.styles.stream()
+                .filter(css -> css instanceof CSS.Rule)
+                .map(css -> (CSS.Rule) css)
+                .forEachOrdered(cssr -> cssBlock.append(cssr));
+        cssStyles.add(cssBlock);
+
+        for (Widget widget : this.widgets) {
+            cssStyles.addAll(widget.styles());
         }
-        return styles;
+        return cssStyles;
     }
 
     @Override
     public HTML.Element build() throws Exception {
+        HTML.Div divElement = HTML.Div.create();
+        HTML.Form formElement = HTML.Form.create();
+        formElement.setId(this.id);
+        formElement.addClass(this.name);
+        divElement.append(formElement);
         for (Widget widget : this.widgets) {
-            this.formElement.append(widget.build());
+            HTML.Element widgetElement = widget.build();
+            if (widgetElement != null) {
+                formElement.append(widgetElement);
+            }
         }
-        return this.divElement;
+        return divElement;
     }
 }

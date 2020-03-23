@@ -23,8 +23,6 @@
  */
 package org.schorn.ella.ui.visual;
 
-import java.util.List;
-
 /**
  *
  * @author bschorn
@@ -32,9 +30,6 @@ import java.util.List;
 public interface Aspect extends Control, Style, Build, Widget, Container<Widget> {
 
     @Override
-    public void addContent(Widget widget) throws Exception;
-
-    @Override
-    public List<Widget> contents();
+    public void accept(Widget widget);
 
 }

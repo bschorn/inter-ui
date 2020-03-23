@@ -29,24 +29,24 @@ package org.schorn.ella.ui.visual;
  */
 public class Rect {
 
-    private final int x;
-    private final int y;
+    private final int top;
+    private final int left;
     private final int width;
     private final int height;
 
-    public Rect(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
+    public Rect(int top, int left, int width, int height) {
+        this.top = top;
+        this.left = left;
         this.width = width;
         this.height = height;
     }
 
-    public int x() {
-        return this.x;
+    public int top() {
+        return this.top;
     }
 
-    public int y() {
-        return this.y;
+    public int left() {
+        return this.left;
     }
 
     public int width() {
@@ -59,6 +59,6 @@ public class Rect {
 
     public String toString() {
         return String.format("x: %d, y: %d, width: %d, height: %d",
-                this.x, this.y, this.width, this.height);
+                this.top, this.left, this.width, this.height);
     }
 }

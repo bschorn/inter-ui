@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.visual;
+package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,56 +29,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.visual.Rect;
 
 /**
  *
  * @author bschorn
  */
-public class Frame implements Comparable<Frame> {
+class FrameImpl implements Frame {
 
-    static private final Map<Frame, Set<Frame>> FRAMES = new HashMap<>();
+    static private final Map<FrameImpl, Set<FrameImpl>> FRAMES = new HashMap<>();
 
-    static public Frame create() {
-        return new Frame();
+    /**
+     *
+     * @return
+     */
+    static public FrameImpl create() {
+        return new FrameImpl();
     }
 
-    public enum Orientation {
+    enum Orientation {
         ROOT, VERTICAL, HORIZONTAL;
     }
 
-    private final Frame parent;
+    private final FrameImpl parent;
     private final int idx;
-    private final Orientation orientation;
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
+    private final Rect rect;
     private final String id;
     private String name;
 
-    private Frame() {
+    FrameImpl() {
         this.parent = this;
         this.idx = 0;
-        this.orientation = Orientation.ROOT;
-        this.x = 0;
-        this.y = 0;
-        this.width = 100;
-        this.height = 100;
+        this.rect = new Rect(0, 0, 100, 100);
         this.id = String.format("%d", this.idx);
         this.name = this.id;
         FRAMES.put(this, new TreeSet<>());
     }
 
-    private Frame(Frame parent, int idx, Orientation orientation, int x, int y, int width, int height) {
+    private FrameImpl(FrameImpl parent, int idx, Rect rect) {
         this.parent = parent;
         this.idx = idx;
-        this.orientation = orientation;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        this.rect = rect;
         this.id = String.format("%s.%d", this.parent.id, this.idx);
         this.name = this.id;
         FRAMES.get(this.findRoot()).add(this);
@@ -91,8 +85,8 @@ public class Frame implements Comparable<Frame> {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof Frame) {
-            return this.compareTo((Frame) object) == 0;
+        if (object instanceof FrameImpl) {
+            return this.compareTo((FrameImpl) object) == 0;
         }
         return false;
     }
@@ -110,28 +104,39 @@ public class Frame implements Comparable<Frame> {
                 this.id, this.rect().toString());
     }
 
+    @Override
     public void setName(String id, String name) {
-        Frame frame = this.frames().get(id);
+        FrameImpl frame = findFrame(id);
         if (frame != null) {
             frame.name = name;
         }
     }
 
-    public Map<String, Frame> frames() {
-        final Map<String, Frame> frames = new TreeMap<>();
-        FRAMES.get(this.findRoot()).stream()
-                .forEach(f -> frames.put(f.name(), f));
-        return frames;
+    @Override
+    public List<Frame> frames() {
+        Set<FrameImpl> set = FRAMES.get(this.findRoot());
+        if (set != null) {
+            return set.stream().map(f -> (Frame) f).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
-    public String name() {
+    @Override
+    public String id() {
         return this.id;
     }
 
-    public Rect rect() {
-        return new Rect(this.x, this.y, this.width, this.height);
+    @Override
+    public String name() {
+        return this.name;
     }
 
+    @Override
+    public Rect rect() {
+        return this.rect;
+    }
+
+    @Override
     public List<Frame> vsplit(int... widths) {
         if (this.unlink()) {
             if (widths.length == 0) {
@@ -144,10 +149,10 @@ public class Frame implements Comparable<Frame> {
             for (int i = 0; i < widths.length; i++) {
                 totWidth += widths[i];
             }
-            int xy = this.x;
+            int xy = this.rect().top();
             for (int i = 0; i < widths.length; i++) {
                 Frame frame = createFrame(Orientation.VERTICAL, i, xy, widths[i] / totWidth);
-                xy += frame.width;
+                xy += frame.rect().width();
                 frames.add(frame);
             }
             return frames;
@@ -155,6 +160,7 @@ public class Frame implements Comparable<Frame> {
         return new ArrayList<>();
     }
 
+    @Override
     public List<Frame> hsplit(int... heights) {
         if (this.unlink()) {
             if (heights.length == 0) {
@@ -167,10 +173,10 @@ public class Frame implements Comparable<Frame> {
             for (int i = 0; i < heights.length; i++) {
                 totHeight += heights[i];
             }
-            int xy = this.y;
+            int xy = this.rect().left();
             for (int i = 0; i < heights.length; i++) {
                 Frame frame = createFrame(Orientation.HORIZONTAL, i, xy, heights[i] / totHeight);
-                xy += frame.height;
+                xy += frame.rect().height();
                 frames.add(frame);
             }
             return frames;
@@ -179,27 +185,31 @@ public class Frame implements Comparable<Frame> {
     }
 
     protected Frame createFrame(Orientation orientation, int idx, int xy, double percent) {
-        Frame frame = null;
+        FrameImpl frame = null;
         switch (orientation) {
             case VERTICAL:
-                frame = new Frame(this, idx, orientation,
-                        xy,
-                        this.y,
-                        Double.valueOf(percent * this.width).intValue(),
-                        this.height);
+                frame = new FrameImpl(this, idx,
+                        new Rect(
+                                xy,
+                                this.rect().left(),
+                                Double.valueOf(percent * this.rect().width()).intValue(),
+                                this.rect().height())
+                );
                 break;
             case HORIZONTAL:
-                frame = new Frame(this, idx, orientation,
-                        this.x,
-                        xy,
-                        this.width,
-                        Double.valueOf(percent * this.height).intValue());
+                frame = new FrameImpl(this, idx,
+                        new Rect(
+                                this.rect().top(),
+                                xy,
+                                this.rect().width(),
+                                Double.valueOf(percent * this.rect().width()).intValue())
+                );
                 break;
         }
         return frame;
     }
 
-    private Frame findRoot() {
+    private FrameImpl findRoot() {
         if (this == this.parent) {
             return this;
         } else {
@@ -211,7 +221,7 @@ public class Frame implements Comparable<Frame> {
         if (this == this.parent) {
             return true;
         }
-        Set<Frame> set = FRAMES.get(this.findRoot());
+        Set<FrameImpl> set = FRAMES.get(this.findRoot());
         if (!set.isEmpty()) {
             if (set.contains(this)) {
                 set.remove(this);
@@ -221,10 +231,13 @@ public class Frame implements Comparable<Frame> {
         return false;
     }
 
+    private FrameImpl findFrame(String id) {
+        return this.frames().stream().map(f -> (FrameImpl) f).filter(f -> f.id().equals(id)).findAny().get();
+    }
 
     static public void main(String[] args) {
         try {
-            Frame root = Frame.create();
+            FrameImpl root = FrameImpl.create();
             root.hsplit(20, 80).get(1).vsplit(40, 60).get(1).hsplit(50, 50);
 
             root.setName("0.0", "menu");
@@ -232,10 +245,6 @@ public class Frame implements Comparable<Frame> {
             root.setName("0.1.1.0", "viewer");
             root.setName("0.1.1.1", "editor");
 
-            root.frames().values().stream()
-                    .forEachOrdered(frame -> {
-                System.out.println(frame.toString());
-            });
         } catch (Throwable ex) {
             ex.printStackTrace();
         }

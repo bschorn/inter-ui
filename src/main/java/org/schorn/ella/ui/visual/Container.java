@@ -23,16 +23,15 @@
  */
 package org.schorn.ella.ui.visual;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
  * @author bschorn
  * @param <T>
  */
-public interface Container<T> {
+public interface Container<T> extends Consumer<T> {
 
-    public void addContent(T t) throws Exception;
+    public void accept(T t);
 
-    public List<T> contents();
 }

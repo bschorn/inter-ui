@@ -23,8 +23,8 @@
  */
 package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.visual.Widget;
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.visual.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +110,7 @@ public enum READ {
 
     public interface Title extends Output {
 
-        Title setTitle(String title);
+        void setTitle(String title);
 
         static public Title create(Object... params) throws Exception {
             return READ.TITLE.create(params);

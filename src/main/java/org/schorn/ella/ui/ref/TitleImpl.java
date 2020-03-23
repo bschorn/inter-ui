@@ -23,35 +23,23 @@
  */
 package org.schorn.ella.ui.ref;
 
-import java.util.List;
-import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.widget.READ;
 
 /**
  *
  * @author bschorn
  */
-public class TitleImpl extends OutputWidget {
+class TitleImpl extends OutputWidget implements READ.Title {
 
     private String title;
-    private final HTML.Div divElement;
 
-    public TitleImpl(String title) {
-        super("view-title");
-        this.title = title;
-        HTML.Div divElement0 = null;
-        try {
-            divElement0 = HTML.Div.create();
-            divElement0.setTextContent(title);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        this.divElement = divElement0;
+    public TitleImpl(String id, String name) {
+        super("view-title", id, name);
     }
 
     public void setTitle(String title) {
         this.title = title;
-        this.divElement.setTextContent(title);
     }
 
     public String getTitle() {
@@ -59,12 +47,9 @@ public class TitleImpl extends OutputWidget {
     }
 
     @Override
-    public List<CSS.Style> getStyles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public HTML.Element build() throws Exception {
-        return this.divElement;
+        HTML.Div divElement = HTML.Div.create();
+        divElement.setTextContent(title);
+        return divElement;
     }
 }

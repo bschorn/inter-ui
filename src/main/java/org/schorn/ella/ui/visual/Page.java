@@ -23,17 +23,28 @@
  */
 package org.schorn.ella.ui.visual;
 
+import java.util.function.Consumer;
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.layout.Frame;
 
 /**
  *
  * @author bschorn
  */
-public interface Page extends Control, Style, Build {
+public interface Page extends Build, Consumer<Frame> {
 
-    static Page create(String id, String name) {
-        return UIProvider.provider().createPage(id, name);
+    static Page create(String title) {
+        return UIProvider.provider().createPage(title);
     }
 
-    public Panel panel();
+    @Override
+    public void accept(Frame frame);
+
+    public void assign(Frame.Styler frameStyler, String frameName);
+
+    public void assign(Panel panel, String frameName);
+
+    public void addStyle(CSS.Style style);
+
 }

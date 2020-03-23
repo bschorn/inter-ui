@@ -25,6 +25,7 @@ package org.schorn.ella.ui.style;
 
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Frame;
 
 /**
  *
@@ -39,6 +40,8 @@ public class StyleFactory {
      */
     static public final CSS.Style LABEL_STYLE_01;
     static public final CSS.Style BODY_FONT_01;
+    static public final CSS.Style GLOBAL_BORDER_BOX;
+    static public final PositionedFrameStyler POSITIONED_FRAME_STYLER = new PositionedFrameStyler();
 
     static {
         CSS.Style labelStyle01 = null;
@@ -59,5 +62,36 @@ public class StyleFactory {
             ex.printStackTrace();
         }
         BODY_FONT_01 = bodyFont01;
+
+        CSS.Block globalBorderBox = null;
+        try {
+            globalBorderBox = CSS.Block.create().append(CSS.Selector.create("*")).append(CSS.Rule.create(CSS.Property.box_sizing, "border-box"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        GLOBAL_BORDER_BOX = globalBorderBox;
+
     }
+
+    static class PositionedFrameStyler implements Frame.Styler {
+
+        @Override
+        public CSS.Block apply(Frame frame) {
+            try {
+                return CSS.Block.create()
+                        .append(CSS.Selector.createID(frame.id()))
+                        .append(CSS.Rule.create(CSS.Property.position, "relative"))
+                        .append(CSS.Rule.create(CSS.Property.top, String.format("%d%%", frame.rect().top())))
+                        .append(CSS.Rule.create(CSS.Property.left, String.format("%d%%", frame.rect().left())))
+                        .append(CSS.Rule.create(CSS.Property.width, String.format("%d%%", frame.rect().width())))
+                        .append(CSS.Rule.create(CSS.Property.height, String.format("%d%%", frame.rect().height())));
+
+            } catch (Exception ex) {
+                this.catchException(ex);
+                return CSS.Block.create();
+            }
+        }
+
+    }
+
 }

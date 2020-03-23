@@ -35,4 +35,9 @@ class CaptureImpl extends AspectImpl implements Capture {
         super(id, name);
     }
 
+    @Override
+    public String customTag() {
+        return "inter-capture";
+    }
+
 }
