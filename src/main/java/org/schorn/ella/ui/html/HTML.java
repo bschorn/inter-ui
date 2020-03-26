@@ -123,7 +123,7 @@ public enum HTML {
     NAV(Nav.class, DOM.HTMLElement),
     NOFRAMES(Noframes.class, DOM.HTMLElement),
     NOSCRIPT(Noscript.class, DOM.HTMLElement),
-    OBJECT(Object.class, DOM.HTMLObjectElement),
+    OBJECT(Objectt.class, DOM.HTMLObjectElement),
     OL(Ol.class, DOM.HTMLOListElement),
     OPTGROUP(Optgroup.class, DOM.HTMLOptGroupElement),
     OPTION(Option.class, DOM.HTMLOptionElement),
@@ -423,7 +423,7 @@ public enum HTML {
         static public List<ContentCategory> parse(HTML html) {
             List<ContentCategory> list = new ArrayList<>();
             for (ContentCategory contentCategory : ContentCategory.values()) {
-                if (contentCategory.members().contains(html)) {
+                if (contentCategory.members().contains(html.tag())) {
                     list.add(contentCategory);
                 }
             }
@@ -594,19 +594,21 @@ public enum HTML {
 
         Element setTextContent(String content);
 
-        Element addAttribute(Attribute attribute) throws InvalidAttributeException;
+        Element addAttribute(Attribute attribute) throws HTML.InvalidAttributeException;
 
         List<Attribute> attributes();
 
         Element addClass(String className);
 
-        Element append(Element element) throws InvalidContentException;
+        Element append(Element element);
 
-        Element insert(Element element) throws InvalidContentException;
+        Element insert(Element element);
 
         Element parent();
 
         List<Element> children();
+
+        void throwException() throws Exception;
 
         default TagOmission tagOmission() {
             return TagOmission.None;
@@ -658,11 +660,16 @@ public enum HTML {
 
     public interface Meta extends HtmlElement {
 
-        static public Meta create(Object... params) throws Exception {
+        static public Meta create(java.lang.Object... params) throws Exception {
             return HTML.META.create(params);
+        }
+        static public Meta createViewport(String deviceWidth, String initialScale) throws Exception {
+            return HTML.META.create((java.lang.Object) "viewport", (java.lang.Object) deviceWidth, (java.lang.Object) initialScale);
         }
 
         Meta setCharset(String charset) throws Exception;
+
+        Meta setName(String value) throws Exception;
     }
 
     public interface Style extends HtmlElement {
@@ -696,9 +703,9 @@ public enum HTML {
             return HTML.HTML.create(params);
         }
 
-        Head htmlHead();
+        Head head();
 
-        Body htmlBody();
+        Body body();
     }
 
     public interface A extends HtmlElement {
@@ -1412,9 +1419,9 @@ public enum HTML {
         }
     }
 
-    public interface Object extends HtmlElement {
+    public interface Objectt extends HtmlElement {
 
-        static public Object create(Object... params) throws Exception {
+        static public Objectt create(Object... params) throws Exception {
             return HTML.OBJECT.create(params);
         }
     }

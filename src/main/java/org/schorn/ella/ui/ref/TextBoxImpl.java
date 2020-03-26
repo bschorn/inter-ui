@@ -24,13 +24,13 @@
 package org.schorn.ella.ui.ref;
 
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.WRITE;
+import org.schorn.ella.ui.widget.InputWidgets;
 
 /**
  *
  * @author bschorn
  */
-class TextBoxImpl extends InputWidget implements WRITE.TextBox {
+class TextBoxImpl extends InputWidgetImpl implements InputWidgets.TextBox {
 
     public TextBoxImpl(String id, String name) {
         super("inter-textbox", HTML.Input.Type.TEXT, id, name);

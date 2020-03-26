@@ -1,0 +1,79 @@
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+.body {
+  padding: 10px;
+}
+input, label {
+  display: block;
+}
+.frame {
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  border: dashed lightgray 2px;
+}
+.panel {
+  display: inline-grid;
+  padding: 10px;
+  border: solid white 1px;
+  border-radius: 5px;
+  background: tan;
+}
+.value {
+  border: solid grey 1px;
+  background: white;
+  color: black;
+}
+</style>
+</head>
+<body>
+<div class="frame" id="f1">
+<div class="panel" id="p1">
+<div class="capture" id="a1">
+<form name="address">
+<label>Street<input type="text" id="street" /></label>
+<label>City<input type="text" id="city" /></label>
+<label>State<input type="text" id="state" /></label>
+<label>Zip<input type="text" id="zip" /></label>
+</form>
+</div>
+
+</div>
+</div>
+<div class="frame" id="f2">
+<div class="panel" id="p2">
+<div class="display" id="a2">
+<div class="label">
+Street
+<div class="value" id="street2">
+123 Happy St
+</div>
+</div>
+<div class="label">
+City
+<div class="value" id="city2">
+Newton
+</div>
+</div>
+<div class="label">
+State
+<div class="value" id="state2">
+KS
+</div>
+</div>
+<div class="label">
+Zip
+<div class="value" id="zip2">
+66714
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

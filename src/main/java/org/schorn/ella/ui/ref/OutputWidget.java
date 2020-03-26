@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.visual.Widget;
+import org.schorn.ella.ui.widget.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
+@Deprecated
 abstract class OutputWidget implements Widget {
 
     static final Logger LGR = LoggerFactory.getLogger(OutputWidget.class);
@@ -50,12 +51,10 @@ abstract class OutputWidget implements Widget {
         this.name = name;
     }
 
-    @Override
     public void addStyle(CSS.Style style) {
         this.styles.add(style);
     }
 
-    @Override
     public List<CSS.Style> styles() {
         List<CSS.Style> cssStyles = new ArrayList<>();
         cssStyles.addAll(this.styles.stream()

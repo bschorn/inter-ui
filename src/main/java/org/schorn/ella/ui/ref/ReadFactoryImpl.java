@@ -26,17 +26,17 @@ package org.schorn.ella.ui.ref;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.StringJoiner;
-import org.schorn.ella.ui.widget.READ;
+import org.schorn.ella.ui.widget.OutputWidgets;
 
 /**
  *
  * @author bschorn
  */
-public class ReadFactoryImpl implements READ.ReadFactory {
+public class ReadFactoryImpl implements OutputWidgets.ReadFactory {
 
     static private final ReadFactoryImpl INSTANCE = new ReadFactoryImpl();
 
-    static public READ.ReadFactory getFactory() {
+    static public OutputWidgets.ReadFactory getFactory() {
         return INSTANCE;
     }
 
@@ -51,11 +51,11 @@ public class ReadFactoryImpl implements READ.ReadFactory {
         //READ.PROGRESS.setImpl(ProgressImpl.class);
         //READ.SCROLL.setImpl(ScrollImpl.class);
         //READ.TEXT.setImpl(TextImpl.class);
-        READ.TITLE.setImpl(TitleImpl.class);
+        OutputWidgets.TITLE.setImpl(TitleImpl.class);
     }
 
     @Override
-    public <T> T createInstance(READ output, Object... params) throws Exception {
+    public <T> T createInstance(OutputWidgets output, Object... params) throws Exception {
         Class<?> classFor = output.getImpl();
         if (classFor == null) {
             // ERROR

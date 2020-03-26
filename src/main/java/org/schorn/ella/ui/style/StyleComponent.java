@@ -1,0 +1,101 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 bschorn.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.schorn.ella.ui.style;
+
+import java.util.HashMap;
+import java.util.Map;
+import org.schorn.ella.ui.layout.Aspect;
+import org.schorn.ella.ui.layout.Editor;
+import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Panel;
+import org.schorn.ella.ui.layout.Viewer;
+import org.schorn.ella.ui.widget.Input;
+import org.schorn.ella.ui.widget.Output;
+import org.schorn.ella.ui.widget.Widget;
+
+/**
+ *
+ * @author bschorn
+ */
+public interface StyleComponent {
+
+    static StyleComponent get(Class<?> classFor) {
+        return Support.MAP.get(classFor);
+    }
+
+    /**
+     * Add Custom
+     *
+     * @param styleComponent
+     */
+    static void add(StyleComponent styleComponent) {
+        Support.MAP.put(styleComponent.classFor(), styleComponent);
+    }
+
+    /**
+     * These are the default style components
+     */
+    public enum StyleComponentImpl implements StyleComponent {
+        PAGE(Page.class),
+        PANEL(Panel.class),
+        FRAME(Frame.class),
+        ASPECT(Aspect.class),
+        EDITOR(Editor.class),
+        VIEWER(Viewer.class),
+        WIDGET(Widget.class),
+        INPUT(Input.class),
+        OUTPUT(Output.class);
+
+        private final Class<?> classFor;
+
+        StyleComponentImpl(Class<?> classFor) {
+            this.classFor = classFor;
+            StyleComponent.add(this);
+        }
+
+        @Override
+        public Class<?> classFor() {
+            return this.classFor;
+        }
+
+    }
+
+    /**
+     * Who is this style for?
+     *
+     * @return
+     */
+    Class<?> classFor();
+
+
+    /**
+     * Support Class (so the MAP is private)
+     */
+    static class Support {
+
+        static private Map<Class<?>, StyleComponent> MAP = new HashMap<>();
+    }
+
+}

@@ -49,6 +49,14 @@ public class Rect {
         return this.left;
     }
 
+    public int bottom() {
+        return this.height - this.top;
+    }
+
+    public int right() {
+        return this.width - this.left;
+    }
+
     public int width() {
         return this.width;
     }

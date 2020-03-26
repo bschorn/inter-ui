@@ -858,6 +858,10 @@ public enum CSS {
             this.atRule = null;
         }
 
+        public String atRule() {
+            return this.atRule;
+        }
+
         @Override
         public String toString() {
             return this.propertyName;

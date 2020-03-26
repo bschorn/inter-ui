@@ -26,13 +26,13 @@ package org.schorn.ella.ui;
 import java.util.Properties;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Editor;
 import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.visual.Capture;
-import org.schorn.ella.ui.visual.Display;
-import org.schorn.ella.ui.visual.Page;
-import org.schorn.ella.ui.visual.Panel;
-import org.schorn.ella.ui.widget.READ;
-import org.schorn.ella.ui.widget.WRITE;
+import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Panel;
+import org.schorn.ella.ui.layout.Viewer;
+import org.schorn.ella.ui.widget.InputWidgets;
+import org.schorn.ella.ui.widget.OutputWidgets;
 
 /**
  *
@@ -44,19 +44,19 @@ public interface UIProvider {
 
     public CSS.CssFactory getCSSFactory();
 
-    public WRITE.WriteFactory getInputFactory();
+    public InputWidgets.InputFactory getInputFactory();
 
-    public READ.ReadFactory getOutputFactory();
+    public OutputWidgets.ReadFactory getOutputFactory();
 
-    public Frame createFrame();
+    public Page createPage();
 
-    public Page createPage(String title);
+    public Frame createFrame(String id, String name);
 
     public Panel createPanel(String id, String name);
 
-    public Display createDisplay(String id, String name);
+    public Viewer createViewer(String id, String name);
 
-    public Capture createCapture(String id, String name);
+    public Editor createEditor(String id, String name);
 
     /**
      * Gets a new instance of the UIProvider's implementation as found by the

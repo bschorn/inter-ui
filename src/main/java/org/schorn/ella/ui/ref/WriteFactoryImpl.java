@@ -26,17 +26,17 @@ package org.schorn.ella.ui.ref;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.StringJoiner;
-import org.schorn.ella.ui.widget.WRITE;
+import org.schorn.ella.ui.widget.InputWidgets;
 
 /**
  *
  * @author bschorn
  */
-public class WriteFactoryImpl implements WRITE.WriteFactory {
+public class WriteFactoryImpl implements InputWidgets.InputFactory {
 
     static private final WriteFactoryImpl INSTANCE = new WriteFactoryImpl();
 
-    static public WRITE.WriteFactory getFactory() {
+    static public InputWidgets.InputFactory getFactory() {
         return INSTANCE;
     }
 
@@ -48,16 +48,16 @@ public class WriteFactoryImpl implements WRITE.WriteFactory {
     public void register() {
         //WRITE.BUTTON.setImpl(ButtonImpl.class);
         //WRITE.CHECKBOXGROUP.setImpl(CheckBoxGroupImpl.class);
-        WRITE.COMBOBOX.setImpl(ComboBoxImpl.class);
+        InputWidgets.COMBOBOX.setImpl(ComboBoxImpl.class);
         //WRITE.DATAGRID.setImpl(DataGridImpl.class);
         //WRITE.DATEPICKER.setImpl(DatePickerImpl.class);
         //WRITE.DATERANGEPICKER.setImpl(DateRangePickerImpl.class);
         //WRITE.RADIOBOXGROUP.setImpl(RadioBoxGroupImpl.class);
-        WRITE.TEXTBOX.setImpl(TextBoxImpl.class);
+        InputWidgets.TEXTBOX.setImpl(TextBoxImpl.class);
     }
 
     @Override
-    public <T> T createInstance(WRITE input, Object... params) throws Exception {
+    public <T> T createInstance(InputWidgets input, Object... params) throws Exception {
         Class<?> classFor = input.getImpl();
         if (classFor == null) {
             // ERROR

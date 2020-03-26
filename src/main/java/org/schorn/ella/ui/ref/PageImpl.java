@@ -23,37 +23,53 @@
  */
 package org.schorn.ella.ui.ref;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.visual.Page;
-import org.schorn.ella.ui.visual.Panel;
+import org.schorn.ella.ui.layout.Page;
 
 /**
  *
  * @author bschorn
  */
-class PageImpl implements Page {
+class PageImpl extends ItemContainerImpl implements Page {
 
-    protected final String title;
-    protected final List<CSS.Style> styles = new ArrayList<>();
-    protected final List<Frame> frames = new ArrayList<>();
-    protected final Map<Frame, Panel> panels = new HashMap<>();
-    protected final Map<Frame, Frame.Styler> frameStylers = new HashMap<>();
+    protected String title = "page";
+    protected boolean isViewport = false;
+    protected String viewportWidth = "";
+    protected String viewportScale = "";
 
+    public PageImpl() {
+        super("", "");
+    }
 
-    PageImpl(String title) {
+    @Override
+    public void setTitle(String title) {
         this.title = title;
     }
 
     @Override
-    public HTML.Element build() throws Exception {
+    public void setViewport(String width, String scale) {
+        this.isViewport = true;
+        this.viewportWidth = width;
+        this.viewportScale = scale;
+    }
+
+    @Override
+    protected HTML.Element build0() throws Exception {
+        HTML.Page pageElement = HTML.Page.create();
+        if (this.isViewport) {
+            pageElement.append(HTML.Meta.createViewport(this.viewportWidth, this.viewportScale));
+        }
+        this.items().stream()
+                .map(i -> i.build())
+                .filter(o -> o.isPresent())
+                .map(o -> o.get())
+                .forEachOrdered(e -> pageElement.append(e));
+        return pageElement;
+    }
+
+    /*
+    @Override
+    protected HTML.Page build0() throws Exception {
         List<CSS.Style> cssStyles = new ArrayList<>();
         cssStyles.addAll(this.styles.stream()
                 .filter(css -> css instanceof CSS.Block)
@@ -68,15 +84,20 @@ class PageImpl implements Page {
         cssStyles.add(cssBlock);
 
         HTML.Page page = HTML.Page.create();
+        if (this.isViewport) {
+            page.append(HTML.Meta.createViewport(this.viewportWidth, this.viewportScale));
+        }
         for (Frame frame : this.frames) {
             HTML.Div div = HTML.Div.create();
             page.append(div);
             div.setId(frame.id());
-            div.addClass("frame");
             div.addClass(frame.name());
+            div.addClass("frame");
             Frame.Styler frameStyler = this.frameStylers.get(frame);
             if (frameStyler != null) {
-                cssStyles.add(frameStyler.apply(frame));
+                CSS.Block frameBlock = frameStyler.apply(frame);
+                cssStyles.add(frameBlock);
+                frameStyler.throwException();
             }
             Panel panel = this.panels.get(frame);
             if (panel != null) {
@@ -94,39 +115,10 @@ class PageImpl implements Page {
                 .map(s -> (CSS.Block) s)
                 .forEachOrdered(b -> style.append(b));
 
-        page.htmlHead().append(style);
+        page.append(style);
 
         return page;
     }
-
-    @Override
-    public void accept(Frame frame) {
-        this.frames.add(frame);
-    }
-
-    @Override
-    public void assign(Panel panel, String frameName) {
-        Optional<Frame> optFrame = this.frames.stream()
-                .filter(frame -> frame.name().equals(frameName))
-                .findAny();
-        if (optFrame.isPresent()) {
-            this.panels.put(optFrame.get(), panel);
-        }
-    }
-
-    @Override
-    public void addStyle(CSS.Style style) {
-        this.styles.add(style);
-    }
-
-    @Override
-    public void assign(Frame.Styler frameStyler, String frameName) {
-        Optional<Frame> optFrame = this.frames.stream()
-                .filter(frame -> frame.name().equals(frameName))
-                .findAny();
-        if (optFrame.isPresent()) {
-            this.frameStylers.put(optFrame.get(), frameStyler);
-        }
-    }
+    */
 
 }

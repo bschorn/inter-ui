@@ -24,13 +24,13 @@
 package org.schorn.ella.ui.ref;
 
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.WRITE;
+import org.schorn.ella.ui.widget.InputWidgets;
 
 /**
  *
  * @author bschorn
  */
-public class ComboBoxImpl extends InputWidget implements WRITE.ComboBox {
+public class ComboBoxImpl extends InputWidgetImpl implements InputWidgets.ComboBox {
 
     public ComboBoxImpl(String id, String name, String[] datalist) {
         super("inter-combobox", HTML.Input.Type.TEXT, id, name);

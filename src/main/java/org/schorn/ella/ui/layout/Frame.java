@@ -23,51 +23,19 @@
  */
 package org.schorn.ella.ui.layout;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.visual.Control;
-import org.schorn.ella.ui.visual.Rect;
+import org.schorn.ella.ui.style.StyleComponent;
 
 /**
  *
  * @author bschorn
  */
-public interface Frame extends Control, Comparable<Frame> {
+public interface Frame extends Container<Item> {
 
-    /**
-     *
-     */
-    public interface Styler extends Function<Frame, CSS.Block> {
+    @Override
+    public void accept(Item item);
 
-        static final Map<Thread, Exception> EXCEPTIONS = new HashMap<>();
-
-        default void throwException() throws Exception {
-            Exception exception = EXCEPTIONS.get(Thread.currentThread());
-            if (exception != null) {
-                throw EXCEPTIONS.remove(Thread.currentThread());
-            }
-        }
-
-        default void catchException(Exception exception) {
-            EXCEPTIONS.put(Thread.currentThread(), exception);
-        }
-
-        @Override
-        public CSS.Block apply(Frame frame);
+    @Override
+    default StyleComponent styleComponent() {
+        return StyleComponent.get(Frame.class);
     }
-
-
-    public void setName(String id, String name);
-
-    public List<Frame> frames();
-
-    public Rect rect();
-
-    public List<Frame> vsplit(int... widths);
-
-    public List<Frame> hsplit(int... heights);
-
 }

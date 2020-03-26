@@ -47,7 +47,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public class HtmlFactoryImpl implements HTML.HtmlFactory {
+class HtmlFactoryImpl implements HTML.HtmlFactory {
+
+    static private final Logger LGR = LoggerFactory.getLogger(HtmlFactoryImpl.class);
 
     static private final HtmlFactoryImpl INSTANCE = new HtmlFactoryImpl();
 
@@ -92,7 +94,6 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
         HTML.COL.setImpl(HtmlColImpl.class);
         HTML.COLGROUP.setImpl(HtmlColgroupImpl.class);
         HTML.COMMAND.setImpl(HtmlCommandImpl.class);
-        HTML.COMMENT.setImpl(HtmlCommentImpl.class);
         HTML.DATAGRID.setImpl(HtmlDatagridImpl.class);
         HTML.DATALIST.setImpl(HtmlDatalistImpl.class);
         HTML.DD.setImpl(HtmlDdImpl.class);
@@ -188,7 +189,7 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
     }
 
     @Override
-    public <T> T createInstance(HTML html, HTML.Object... params) throws Exception {
+    public <T> T createInstance(HTML html, Object... params) throws Exception {
         Class<?> classFor = html.getImpl();
         if (classFor == null) {
             // ERROR
@@ -236,7 +237,7 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
     static abstract class ElementImpl implements Element {
 
         static private final AtomicInteger ID = new AtomicInteger(100);
-        static public final String[] INDENT = new String[]{"  ", "    ", "      ", "        ", "          ", "            ", "              "};
+        static public final String[] INDENT = new String[]{"  ", "    ", "      ", "        ", "          ", "            ", "              ", "                ", "                  ", "                    "};
         static public final String LINEFEED = "\n";
         private static final Logger LGR = LoggerFactory.getLogger(ElementImpl.class);
 
@@ -246,6 +247,7 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
         protected String tag;
         protected List<Element> children = new ArrayList<>();
         protected List<Attribute> attributes = new ArrayList<>();
+        protected Exception exception = null;
 
         ElementImpl(String tag) {
             if (tag == null) {
@@ -267,31 +269,35 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
         }
 
         @Override
-        public Element insert(Element element) throws HTML.InvalidContentException {
+        public Element insert(Element element) {
             //validateContent(this, element);
             if (element instanceof CustomElement) {
                 element = ((CustomElement) element).owner();
             }
             ElementImpl elementImpl = (ElementImpl) element;
-            if (elementImpl.parent != element) {
-                ((ElementImpl) elementImpl.parent).children.remove(element);
+            if (elementImpl != null) {
+                if (elementImpl.parent != element) {
+                    ((ElementImpl) elementImpl.parent).children.remove(element);
+                }
+                elementImpl.parent = this;
             }
-            elementImpl.parent = this;
             this.children.add(0, element);
             return this;
         }
 
         @Override
-        public Element append(Element element) throws HTML.InvalidContentException {
+        public Element append(Element element) {
             //validateContent(this, element);
             if (element instanceof CustomElement) {
                 element = ((CustomElement) element).owner();
             }
             ElementImpl elementImpl = (ElementImpl) element;
-            if (elementImpl.parent != element) {
-                ((ElementImpl) elementImpl.parent).children.remove(element);
+            if (elementImpl != null) {
+                if (elementImpl.parent != element) {
+                    ((ElementImpl) elementImpl.parent).children.remove(element);
+                }
+                elementImpl.parent = this;
             }
-            elementImpl.parent = this;
             this.children.add(element);
             return this;
         }
@@ -337,13 +343,16 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
         public String getId() {
             Optional<Attribute> id = this.attributes.stream().filter(a -> a.name().equalsIgnoreCase("id")).findFirst();
             if (id.isPresent()) {
-                return id.get().value().toString();
+                return id.get().value();
             }
             return "";
         }
 
         @Override
         public String render() {
+            if (this.parent == this) {
+                this.setLevel(0);
+            }
             StringBuilder builder = new StringBuilder();
             builder.append(renderIndent());
             builder.append(renderStartTag());
@@ -378,7 +387,7 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
             return "";
         }
 
-        protected final void addAttribute0(Attribute attribute) throws HTML.InvalidAttributeException {
+        protected final void addAttribute0(Attribute attribute) {
             if (attribute.render() != null) {
                 List<Attribute> existing
                         = this.attributes.stream()
@@ -462,6 +471,13 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
 
         protected String renderContent() {
             return "";
+        }
+
+        @Override
+        public void throwException() throws Exception {
+            if (this.exception != null) {
+                throw this.exception;
+            }
         }
     }
 
@@ -575,139 +591,8 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
 
     }
 
-    static class HtmlCommentImpl extends ElementImpl implements HTML.Comment {
-
-        private final String tag = "!--";
-        protected String textContent = "";
-
-        public HtmlCommentImpl() {
-            super("!--");
-        }
-        public HtmlCommentImpl(String tag) {
-            super(tag);
-        }
-
-        @Override
-        public HTML.TagOmission tagOmission() {
-            return HTML.TagOmission.EndMustBeOmitted;
-        }
-
-        @Override
-        public HtmlElement setTextContent(String content) {
-            this.textContent = content;
-            return this;
-        }
-
-        @Override
-        public HtmlElement setAutoCapitalize(HTML.AutoCapitalize autoCapitalize) {
-            return this;
-        }
-
-        @Override
-        public HtmlElement setContentEditable(boolean flag) {
-            return this;
-        }
-
-        @Override
-        public HtmlElement setDraggable(boolean flag) {
-            return this;
-        }
-
-        @Override
-        public HtmlElement setHidden(boolean flag) {
-            return this;
-        }
-
-        @Override
-        public HtmlElement setInputMode(HTML.InputMode inputMode) {
-            return this;
-        }
-
-        @Override
-        public HtmlElement setStyle(HTML.Style style) {
-            return this;
-        }
-
-        @Override
-        public String render() {
-            StringBuilder builder = new StringBuilder();
-            builder.append(renderStartTag());
-            builder.append(renderContent());
-            builder.append(renderEndTag());
-            builder.append(renderLinefeed());
-            return builder.toString();
-        }
-
-        protected String renderStartTag() {
-            return "<!-- ";
-        }
-
-        protected String renderEndTag() {
-            return " -->";
-        }
-
-        protected String renderContent() {
-            return this.textContent != null ? this.textContent : "";
-        }
-
-        protected String renderLinefeed() {
-            return ElementImpl.LINEFEED;
-        }
-
-        @Override
-        public Element setId(String value) throws Exception {
-            return this;
-        }
-
-        @Override
-        public String getId() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public String tag() {
-            return "--";
-        }
-
-        @Override
-        public Element addAttribute(Attribute attribute) throws HTML.InvalidAttributeException {
-            return this;
-        }
-
-        @Override
-        public List<Attribute> attributes() {
-            return new ArrayList<>(0);
-        }
-
-        @Override
-        public Element addClass(String className) {
-            return this;
-        }
-
-        @Override
-        public Element append(Element element) throws HTML.InvalidContentException {
-            return this;
-        }
-
-        @Override
-        public Element insert(Element element) throws HTML.InvalidContentException {
-            return this;
-        }
-
-        @Override
-        public Element parent() {
-            return this;
-        }
-
-        @Override
-        public List<Element> children() {
-            return new ArrayList<>(0);
-        }
-
-    }
-
     static class HtmlPageImpl extends HtmlElementImpl implements HTML.Page {
-        private static final Logger LGR = LoggerFactory.getLogger(ElementImpl.class);
+        //private static final Logger LGR = LoggerFactory.getLogger(ElementImpl.class);
 
         private final HTML.Head head;
         private final HTML.Body body;
@@ -730,24 +615,34 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
         }
 
         @Override
-        public HTML.Head htmlHead() {
+        public HTML.Head head() {
             return this.head;
         }
 
         @Override
-        public HTML.Body htmlBody() {
+        public HTML.Body body() {
             return this.body;
         }
 
         @Override
-        public Element insert(Element element) throws HTML.InvalidContentException {
-            LGR.error("{}.insert() - InvalidOperation", this.getClass().getSimpleName());
+        public Element insert(Element element) {
+            List<HTML.ContentCategory> contentCategories = HTML.ContentCategory.parse(HTML.valueOf(element.tag()));
+            if (contentCategories.contains(HTML.ContentCategory.Metadata)) {
+                this.head.insert(element);
+            } else {
+                this.body.insert(element);
+            }
             return this;
         }
 
         @Override
-        public Element append(Element element) throws HTML.InvalidContentException {
-            LGR.error("{}.append() - InvalidOperation", this.getClass().getSimpleName());
+        public Element append(Element element) {
+            List<HTML.ContentCategory> contentCategories = HTML.ContentCategory.parse(HTML.valueOf(element.tag().toUpperCase()));
+            if (contentCategories.contains(HTML.ContentCategory.Metadata)) {
+                this.head.append(element);
+            } else {
+                this.body.append(element);
+            }
             return this;
         }
     }
@@ -1261,12 +1156,49 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
 
     static class HtmlMetaImpl extends HtmlElementImpl implements HTML.Meta {
 
-        public HtmlMetaImpl() {
+        static private final Logger LGR = LoggerFactory.getLogger(HtmlMetaImpl.class);
+
+        public HtmlMetaImpl(Object... params) {
             super("meta");
+            try {
+                if (params != null && params.length > 0) {
+                    HTML.Attribute attribute1 = null;
+                    HTML.Attribute attribute2 = null;
+                    if (params[0] instanceof String && params[0].toString().equalsIgnoreCase("viewport")) {
+                        attribute1 = HTML.Attribute.create("name", "viewport");
+                        switch (params.length) {
+                            case 2:
+                                attribute2 = HTML.Attribute.create("content", String.format("width=%s, initial-scale=1", params[1]));
+                                break;
+                            case 3:
+                                attribute2 = HTML.Attribute.create("content", String.format("width=%s, initial-scale=%s", params[1], params[2]));
+                                break;
+                            default:
+                                attribute2 = HTML.Attribute.create("content", "width=device-width, initial-scale=1");
+                                break;
+                        }
+                    }
+                    if (attribute1 != null && attribute2 != null) {
+                        this.addAttribute(attribute1);
+                        this.addAttribute(attribute2);
+                    }
+                }
+            } catch (Exception ex) {
+                LGR.error("{}.ctor() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
         }
 
         @Override
         public HTML.Meta setCharset(String charset) throws Exception {
+            this.addAttribute(HTML.Attribute.create("charset", charset));
+            return this;
+        }
+
+        @Override
+        public HTML.Meta setName(String value) throws Exception {
+            this.addAttribute(HTML.Attribute.create("name", value));
             return this;
         }
     }
@@ -1299,7 +1231,7 @@ public class HtmlFactoryImpl implements HTML.HtmlFactory {
         }
     }
 
-    static class HtmlObjectImpl extends HtmlElementImpl implements HTML.Object {
+    static class HtmlObjectImpl extends HtmlElementImpl implements HTML.Objectt {
 
         public HtmlObjectImpl() {
             super("object");

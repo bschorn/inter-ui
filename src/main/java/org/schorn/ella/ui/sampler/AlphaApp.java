@@ -28,12 +28,13 @@ import java.nio.file.Paths;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.style.StyleFactory;
-import org.schorn.ella.ui.visual.Capture;
-import org.schorn.ella.ui.visual.Page;
-import org.schorn.ella.ui.widget.READ;
-import org.schorn.ella.ui.widget.WRITE;
+import org.schorn.ella.ui.widget.OutputWidgets;
+import org.schorn.ella.ui.widget.InputWidgets;
 
 /**
  *
@@ -48,17 +49,18 @@ public class AlphaApp {
             Frame frame = UIProvider.provider().createFrame();
             frame.hsplit(20, 80).get(1).vsplit(40, 60).get(1).hsplit(50, 50);
 
-            frame.setName("0.0", "menu");
-            frame.setName("0.1.0", "nav");
-            frame.setName("0.1.1.0", "viewer");
-            frame.setName("0.1.1.1", "editor");
+            frame.setIdName("0_0", "menu", "Menu");
+            frame.setIdName("0_1_0", "nav", "Navigation");
+            frame.setIdName("0_1_1_0", "viewer", "Viewer");
+            frame.setIdName("0_1_1_1", "editor", "Editor");
 
             Page page = Page.create("AlphaApp");
+            page.setViewport("device-width", "1");
             frame.frames().forEach(page);
-            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "menu");
-            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "nav");
-            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "viewer");
-            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "editor");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "Menu");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "Navigation");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "Viewer");
+            page.assign(StyleFactory.POSITIONED_FRAME_STYLER, "Editor");
             page.addStyle(CSS.Rule.create(CSS.Property.padding, "10px"));
             page.addStyle(StyleFactory.BODY_FONT_01);
             page.addStyle(StyleFactory.GLOBAL_BORDER_BOX);
@@ -90,11 +92,14 @@ public class AlphaApp {
 
             String formAddressId = "Form.Address.00";
             String formAddressName = "Address";
-            Capture formAddress = Capture.create(formAddressId, formAddressName);
-            formAddress.accept(READ.Title.create("customerAddress", "Customer Address"));
-            formAddress.accept(WRITE.TextBox.create("streetAddress", "Street Address"));
-            formAddress.accept(WRITE.ComboBox.create("city", "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
+            Edit formAddress = Aspect.createEdit(formAddressId, formAddressName);
+            formAddress.accept(OutputWidgets.Title.create("customerAddress", "Customer Address"));
+            formAddress.accept(InputWidgets.TextBox.create("streetAddress", "Street Address"));
+            formAddress.accept(InputWidgets.ComboBox.create("city", "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
 
+            Panel editor = UIProvider.provider().createPanel("editor-panel", "Editor Panel");
+            editor.accept(formAddress);
+            page.assign(editor, "Editor");
 
             HTML.Element pageElement = page.build();
             Files.write(Paths.get(OUTFILE), pageElement.render().getBytes());

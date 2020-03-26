@@ -23,29 +23,23 @@
  */
 package org.schorn.ella.ui.ref;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.visual.Rect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
-class FrameImpl implements Frame {
+class FrameImpl extends ItemContainerImpl implements Frame {
 
-    static private final Map<FrameImpl, Set<FrameImpl>> FRAMES = new HashMap<>();
+    static final Logger LGR = LoggerFactory.getLogger(FrameImpl.class);
 
-    /**
-     *
-     * @return
-     */
+    FrameImpl(String id, String name) {
+        super(id, name);
+    }
+
+    /*
     static public FrameImpl create() {
         return new FrameImpl();
     }
@@ -57,15 +51,17 @@ class FrameImpl implements Frame {
     private final FrameImpl parent;
     private final int idx;
     private final Rect rect;
-    private final String id;
+    private final String frameId;
+    private String id;
     private String name;
 
     FrameImpl() {
         this.parent = this;
         this.idx = 0;
         this.rect = new Rect(0, 0, 100, 100);
-        this.id = String.format("%d", this.idx);
-        this.name = this.id;
+        this.frameId = String.format("%d", this.idx);
+        this.id = this.frameId;
+        this.name = this.frameId;
         FRAMES.put(this, new TreeSet<>());
     }
 
@@ -73,8 +69,9 @@ class FrameImpl implements Frame {
         this.parent = parent;
         this.idx = idx;
         this.rect = rect;
-        this.id = String.format("%s.%d", this.parent.id, this.idx);
-        this.name = this.id;
+        this.frameId = String.format("%s_%d", this.parent.frameId, this.idx);
+        this.id = this.frameId;
+        this.name = this.frameId;
         FRAMES.get(this.findRoot()).add(this);
     }
 
@@ -94,20 +91,36 @@ class FrameImpl implements Frame {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.frameId);
         return hash;
     }
 
     @Override
     public String toString() {
         return String.format("%s: %s",
-                this.id, this.rect().toString());
+                this.frameId, this.rect().toString());
     }
 
     @Override
-    public void setName(String id, String name) {
-        FrameImpl frame = findFrame(id);
+    public String frameId() {
+        return this.frameId;
+    }
+
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    @Override
+    public void setIdName(String frameId, String id, String name) {
+        FrameImpl frame = findFrame(frameId);
         if (frame != null) {
+            frame.id = id;
             frame.name = name;
         }
     }
@@ -119,16 +132,6 @@ class FrameImpl implements Frame {
             return set.stream().map(f -> (Frame) f).collect(Collectors.toList());
         }
         return new ArrayList<>();
-    }
-
-    @Override
-    public String id() {
-        return this.id;
-    }
-
-    @Override
-    public String name() {
-        return this.name;
     }
 
     @Override
@@ -240,13 +243,14 @@ class FrameImpl implements Frame {
             FrameImpl root = FrameImpl.create();
             root.hsplit(20, 80).get(1).vsplit(40, 60).get(1).hsplit(50, 50);
 
-            root.setName("0.0", "menu");
-            root.setName("0.1.0", "nav");
-            root.setName("0.1.1.0", "viewer");
-            root.setName("0.1.1.1", "editor");
+            root.setIdName("0.0", "menu", "Menu");
+            root.setIdName("0.1.0", "nav", "Navigation");
+            root.setIdName("0.1.1.0", "viewer", "Viewer");
+            root.setIdName("0.1.1.1", "editor", "Editor");
 
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
     }
+     */
 }

@@ -24,13 +24,13 @@
 package org.schorn.ella.ui.ref;
 
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.READ;
+import org.schorn.ella.ui.widget.OutputWidgets;
 
 /**
  *
  * @author bschorn
  */
-class TitleImpl extends OutputWidget implements READ.Title {
+class TitleImpl extends OutputWidgetImpl implements OutputWidgets.Title {
 
     private String title;
 
@@ -38,16 +38,13 @@ class TitleImpl extends OutputWidget implements READ.Title {
         super("view-title", id, name);
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
     @Override
-    public HTML.Element build() throws Exception {
+    protected HTML.Element build0() throws Exception {
         HTML.Div divElement = HTML.Div.create();
         divElement.setTextContent(title);
         return divElement;

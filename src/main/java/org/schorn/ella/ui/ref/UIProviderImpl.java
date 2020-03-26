@@ -26,13 +26,13 @@ package org.schorn.ella.ui.ref;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Editor;
 import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.visual.Capture;
-import org.schorn.ella.ui.visual.Display;
-import org.schorn.ella.ui.visual.Page;
-import org.schorn.ella.ui.visual.Panel;
-import org.schorn.ella.ui.widget.READ;
-import org.schorn.ella.ui.widget.WRITE;
+import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Panel;
+import org.schorn.ella.ui.layout.Viewer;
+import org.schorn.ella.ui.widget.InputWidgets;
+import org.schorn.ella.ui.widget.OutputWidgets;
 
 /**
  *
@@ -51,23 +51,23 @@ public class UIProviderImpl implements UIProvider {
     }
 
     @Override
-    public WRITE.WriteFactory getInputFactory() {
+    public InputWidgets.InputFactory getInputFactory() {
         return WriteFactoryImpl.getFactory();
     }
 
     @Override
-    public READ.ReadFactory getOutputFactory() {
+    public OutputWidgets.ReadFactory getOutputFactory() {
         return ReadFactoryImpl.getFactory();
     }
 
     @Override
-    public Frame createFrame() {
-        return new FrameImpl();
+    public Frame createFrame(String id, String name) {
+        return new FrameImpl(id, name);
     }
 
     @Override
-    public Page createPage(String title) {
-        return new PageImpl(title);
+    public Page createPage() {
+        return new PageImpl();
     }
 
     @Override
@@ -76,13 +76,13 @@ public class UIProviderImpl implements UIProvider {
     }
 
     @Override
-    public Display createDisplay(String id, String name) {
-        return new DisplayImpl(id, name);
+    public Viewer createViewer(String id, String name) {
+        return new ViewerImpl(id, name);
     }
 
     @Override
-    public Capture createCapture(String id, String name) {
-        return new CaptureImpl(id, name);
+    public Editor createEditor(String id, String name) {
+        return new EditorImpl(id, name);
     }
 
 }
