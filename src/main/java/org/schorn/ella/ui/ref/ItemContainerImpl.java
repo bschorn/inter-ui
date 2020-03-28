@@ -34,7 +34,7 @@ import org.schorn.ella.ui.layout.Item;
  *
  * @author bschorn
  */
-abstract class ItemContainerImpl implements Container<Item> {
+abstract class ItemContainerImpl implements Container<Item>, Item {
 
     private final String id;
     private final String name;
@@ -87,7 +87,7 @@ abstract class ItemContainerImpl implements Container<Item> {
         HTML.Div containerElement = HTML.Div.create();
         containerElement.setId(this.id());
         containerElement.addClass(this.name());
-        containerElement.addClass(this.styleComponent().classFor().getSimpleName().toLowerCase());
+        containerElement.addClass(this.type().className());
         this.items().stream()
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())

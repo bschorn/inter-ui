@@ -23,16 +23,14 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.style.StyleComponent;
-
 /**
  *
  * @author bschorn
  */
 public interface Editor extends Aspect {
     @Override
-    default StyleComponent styleComponent() {
-        return StyleComponent.get(Editor.class);
+    default Type type() {
+        return Type.get(Editor.class);
     }
 
 }

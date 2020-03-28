@@ -187,7 +187,7 @@ public enum CSS {
             return Role.SELECTOR;
         }
 
-        static public Selector create(String selector) throws Exception {
+        static public Selector create(String selector) {
             try {
                 return CSS.SELECTOR.create(Selector.class, selector);
             } catch (Exception ex) {
@@ -199,7 +199,19 @@ public enum CSS {
             return null;
         }
 
-        static public Selector createType(HTML type) throws Exception {
+        static public Selector createGlobal() {
+            try {
+                return CSS.SELECTOR.create(Selector.class, "*");
+            } catch (Exception ex) {
+                LGR.error("{}.create({}) - Caught Exception: {}",
+                        Selector.class.getSimpleName(),
+                        "*",
+                        ToString.stackTrace(ex));
+            }
+            return null;
+        }
+
+        static public Selector createType(HTML type) {
             try {
                 return CSS.SELECTOR.create(Selector.class, type.tag());
             } catch (Exception ex) {
@@ -211,7 +223,7 @@ public enum CSS {
             return null;
         }
 
-        static public Selector createClass(String className) throws Exception {
+        static public Selector createClass(String className) {
             try {
                 return CSS.SELECTOR.create(Selector.class, String.format(".%s", className));
             } catch (Exception ex) {
@@ -299,8 +311,13 @@ public enum CSS {
             return Role.RULE;
         }
 
-        static public Rule create(Property property, String value) throws Exception {
-            return CSS.RULE.create(Rule.class, property, value);
+        static public Rule create(Property property, String value) {
+            try {
+                return CSS.RULE.create(Rule.class, property, value);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
         }
     }
 
@@ -365,6 +382,13 @@ public enum CSS {
         private final Double min;
         private final Double max;
 
+        DataType() {
+            this.flavor = DataTypeFlavor.PATTERN;
+            this.list = null;
+            this.pattern = Pattern.compile("^.*$");
+            this.min = null;
+            this.max = null;
+        }
         DataType(String[] list) {
             this.flavor = DataTypeFlavor.LIST;
             this.list = Arrays.asList(list);

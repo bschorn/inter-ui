@@ -23,10 +23,9 @@
  */
 package org.schorn.ella.ui.style;
 
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.Map;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Frame;
 
 /**
  *
@@ -34,98 +33,28 @@ import org.schorn.ella.ui.layout.Frame;
  */
 public class StyleFactory {
 
-    /*
-    input, label {
-        display:block;
+    public interface FactorySupplier {
+
+        CSS.Style get();
     }
-     */
-    static public final CSS.Style LABEL_STYLE_01;
-    static public final CSS.Style BODY_FONT_01;
-    static public final CSS.Style GLOBAL_BORDER_BOX;
-    static public final CSS.Style FRAME;
-    static public final CSS.Style PANEL;
-    static public final CSS.Style VALUE;
-    static public final PositionedFrameStyler POSITIONED_FRAME_STYLER = new PositionedFrameStyler();
+
+    static private Map<FactorySupplier, CSS.Style> STYLES = new HashMap<>();
+
+    static public void set(FactorySupplier id, CSS.Style style) {
+        STYLES.put(id, style);
+    }
+
+    static public CSS.Style get(FactorySupplier id) {
+        return STYLES.get(id);
+    }
 
     static {
-        CSS.Style labelStyle01 = null;
-        try {
-            labelStyle01 = CSS.Block.create()
-                    .append(CSS.Selector.createType(HTML.INPUT))
-                    .append(CSS.Selector.createType(HTML.LABEL))
-                    .append(CSS.Rule.create(CSS.Property.display, "block"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        LABEL_STYLE_01 = labelStyle01;
-
-        CSS.Rule bodyFont01 = null;
-        try {
-            bodyFont01 = CSS.Rule.create(CSS.Property.font, ".85em Arial, sans-serif");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        BODY_FONT_01 = bodyFont01;
-
-        CSS.Block globalBorderBox = null;
-        try {
-            globalBorderBox = CSS.Block.create().append(CSS.Selector.create("*"))
-                    .append(CSS.Rule.create(CSS.Property.box_sizing, "border-box"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        GLOBAL_BORDER_BOX = globalBorderBox;
-
-        CSS.Block frame = null;
-        try {
-            frame = CSS.Block.create().append(CSS.Selector.createClass("frame"))
-                    .append(CSS.Rule.create(CSS.Property.display, "inline-block"))
-                    .append(CSS.Rule.create(CSS.Property.width, "inline-block"))
-                    .append(CSS.Rule.create(CSS.Property.height, "inline-block"))
-                    .append(CSS.Rule.create(CSS.Property.border, "dashed lightgray 2px"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        FRAME = frame;
-
-        CSS.Block panel = null;
-        try {
-            panel = CSS.Block.create().append(CSS.Selector.createClass("panel"))
-                    .append(CSS.Rule.create(CSS.Property.display, "inline-grid"))
-                    .append(CSS.Rule.create(CSS.Property.padding, "10px"))
-                    .append(CSS.Rule.create(CSS.Property.border, "solid white 1px"))
-                    .append(CSS.Rule.create(CSS.Property.border_radius, "5px"))
-                    .append(CSS.Rule.create(CSS.Property.background, "tan"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        PANEL = panel;
-
-        CSS.Block value = null;
-        try {
-            value = CSS.Block.create().append(CSS.Selector.createClass("value"))
-                    .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
-                    .append(CSS.Rule.create(CSS.Property.color, "black"))
-                    .append(CSS.Rule.create(CSS.Property.background, "white"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        VALUE = value;
+        GenericStyles.init();
+        PageStyles.init();
+        FrameStyles.init();
+        PanelStyles.init();
+        AspectStyles.init();
+        WidgetStyles.init();
+        FontStyles.init();
     }
-
-    static class PositionedFrameStyler implements Function<Frame, CSS.Block> {
-
-        public CSS.Block apply(Frame frame) {
-            try {
-                return CSS.Block.create()
-                        .append(CSS.Selector.createID(frame.id()))
-                        .append(CSS.Rule.create(CSS.Property.position, "absolute"));
-
-            } catch (Exception ex) {
-                return CSS.Block.create();
-            }
-        }
-
-    }
-
 }

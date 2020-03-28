@@ -41,33 +41,13 @@ import org.schorn.ella.ui.widget.OutputWidgets;
 public class UIProviderImpl implements UIProvider {
 
     @Override
-    public HTML.HtmlFactory getHTMLFactory() {
-        return HtmlFactoryImpl.getFactory();
-    }
-
-    @Override
-    public CSS.CssFactory getCSSFactory() {
-        return CssFactoryImpl.getFactory();
-    }
-
-    @Override
-    public InputWidgets.InputFactory getInputFactory() {
-        return WriteFactoryImpl.getFactory();
-    }
-
-    @Override
-    public OutputWidgets.ReadFactory getOutputFactory() {
-        return ReadFactoryImpl.getFactory();
+    public Page createPage() {
+        return new PageImpl();
     }
 
     @Override
     public Frame createFrame(String id, String name) {
         return new FrameImpl(id, name);
-    }
-
-    @Override
-    public Page createPage() {
-        return new PageImpl();
     }
 
     @Override
@@ -85,4 +65,23 @@ public class UIProviderImpl implements UIProvider {
         return new EditorImpl(id, name);
     }
 
+    @Override
+    public InputWidgets.InputFactory getInputFactory() {
+        return WriteFactoryImpl.getFactory();
+    }
+
+    @Override
+    public OutputWidgets.ReadFactory getOutputFactory() {
+        return ReadFactoryImpl.getFactory();
+    }
+
+    @Override
+    public HTML.HtmlFactory getHTMLFactory() {
+        return HtmlFactoryImpl.getFactory();
+    }
+
+    @Override
+    public CSS.CssFactory getCSSFactory() {
+        return CssFactoryImpl.getFactory();
+    }
 }

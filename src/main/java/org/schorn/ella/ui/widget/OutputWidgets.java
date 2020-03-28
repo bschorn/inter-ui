@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.widget;
 
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.layout.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,41 +70,60 @@ public enum OutputWidgets {
     }
 
     public interface Output extends Widget {
-
     }
 
     public interface Chart extends Output {
+        @Override
+        default Type type() {
+            return Type.get(Chart.class);
+        }
 
-        static public Chart create(Object... params) throws Exception {
-            return OutputWidgets.CHART.create(params);
+        static public Chart create(String name, String url) throws Exception {
+            return OutputWidgets.CHART.create(name, url);
         }
     }
 
     public interface Image extends Output {
+        @Override
+        default Type type() {
+            return Type.get(Image.class);
+        }
 
-        static public Image create(Object... params) throws Exception {
-            return OutputWidgets.IMAGE.create(params);
+        static public Image create(String name, String url) throws Exception {
+            return OutputWidgets.IMAGE.create(name, url);
         }
     }
 
     public interface Progress extends Output {
+        @Override
+        default Type type() {
+            return Type.get(Progress.class);
+        }
 
-        static public Progress create(Object... params) throws Exception {
-            return OutputWidgets.PROGRESS.create(params);
+        static public Progress create(String name) throws Exception {
+            return OutputWidgets.PROGRESS.create(name);
         }
     }
 
     public interface Scroll extends Output {
+        @Override
+        default Type type() {
+            return Type.get(Chart.class);
+        }
 
-        static public Scroll create(Object... params) throws Exception {
-            return OutputWidgets.SCROLL.create(params);
+        static public Scroll create(String name) throws Exception {
+            return OutputWidgets.SCROLL.create(name);
         }
     }
 
     public interface Text extends Output {
+        @Override
+        default Type type() {
+            return Type.get(Text.class);
+        }
 
-        static public Text create(Object... params) throws Exception {
-            return OutputWidgets.TEXT.create(params);
+        static public Text create(String name, String text) throws Exception {
+            return OutputWidgets.TEXT.create(name, text);
         }
     }
 
@@ -111,8 +131,8 @@ public enum OutputWidgets {
 
         void setTitle(String title);
 
-        static public Title create(Object... params) throws Exception {
-            return OutputWidgets.TITLE.create(params);
+        static public Title create(String name, String title) throws Exception {
+            return OutputWidgets.TITLE.create(name, title);
         }
     }
 

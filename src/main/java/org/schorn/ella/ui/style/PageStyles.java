@@ -21,20 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.style;
+
+import org.schorn.ella.ui.html.CSS;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public enum PageStyles implements StyleFactory.FactorySupplier {
+    DUMMY;
 
     @Override
-    public void accept(Item item);
+    public CSS.Style get() {
+        return StyleFactory.get(this);
+    }
 
-    @Override
-    default Type type() {
-        return Type.get(Panel.class);
+    static public void init() {
+        StyleFactory.set(DUMMY, CSS.Block.create());
     }
 
 }

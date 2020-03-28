@@ -23,14 +23,41 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.style.StyleComponent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.style.StyleSheet;
 
 /**
  *
  * @author bschorn
  */
-public interface Style {
+public class Style implements StyleSheet {
 
-    public StyleComponent styleComponent();
+    private final Map<Type, List<CSS.Style>> map = new HashMap<>();
+
+    public void addStyle(Type type, CSS.Style style) {
+        List<CSS.Style> partStyles = this.map.get(type);
+        if (partStyles == null) {
+            partStyles = new ArrayList<>();
+            this.map.put(type, partStyles);
+        }
+        partStyles.add(style);
+    }
+
+    public List<CSS.Style> getStyles(Type type) {
+        return this.map.get(type);
+    }
+
+    @Override
+    public List<CSS.Style> styles() {
+        return this.map.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
 
 }

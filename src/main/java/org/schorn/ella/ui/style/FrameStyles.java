@@ -21,20 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.style;
+
+import org.schorn.ella.ui.html.CSS;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public enum FrameStyles implements StyleFactory.FactorySupplier {
+    DEBUG;
 
     @Override
-    public void accept(Item item);
+    public CSS.Style get() {
+        return StyleFactory.get(this);
+    }
 
-    @Override
-    default Type type() {
-        return Type.get(Panel.class);
+    static public void init() {
+        StyleFactory.set(DEBUG, CSS.Block.create().append(CSS.Selector.createClass("frame"))
+                .append(CSS.Rule.create(CSS.Property.display, "inline-block"))
+                .append(CSS.Rule.create(CSS.Property.min_width, "500px"))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100px"))
+                .append(CSS.Rule.create(CSS.Property.border, "dashed lightgray 2px")));
     }
 
 }

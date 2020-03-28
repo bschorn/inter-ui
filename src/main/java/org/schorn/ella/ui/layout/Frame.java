@@ -23,8 +23,6 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.style.StyleComponent;
-
 /**
  *
  * @author bschorn
@@ -35,7 +33,7 @@ public interface Frame extends Container<Item> {
     public void accept(Item item);
 
     @Override
-    default StyleComponent styleComponent() {
-        return StyleComponent.get(Frame.class);
+    default Type type() {
+        return Type.get(Frame.class);
     }
 }

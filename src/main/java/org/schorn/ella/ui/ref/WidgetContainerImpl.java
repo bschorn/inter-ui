@@ -87,7 +87,7 @@ abstract class WidgetContainerImpl implements Container<Widget> {
         HTML.Div containerElement = HTML.Div.create();
         containerElement.setId(this.id());
         containerElement.addClass(this.name());
-        containerElement.addClass(this.styleComponent().classFor().getSimpleName().toLowerCase());
+        containerElement.addClass(this.type().className());
         this.widgets().stream()
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())

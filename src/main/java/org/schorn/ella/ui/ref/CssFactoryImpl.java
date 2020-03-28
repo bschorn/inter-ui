@@ -35,7 +35,7 @@ import org.schorn.ella.ui.html.CSS;
  *
  * @author bschorn
  */
-public class CssFactoryImpl implements CSS.CssFactory {
+final class CssFactoryImpl implements CSS.CssFactory {
     static private final CssFactoryImpl INSTANCE = new CssFactoryImpl();
 
     static public CSS.CssFactory getFactory() {
@@ -46,6 +46,7 @@ public class CssFactoryImpl implements CSS.CssFactory {
         this.register();
     }
 
+    @Override
     public void register() {
         CSS.BLOCK.setImpl(BlockImpl.class);
         CSS.SELECTOR.setImpl(SelectorImpl.class);

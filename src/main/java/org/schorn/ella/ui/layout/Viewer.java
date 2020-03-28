@@ -23,8 +23,6 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.style.StyleComponent;
-
 /**
  *
  * @author bschorn
@@ -32,8 +30,8 @@ import org.schorn.ella.ui.style.StyleComponent;
 public interface Viewer extends Aspect {
 
     @Override
-    default StyleComponent styleComponent() {
-        return StyleComponent.get(Viewer.class);
+    default Type type() {
+        return Type.get(Viewer.class);
     }
 
 }

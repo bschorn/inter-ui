@@ -28,8 +28,8 @@ import java.util.function.Consumer;
 /**
  *
  * @author bschorn
- * @param <T>
+ * @param <I>
  */
-public interface Container<T extends Item> extends Item, Consumer<T> {
+public interface Container<I extends Item> extends Item, Consumer<I> {
 
 }

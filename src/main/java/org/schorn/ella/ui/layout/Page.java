@@ -24,13 +24,14 @@
 package org.schorn.ella.ui.layout;
 
 import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.style.StyleComponent;
+import org.schorn.ella.ui.style.StyleSheet;
+
 
 /**
  *
  * @author bschorn
  */
-public interface Page extends Container<Item>, Style {
+public interface Page extends Container<Item>, Item {
 
     static Page create() {
         return UIProvider.provider().createPage();
@@ -41,15 +42,16 @@ public interface Page extends Container<Item>, Style {
     @Override
     public void accept(Item item);
 
-    //public void setStyleSheet(StyleSheet styleSheet);
+    //public void addStyleSheet(StyleSheet styleSheet);
 
     //public void addStyle(CSS.Style style);
 
     public void setViewport(String width, String initialScale);
 
     @Override
-    default StyleComponent styleComponent() {
-        return StyleComponent.get(Page.class);
+    default Type type() {
+        return Type.get(Page.class);
     }
 
+    String produce(StyleSheet styleSheet) throws Exception;
 }

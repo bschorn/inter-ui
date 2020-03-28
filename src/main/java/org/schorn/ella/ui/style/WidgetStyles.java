@@ -21,20 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.style;
+
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public enum WidgetStyles implements StyleFactory.FactorySupplier {
+    LABEL_OVER_VALUE,
+    OUTPUT_VALUE;
 
     @Override
-    public void accept(Item item);
+    public CSS.Style get() {
+        return StyleFactory.get(this);
+    }
 
-    @Override
-    default Type type() {
-        return Type.get(Panel.class);
+    static public void init() {
+        StyleFactory.set(LABEL_OVER_VALUE, CSS.Block.create()
+                .append(CSS.Selector.createType(HTML.INPUT))
+                .append(CSS.Selector.createType(HTML.LABEL))
+                .append(CSS.Rule.create(CSS.Property.display, "block")));
+
+        StyleFactory.set(OUTPUT_VALUE, CSS.Block.create()
+                .append(CSS.Selector.createClass("value"))
+                .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
+                .append(CSS.Rule.create(CSS.Property.color, "black"))
+                .append(CSS.Rule.create(CSS.Property.background, "white")));
+
     }
 
 }

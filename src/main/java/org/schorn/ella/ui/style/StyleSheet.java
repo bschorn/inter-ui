@@ -32,9 +32,17 @@ import org.schorn.ella.ui.html.CSS;
  */
 public interface StyleSheet {
 
-    public StyleSheet addStyle(StyleComponent styleComponent, CSS.Style style);
+    static final StyleSheet RESET = new StyleReset();
 
-    public List<CSS.Style> getStyle(StyleComponent styleComponent);
+    default void reset() {
+        this.styles().clear();
+        this.styles().addAll(StyleSheet.RESET.styles());
+    }
 
-    public List<CSS.Style> getAllStyles();
+    default void add(StyleFactory.FactorySupplier styleSupplier) {
+        this.styles().add(styleSupplier.get());
+    }
+
+    public List<CSS.Style> styles();
+
 }

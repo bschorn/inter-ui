@@ -21,20 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.style;
+
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public enum FontStyles implements StyleFactory.FactorySupplier {
+    ARIAL85;
 
     @Override
-    public void accept(Item item);
+    public CSS.Style get() {
+        return StyleFactory.get(this);
+    }
 
-    @Override
-    default Type type() {
-        return Type.get(Panel.class);
+    static public void init() {
+        StyleFactory.set(ARIAL85, CSS.Block.create()
+                .append(CSS.Selector.createType(HTML.BODY))
+                .append(CSS.Rule.create(CSS.Property.font, ".85em Arial, sans-serif")));
     }
 
 }

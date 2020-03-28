@@ -31,6 +31,7 @@ import org.schorn.ella.ui.html.HTML;
  * @author bschorn
  */
 public interface Build {
+
     public Optional<HTML.Element> build();
 
     public void throwException() throws Exception;

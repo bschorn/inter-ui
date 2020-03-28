@@ -21,20 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.sampler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.style.FontStyles;
+import org.schorn.ella.ui.style.FrameStyles;
+import org.schorn.ella.ui.style.GenericStyles;
+import org.schorn.ella.ui.style.PanelStyles;
+import org.schorn.ella.ui.style.StyleSheet;
+import org.schorn.ella.ui.style.WidgetStyles;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public final class AlphaStyle implements StyleSheet {
 
-    @Override
-    public void accept(Item item);
+    private final List<CSS.Style> styles = new ArrayList<>();
 
-    @Override
-    default Type type() {
-        return Type.get(Panel.class);
+    public AlphaStyle() {
+        this.reset();
+        this.add(FontStyles.ARIAL85);
+        this.add(GenericStyles.GLOBAL_BOX_SIZING_BORDER_BOX);
+        this.add(FrameStyles.DEBUG);
+        this.add(PanelStyles.DEBUG);
+        this.add(WidgetStyles.LABEL_OVER_VALUE);
     }
 
+    @Override
+    public List<CSS.Style> styles() {
+        return this.styles;
+    }
+
+    @Override
+    public String toString() {
+        return this.styles.stream().map(s -> s.render()).collect(Collectors.joining("\n"));
+    }
 }

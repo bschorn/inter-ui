@@ -28,8 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.style.StyleComponent;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.widget.Output;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +36,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-class OutputWidgetImpl implements Widget {
+abstract class OutputWidgetImpl implements Output {
 
-    static final Logger LGR = LoggerFactory.getLogger(OutputWidgetImpl.class);
+    static private final Logger LGR = LoggerFactory.getLogger(OutputWidgetImpl.class);
 
     protected final String customTag;
     protected final String id;
@@ -48,10 +47,11 @@ class OutputWidgetImpl implements Widget {
     protected String label = null;
     protected Exception exception = null;
 
-    OutputWidgetImpl(String customTag, String id, String name) {
+    OutputWidgetImpl(String customTag, String name, String label) {
         this.customTag = customTag;
-        this.id = id;
+        this.id = String.format("%s_ID", name);
         this.name = name;
+        this.label = label;
     }
 
     public void addLabel(String label) {
@@ -73,37 +73,7 @@ class OutputWidgetImpl implements Widget {
         return Optional.ofNullable(element);
     }
 
-    protected HTML.Element build0() throws Exception {
-
-        HTML.Div divElement = HTML.Div.create();
-        HTML.Input inputElement = HTML.Input.create();
-        //inputElement.addAttribute(this.inputType.asAttribute());
-        HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, this.name);
-        inputElement.addAttribute(attribute);
-        if (!this.datalist.isEmpty()) {
-            String datalistId = String.format("%s-list", this.id);
-            HTML.Datalist datalistElement = HTML.Datalist.create();
-            datalistElement.setId(datalistId);
-            for (String optionStr : this.datalist) {
-                HTML.Option option = HTML.Option.create();
-                option.addAttribute(HTML.Attribute.create("value", optionStr));
-                datalistElement.append(option);
-            }
-            inputElement.addAttribute(HTML.Attribute.create("list", datalistId));
-            inputElement.append(datalistElement);
-        }
-        if (this.label != null) {
-            HTML.Label labelElement = HTML.Label.create();
-            labelElement.append(inputElement);
-            labelElement.setTextContent(this.label);
-            labelElement.append(inputElement);
-            divElement.append(labelElement);
-        } else {
-            divElement.append(inputElement);
-        }
-
-        return divElement;
-    }
+    abstract HTML.Element build0() throws Exception;
 
     @Override
     public String customTag() {
@@ -127,33 +97,4 @@ class OutputWidgetImpl implements Widget {
         }
     }
 
-    @Override
-    public StyleComponent styleComponent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /*
-    @Override
-    public void addStyle(CSS.Style style) {
-        this.styles.add(style);
-    }
-
-    @Override
-    public List<CSS.Style> styles() {
-        List<CSS.Style> cssStyles = new ArrayList<>();
-        cssStyles.addAll(this.styles.stream()
-                .filter(css -> css instanceof CSS.Block)
-                .collect(Collectors.toList()));
-
-        final CSS.Block cssBlock = CSS.Block.create();
-        cssBlock.append(CSS.Selector.createID(this.id));
-        this.styles.stream()
-                .filter(css -> css instanceof CSS.Rule)
-                .map(css -> (CSS.Rule) css)
-                .forEachOrdered(cssr -> cssBlock.append(cssr));
-        cssStyles.add(cssBlock);
-
-        return cssStyles;
-    }
-     */
 }

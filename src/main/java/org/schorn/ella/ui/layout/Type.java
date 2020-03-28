@@ -21,16 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
+package org.schorn.ella.ui.layout;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.schorn.ella.ui.layout.Aspect;
-import org.schorn.ella.ui.layout.Editor;
-import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.layout.Page;
-import org.schorn.ella.ui.layout.Panel;
-import org.schorn.ella.ui.layout.Viewer;
 import org.schorn.ella.ui.widget.Input;
 import org.schorn.ella.ui.widget.Output;
 import org.schorn.ella.ui.widget.Widget;
@@ -39,25 +33,25 @@ import org.schorn.ella.ui.widget.Widget;
  *
  * @author bschorn
  */
-public interface StyleComponent {
+public interface Type {
 
-    static StyleComponent get(Class<?> classFor) {
-        return Support.MAP.get(classFor);
+    static Type get(Class<?> classFor) {
+        return Helper.MAP.get(classFor);
     }
 
     /**
      * Add Custom
      *
-     * @param styleComponent
+     * @param itemType
      */
-    static void add(StyleComponent styleComponent) {
-        Support.MAP.put(styleComponent.classFor(), styleComponent);
+    static void add(Type itemType) {
+        Helper.MAP.put(itemType.classFor(), itemType);
     }
 
     /**
      * These are the default style components
      */
-    public enum StyleComponentImpl implements StyleComponent {
+    enum Types implements Type {
         PAGE(Page.class),
         PANEL(Panel.class),
         FRAME(Frame.class),
@@ -69,10 +63,12 @@ public interface StyleComponent {
         OUTPUT(Output.class);
 
         private final Class<?> classFor;
+        private final String className;
 
-        StyleComponentImpl(Class<?> classFor) {
+        Types(Class<?> classFor) {
             this.classFor = classFor;
-            StyleComponent.add(this);
+            this.className = classFor.getSimpleName().toLowerCase();
+            Type.add(this);
         }
 
         @Override
@@ -80,6 +76,10 @@ public interface StyleComponent {
             return this.classFor;
         }
 
+        @Override
+        public String className() {
+            return this.className;
+        }
     }
 
     /**
@@ -89,13 +89,18 @@ public interface StyleComponent {
      */
     Class<?> classFor();
 
+    String className();
 
     /**
      * Support Class (so the MAP is private)
      */
-    static class Support {
+    static class Helper {
 
-        static private Map<Class<?>, StyleComponent> MAP = new HashMap<>();
+        static private Map<Class<?>, Type> MAP = new HashMap<>();
+
+        static {
+            Types.values();
+        }
     }
 
 }

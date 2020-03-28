@@ -21,52 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.visual;
+package org.schorn.ella.ui.style;
+
+import org.schorn.ella.ui.html.CSS;
 
 /**
  *
  * @author bschorn
  */
-public class Rect {
+public enum AspectStyles implements StyleFactory.FactorySupplier {
+    DUMMY;
 
-    private final int top;
-    private final int left;
-    private final int width;
-    private final int height;
-
-    public Rect(int top, int left, int width, int height) {
-        this.top = top;
-        this.left = left;
-        this.width = width;
-        this.height = height;
+    @Override
+    public CSS.Style get() {
+        return StyleFactory.get(this);
     }
 
-    public int top() {
-        return this.top;
+    static public void init() {
+        StyleFactory.set(DUMMY, CSS.Block.create());
     }
 
-    public int left() {
-        return this.left;
-    }
-
-    public int bottom() {
-        return this.height - this.top;
-    }
-
-    public int right() {
-        return this.width - this.left;
-    }
-
-    public int width() {
-        return this.width;
-    }
-
-    public int height() {
-        return this.height;
-    }
-
-    public String toString() {
-        return String.format("x: %d, y: %d, width: %d, height: %d",
-                this.top, this.left, this.width, this.height);
-    }
 }

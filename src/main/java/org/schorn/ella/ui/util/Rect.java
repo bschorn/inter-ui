@@ -21,20 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.util;
 
 /**
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public class Rect {
 
-    @Override
-    public void accept(Item item);
+    private final int top;
+    private final int left;
+    private final int width;
+    private final int height;
 
-    @Override
-    default Type type() {
-        return Type.get(Panel.class);
+    public Rect(int top, int left, int width, int height) {
+        this.top = top;
+        this.left = left;
+        this.width = width;
+        this.height = height;
     }
 
+    public int top() {
+        return this.top;
+    }
+
+    public int left() {
+        return this.left;
+    }
+
+    public int bottom() {
+        return this.height - this.top;
+    }
+
+    public int right() {
+        return this.width - this.left;
+    }
+
+    public int width() {
+        return this.width;
+    }
+
+    public int height() {
+        return this.height;
+    }
+
+    public String toString() {
+        return String.format("x: %d, y: %d, width: %d, height: %d",
+                this.top, this.left, this.width, this.height);
+    }
 }

@@ -32,9 +32,9 @@ import org.schorn.ella.ui.widget.InputWidgets;
  */
 public class ComboBoxImpl extends InputWidgetImpl implements InputWidgets.ComboBox {
 
-    public ComboBoxImpl(String id, String name, String[] datalist) {
-        super("inter-combobox", HTML.Input.Type.TEXT, id, name);
-        this.addDatalist(datalist);
+    public ComboBoxImpl(String name, String label, String[] datalist) {
+        super("inter-combobox", HTML.Input.Type.TEXT, name, label);
+        this.setDatalist(datalist);
     }
 
 }

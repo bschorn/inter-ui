@@ -26,10 +26,13 @@ package org.schorn.ella.ui.layout;
 /**
  *
  * @author bschorn
+ * @param <T>
  */
-public interface Item extends Build, Style {
+public interface Item extends Build {
     public String id();
 
     public String name();
+
+    public Type type();
 
 }

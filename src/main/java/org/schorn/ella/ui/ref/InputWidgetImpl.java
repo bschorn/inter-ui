@@ -28,8 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.style.StyleComponent;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.widget.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-class InputWidgetImpl implements Widget {
+class InputWidgetImpl implements Input {
 
     static final Logger LGR = LoggerFactory.getLogger(InputWidgetImpl.class);
 
@@ -49,18 +48,21 @@ class InputWidgetImpl implements Widget {
     protected String label = null;
     protected Exception exception = null;
 
-    InputWidgetImpl(String customTag, HTML.Input.Type inputType, String id, String name) {
+    InputWidgetImpl(String customTag, HTML.Input.Type inputType, String name, String label) {
         this.customTag = customTag;
         this.inputType = inputType;
-        this.id = id;
+        this.id = String.format("%s_ID", name);
         this.name = name;
-    }
-
-    public void addLabel(String label) {
         this.label = label;
     }
 
-    public void addDatalist(String[] datalist) {
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    @Override
+    final public void setDatalist(String[] datalist) {
         this.datalist.addAll(Arrays.asList(datalist));
     }
 
@@ -127,11 +129,6 @@ class InputWidgetImpl implements Widget {
         if (this.exception != null) {
             throw this.exception;
         }
-    }
-
-    @Override
-    public StyleComponent styleComponent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /*

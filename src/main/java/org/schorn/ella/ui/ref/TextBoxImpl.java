@@ -32,8 +32,8 @@ import org.schorn.ella.ui.widget.InputWidgets;
  */
 class TextBoxImpl extends InputWidgetImpl implements InputWidgets.TextBox {
 
-    public TextBoxImpl(String id, String name) {
-        super("inter-textbox", HTML.Input.Type.TEXT, id, name);
+    public TextBoxImpl(String name, String label) {
+        super("inter-textbox", HTML.Input.Type.TEXT, name, label);
     }
 
 }

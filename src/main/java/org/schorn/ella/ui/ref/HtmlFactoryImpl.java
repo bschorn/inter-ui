@@ -130,7 +130,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         HTML.INPUT.setImpl(HtmlInputImpl.class);
         HTML.INS.setImpl(HtmlInsImpl.class);
         HTML.ISINDEX.setImpl(HtmlIsindexImpl.class);
-        HTML.KDB.setImpl(HtmlKdbImpl.class);
+        HTML.KBD.setImpl(HtmlKdbImpl.class);
         HTML.LABEL.setImpl(HtmlLabelImpl.class);
         HTML.LEGEND.setImpl(HtmlLegendImpl.class);
         HTML.LI.setImpl(HtmlLiImpl.class);
@@ -1158,30 +1158,18 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
 
         static private final Logger LGR = LoggerFactory.getLogger(HtmlMetaImpl.class);
 
-        public HtmlMetaImpl(Object... params) {
+        public HtmlMetaImpl(String attributeName, String param1, String param2) {
             super("meta");
             try {
-                if (params != null && params.length > 0) {
-                    HTML.Attribute attribute1 = null;
-                    HTML.Attribute attribute2 = null;
-                    if (params[0] instanceof String && params[0].toString().equalsIgnoreCase("viewport")) {
-                        attribute1 = HTML.Attribute.create("name", "viewport");
-                        switch (params.length) {
-                            case 2:
-                                attribute2 = HTML.Attribute.create("content", String.format("width=%s, initial-scale=1", params[1]));
-                                break;
-                            case 3:
-                                attribute2 = HTML.Attribute.create("content", String.format("width=%s, initial-scale=%s", params[1], params[2]));
-                                break;
-                            default:
-                                attribute2 = HTML.Attribute.create("content", "width=device-width, initial-scale=1");
-                                break;
-                        }
-                    }
-                    if (attribute1 != null && attribute2 != null) {
-                        this.addAttribute(attribute1);
-                        this.addAttribute(attribute2);
-                    }
+                HTML.Attribute attribute1 = null;
+                HTML.Attribute attribute2 = null;
+                if (attributeName.equalsIgnoreCase("viewport")) {
+                    attribute1 = HTML.Attribute.create("name", "viewport");
+                    attribute2 = HTML.Attribute.create("content", String.format("width=%s, initial-scale=%s", param1, param2));
+                }
+                if (attribute1 != null && attribute2 != null) {
+                    this.addAttribute(attribute1);
+                    this.addAttribute(attribute2);
                 }
             } catch (Exception ex) {
                 LGR.error("{}.ctor() - Caught Exception: {}",

@@ -110,7 +110,7 @@ public enum HTML {
     INPUT(Input.class, DOM.HTMLInputElement),
     INS(Ins.class, DOM.HTMLElement),
     ISINDEX(Isindex.class, DOM.HTMLElement),
-    KDB(Kdb.class, DOM.HTMLElement),
+    KBD(Kdb.class, DOM.HTMLElement),
     LABEL(Label.class, DOM.HTMLLabelElement),
     LEGEND(Legend.class, DOM.HTMLLegendElement),
     LI(Li.class, DOM.HTMLLIElement),
@@ -486,14 +486,13 @@ public enum HTML {
 
             @Override
             public void addValue(String value) {
-                if (value == null) {
-                    return;
+                if (value != null) {
+                    if (this.value == null) {
+                        this.setValue(value);
+                    } else {
+                        this.setValue(String.format("%s %s", this.value, value));
+                    }
                 }
-                if (this.value == null) {
-                    this.setValue0(value);
-                    return;
-                }
-
             }
 
             @Override
@@ -664,12 +663,17 @@ public enum HTML {
             return HTML.META.create(params);
         }
         static public Meta createViewport(String deviceWidth, String initialScale) throws Exception {
-            return HTML.META.create((java.lang.Object) "viewport", (java.lang.Object) deviceWidth, (java.lang.Object) initialScale);
+            Object[] params = new Object[]{"viewport", deviceWidth, initialScale};
+            return HTML.META.create(params);
         }
 
         Meta setCharset(String charset) throws Exception;
 
         Meta setName(String value) throws Exception;
+
+        default TagOmission tagOmission() {
+            return TagOmission.EndMustBeOmitted;
+        }
     }
 
     public interface Style extends HtmlElement {
@@ -1345,7 +1349,7 @@ public enum HTML {
     public interface Kdb extends HtmlElement {
 
         static public Kdb create(Object... params) throws Exception {
-            return HTML.KDB.create(params);
+            return HTML.KBD.create(params);
         }
     }
 

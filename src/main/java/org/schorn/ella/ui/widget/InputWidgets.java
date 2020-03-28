@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.widget;
 
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.layout.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,54 +72,90 @@ public enum InputWidgets {
     }
 
     public interface Button extends Input {
-
-        static public Button create(Object... params) throws Exception {
-            return InputWidgets.BUTTON.create(params);
+        @Override
+        default Type type() {
+            return Type.get(Button.class);
+        }
+        static public Button create(String name, String label) throws Exception {
+            return InputWidgets.BUTTON.create(name, label);
         }
     }
 
     public interface CheckBoxGroup extends Input {
+        @Override
+        default Type type() {
+            return Type.get(Button.class);
+        }
 
-        static public CheckBoxGroup create(Object... params) throws Exception {
-            return InputWidgets.CHECKBOXGROUP.create(params);
+        static public CheckBoxGroup create(String name, String label) throws Exception {
+            return InputWidgets.CHECKBOXGROUP.create(name, label);
         }
     }
 
     public interface ComboBox extends Input {
+        @Override
+        default Type type() {
+            return Type.get(Button.class);
+        }
 
-        static public ComboBox create(Object... params) throws Exception {
-            return InputWidgets.COMBOBOX.create(params);
+        static public ComboBox create(String name, String label, String[] datalist) throws Exception {
+            return InputWidgets.COMBOBOX.create(name, label, datalist);
         }
     }
 
     public interface DataGrid extends Input {
-        static public DataGrid create(Object... params) throws Exception {
-            return InputWidgets.DATAGRID.create(params);
+
+        @Override
+        default Type type() {
+            return Type.get(DataGrid.class);
+        }
+
+        static public DataGrid create(String name, String label) throws Exception {
+            return InputWidgets.DATAGRID.create(name, label);
         }
     }
 
     public interface DatePicker extends Input {
-        static public DatePicker create(Object... params) throws Exception {
-            return InputWidgets.DATEPICKER.create(params);
+        @Override
+        default Type type() {
+            return Type.get(Button.class);
+        }
+
+        static public DatePicker create(String name, String label) throws Exception {
+            return InputWidgets.DATEPICKER.create(name, label);
         }
     }
 
     public interface DateRangePicker extends Input {
-        static public DateRangePicker create(Object... params) throws Exception {
-            return InputWidgets.DATERANGEPICKER.create(params);
+        @Override
+        default Type type() {
+            return Type.get(DateRangePicker.class);
+        }
+
+        static public DateRangePicker create(String name, String label) throws Exception {
+            return InputWidgets.DATERANGEPICKER.create(name, label);
         }
     }
 
     public interface RadioBoxGroup extends Input {
-        static public RadioBoxGroup create(Object... params) throws Exception {
-            return InputWidgets.RADIOBOXGROUP.create(params);
+        @Override
+        default Type type() {
+            return Type.get(RadioBoxGroup.class);
+        }
+
+        static public RadioBoxGroup create(String name, String label) throws Exception {
+            return InputWidgets.RADIOBOXGROUP.create(name, label);
         }
     }
 
     public interface TextBox extends Input {
+        @Override
+        default Type type() {
+            return Type.get(TextBox.class);
+        }
 
-        static public TextBox create(Object... params) throws Exception {
-            return InputWidgets.TEXTBOX.create(params);
+        static public TextBox create(String name, String label) throws Exception {
+            return InputWidgets.TEXTBOX.create(name, label);
         }
     }
 

@@ -23,8 +23,11 @@
  */
 package org.schorn.ella.ui.ref;
 
+import java.util.Optional;
+import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.style.StyleSheet;
 
 /**
  *
@@ -54,20 +57,47 @@ class PageImpl extends ItemContainerImpl implements Page {
     }
 
     @Override
+    public String produce(StyleSheet styleSheet) throws Exception {
+        Optional<HTML.Element> optPageElement = this.build();
+        if (optPageElement.isPresent()) {
+            HTML.Page pageElement = (HTML.Page) optPageElement.get();
+
+            HTML.Style style = HTML.Style.create();
+            styleSheet.styles().stream()
+                    .filter(s -> s instanceof CSS.Block)
+                    .map(s -> (CSS.Block) s)
+                    .forEachOrdered(b -> style.append(b));
+            pageElement.append(style);
+            return pageElement.render();
+        }
+        return "<html><body><p>ERROR<p></body></html>";
+    }
+
+    @Override
     protected HTML.Element build0() throws Exception {
         HTML.Page pageElement = HTML.Page.create();
         if (this.isViewport) {
-            pageElement.append(HTML.Meta.createViewport(this.viewportWidth, this.viewportScale));
+            HTML.Meta metaViewport = HTML.Meta.createViewport(this.viewportWidth, this.viewportScale);
+            pageElement.append(metaViewport);
         }
+        HTML.Title titleElement = HTML.Title.create();
+        titleElement.setTextContent(this.title);
+        pageElement.append(titleElement);
+
         this.items().stream()
+                //.peek(i -> System.out.println(String.format("Pre-build: %s.%s", i.getClass().getSimpleName(), i.id())))
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())
                 .map(o -> o.get())
+                //.peek(e -> System.out.println(String.format("Post-build: %s.%s", e.tag(), e.getId())))
                 .forEachOrdered(e -> pageElement.append(e));
         return pageElement;
     }
 
-    /*
+}
+
+
+/*
     @Override
     protected HTML.Page build0() throws Exception {
         List<CSS.Style> cssStyles = new ArrayList<>();
@@ -119,6 +149,4 @@ class PageImpl extends ItemContainerImpl implements Page {
 
         return page;
     }
-    */
-
-}
+ */
