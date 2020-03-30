@@ -26,11 +26,11 @@ package org.schorn.ella.ui;
 import java.util.Properties;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Editor;
+import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Panel;
-import org.schorn.ella.ui.layout.Viewer;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
 
@@ -46,17 +46,19 @@ public interface UIProvider {
 
     public InputWidgets.InputFactory getInputFactory();
 
-    public OutputWidgets.ReadFactory getOutputFactory();
+    public OutputWidgets.OutputFactory getOutputFactory();
 
     public Page createPage();
 
-    public Frame createFrame(String id, String name);
+    public Frame createFrame(Item.Name name);
 
-    public Panel createPanel(String id, String name);
+    public Panel createPanel(Item.Name name);
 
-    public Viewer createViewer(String id, String name);
+    public Panel createPanel(Item.Name name, String label);
 
-    public Editor createEditor(String id, String name);
+    public Aspect createAspect(Item.Name name);
+
+    public Aspect createAspect(Item.Name name, String label);
 
     /**
      * Gets a new instance of the UIProvider's implementation as found by the

@@ -31,8 +31,6 @@ import org.schorn.ella.ui.layout.Type;
  */
 public interface Input extends Widget {
 
-    public void setLabel(String label);
-
     public void setDatalist(String[] datalist);
 
     @Override

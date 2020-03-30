@@ -35,8 +35,8 @@ class FrameImpl extends ItemContainerImpl implements Frame {
 
     static final Logger LGR = LoggerFactory.getLogger(FrameImpl.class);
 
-    FrameImpl(String id, String name) {
-        super(id, name);
+    FrameImpl(String name) {
+        super(name, name);
     }
 
     /*

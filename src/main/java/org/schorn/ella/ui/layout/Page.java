@@ -54,4 +54,12 @@ public interface Page extends Container<Item>, Item {
     }
 
     String produce(StyleSheet styleSheet) throws Exception;
+
+    default Panel newFramePanel(Item.Name name, String label) {
+        Frame frame = UIProvider.provider().createFrame(name);
+        Panel panel = UIProvider.provider().createPanel(name, label);
+        frame.accept(panel);
+        this.accept(frame);
+        return panel;
+    }
 }

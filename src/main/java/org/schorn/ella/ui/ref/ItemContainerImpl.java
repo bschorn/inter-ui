@@ -38,12 +38,14 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
 
     private final String id;
     private final String name;
+    private String label;
     private final List<Item> items = new ArrayList<>();
     private Exception exception = null;
 
-    ItemContainerImpl(String id, String name) {
-        this.id = id;
+    ItemContainerImpl(String name, String label) {
+        this.id = String.format("%s-%s-ID", this.type().className().toLowerCase(), name);
         this.name = name;
+        this.label = label;
     }
 
     @Override
@@ -54,6 +56,16 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
     @Override
     public String name() {
         return this.name;
+    }
+
+    @Override
+    public String label() {
+        return this.label;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override
@@ -85,6 +97,9 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
 
     protected HTML.Element build0() throws Exception {
         HTML.Div containerElement = HTML.Div.create();
+        if (this.label != null) {
+            containerElement.setTextContent(this.label);
+        }
         containerElement.setId(this.id());
         containerElement.addClass(this.name());
         containerElement.addClass(this.type().className());

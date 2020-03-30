@@ -32,7 +32,8 @@ import org.schorn.ella.ui.html.HTML;
  */
 public enum WidgetStyles implements StyleFactory.FactorySupplier {
     LABEL_OVER_VALUE,
-    OUTPUT_VALUE;
+    OUTPUT_VALUE,
+    HIGHLIGHT_ON_HOVER;
 
     @Override
     public CSS.Style get() {
@@ -51,6 +52,11 @@ public enum WidgetStyles implements StyleFactory.FactorySupplier {
                 .append(CSS.Rule.create(CSS.Property.color, "black"))
                 .append(CSS.Rule.create(CSS.Property.background, "white")));
 
+        StyleFactory.set(HIGHLIGHT_ON_HOVER, CSS.Block.create()
+                .append(CSS.Selector.createClass("value"))
+                .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
+                .append(CSS.Rule.create(CSS.Property.color, "black"))
+                .append(CSS.Rule.create(CSS.Property.background, "white")));
     }
 
 }

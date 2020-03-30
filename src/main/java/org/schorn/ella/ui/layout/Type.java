@@ -56,8 +56,6 @@ public interface Type {
         PANEL(Panel.class),
         FRAME(Frame.class),
         ASPECT(Aspect.class),
-        EDITOR(Editor.class),
-        VIEWER(Viewer.class),
         WIDGET(Widget.class),
         INPUT(Input.class),
         OUTPUT(Output.class);

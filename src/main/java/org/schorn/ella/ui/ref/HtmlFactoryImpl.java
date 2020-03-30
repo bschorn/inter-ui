@@ -26,11 +26,13 @@ package org.schorn.ella.ui.ref;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
@@ -402,6 +404,9 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         }
 
         protected String renderIndent() {
+            if (this.level >= INDENT.length) {
+                return INDENT[INDENT.length - 1];
+            }
             return INDENT[this.level];
         }
 
@@ -548,7 +553,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
             // Convert <style></style> into <tag style=''>
             return this;
         }
-
+        /*
         @Override
         public String render() {
             StringBuilder builder = new StringBuilder();
@@ -564,7 +569,8 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
             builder.append(renderLinefeed());
             return builder.toString();
         }
-
+         */
+ /*
         @Override
         protected String renderStartTag() {
             switch (this.tagOmission()) {
@@ -583,7 +589,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
                     }
             }
         }
-
+*/
         @Override
         protected String renderContent() {
             return this.textContent != null ? this.textContent : "";
@@ -862,6 +868,12 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         public HtmlDetailsImpl() {
             super("details");
         }
+
+        public HTML.Details setSummary(HTML.Summary summary) {
+            this.insert(summary);
+            return this;
+        }
+
     }
 
     static class HtmlDialogImpl extends HtmlElementImpl implements HTML.Dialog {
@@ -952,6 +964,54 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
 
         public HtmlFormImpl() {
             super("form");
+        }
+
+        @Override
+        public HTML.Form setAction(String actionURL) {
+            try {
+                this.addAttribute0(HTML.Attribute.create(HTML.Form.FormAttributes.ACTION, actionURL));
+            } catch (Exception ex) {
+                LGR.error("{}.setAction() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public HTML.Form setMethod(HTML.Method method) {
+            try {
+                this.addAttribute0(HTML.Attribute.create(HTML.Form.FormAttributes.METHOD, method.value()));
+            } catch (Exception ex) {
+                LGR.error("{}.setMethod() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public HTML.Form setEnctype(HTML.Enctype enctype) {
+            try {
+                this.addAttribute0(HTML.Attribute.create(HTML.Form.FormAttributes.ENCTYPE, enctype.value()));
+            } catch (Exception ex) {
+                LGR.error("{}.setEnctype() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public HTML.Form setTarget(HTML.Target target) {
+            try {
+                this.addAttribute0(HTML.Attribute.create(HTML.Form.FormAttributes.TARGET, target.value()));
+            } catch (Exception ex) {
+                LGR.error("{}.setTarget() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
         }
     }
 
@@ -1080,6 +1140,45 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         @Override
         public HTML.TagOmission tagOmission() {
             return HTML.TagOmission.EndMustBeOmitted;
+        }
+
+        @Override
+        public Element setAccept(String... acceptTypes) {
+
+            String acceptType = Arrays.asList(acceptTypes).stream()
+                    .collect(Collectors.joining(","));
+            try {
+                this.addAttribute(HTML.Attribute.create("accept", acceptType));
+            } catch (Exception ex) {
+                LGR.error("{}.setAccept() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setValue(Object value) {
+            try {
+                this.addAttribute(HTML.Attribute.create("value", value.toString()));
+            } catch (Exception ex) {
+                LGR.error("{}.setValue() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setPattern(Pattern pattern) {
+            try {
+                this.addAttribute(HTML.Attribute.create("pattern", pattern.toString()));
+            } catch (Exception ex) {
+                LGR.error("{}.setPattern() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
         }
 
     }
@@ -1458,6 +1557,13 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
 
         public HtmlSubImpl() {
             super("sub");
+        }
+    }
+
+    static class HtmlSummaryImpl extends HtmlElementImpl implements HTML.Summary {
+
+        public HtmlSummaryImpl() {
+            super("summary");
         }
     }
 

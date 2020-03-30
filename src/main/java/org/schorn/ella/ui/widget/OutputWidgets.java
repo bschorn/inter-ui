@@ -50,7 +50,7 @@ public enum OutputWidgets {
         return this.implOf;
     }
 
-    public interface ReadFactory {
+    public interface OutputFactory {
 
         public void register();
 
@@ -63,7 +63,7 @@ public enum OutputWidgets {
 
     static final Logger LGR = LoggerFactory.getLogger(OutputWidgets.class);
 
-    static final ReadFactory FACTORY;
+    static final OutputFactory FACTORY;
 
     static {
         FACTORY = UIProvider.provider().getOutputFactory();

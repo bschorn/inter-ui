@@ -32,15 +32,15 @@ import org.schorn.ella.ui.widget.OutputWidgets;
  *
  * @author bschorn
  */
-public class ReadFactoryImpl implements OutputWidgets.ReadFactory {
+public class OutputFactoryImpl implements OutputWidgets.OutputFactory {
 
-    static private final ReadFactoryImpl INSTANCE = new ReadFactoryImpl();
+    static private final OutputFactoryImpl INSTANCE = new OutputFactoryImpl();
 
-    static public OutputWidgets.ReadFactory getFactory() {
+    static public OutputWidgets.OutputFactory getFactory() {
         return INSTANCE;
     }
 
-    private ReadFactoryImpl() {
+    private OutputFactoryImpl() {
         this.register();
     }
 

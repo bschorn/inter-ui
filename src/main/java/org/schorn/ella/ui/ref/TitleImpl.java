@@ -60,4 +60,5 @@ class TitleImpl extends OutputWidgetImpl implements OutputWidgets.Title {
         divElement.setTextContent(this.title);
         return divElement;
     }
+
 }

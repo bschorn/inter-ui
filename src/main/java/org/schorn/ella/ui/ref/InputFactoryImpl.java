@@ -26,21 +26,25 @@ package org.schorn.ella.ui.ref;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.StringJoiner;
+import org.schorn.ella.ui.util.ToString;
 import org.schorn.ella.ui.widget.InputWidgets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
-public class WriteFactoryImpl implements InputWidgets.InputFactory {
+public class InputFactoryImpl implements InputWidgets.InputFactory {
 
-    static private final WriteFactoryImpl INSTANCE = new WriteFactoryImpl();
+    static private final Logger LGR = LoggerFactory.getLogger(InputFactoryImpl.class);
+    static private final InputFactoryImpl INSTANCE = new InputFactoryImpl();
 
     static public InputWidgets.InputFactory getFactory() {
         return INSTANCE;
     }
 
-    private WriteFactoryImpl() {
+    private InputFactoryImpl() {
         this.register();
     }
 
@@ -82,7 +86,9 @@ public class WriteFactoryImpl implements InputWidgets.InputFactory {
                 try {
                     newInstance = (T) constructor.newInstance(params);
                 } catch (InvocationTargetException ite) {
-                    // ERROR
+                    LGR.error("{}.createInstance() - Caught Exception: {}",
+                            this.getClass().getSimpleName(),
+                            ToString.stackTrace(ite.getCause()));
                 }
                 break;
             }

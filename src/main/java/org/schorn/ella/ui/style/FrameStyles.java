@@ -39,9 +39,9 @@ public enum FrameStyles implements StyleFactory.FactorySupplier {
 
     static public void init() {
         StyleFactory.set(DEBUG, CSS.Block.create().append(CSS.Selector.createClass("frame"))
-                .append(CSS.Rule.create(CSS.Property.display, "inline-block"))
-                .append(CSS.Rule.create(CSS.Property.min_width, "500px"))
-                .append(CSS.Rule.create(CSS.Property.min_height, "100px"))
+                .append(CSS.Rule.create(CSS.Property.display, "flex"))
+                .append(CSS.Rule.create(CSS.Property.width, "50vw"))
+                //.append(CSS.Rule.create(CSS.Property.min_height, "100px"))
                 .append(CSS.Rule.create(CSS.Property.border, "dashed lightgray 2px")));
     }
 

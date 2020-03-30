@@ -26,11 +26,11 @@ package org.schorn.ella.ui.ref;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Editor;
+import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Panel;
-import org.schorn.ella.ui.layout.Viewer;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
 
@@ -46,33 +46,38 @@ public class UIProviderImpl implements UIProvider {
     }
 
     @Override
-    public Frame createFrame(String id, String name) {
-        return new FrameImpl(id, name);
+    public Frame createFrame(Item.Name name) {
+        return new FrameImpl(name.toString());
     }
 
     @Override
-    public Panel createPanel(String id, String name) {
-        return new PanelImpl(id, name);
+    public Panel createPanel(Item.Name name) {
+        return new PanelImpl(name.toString(), null);
     }
 
     @Override
-    public Viewer createViewer(String id, String name) {
-        return new ViewerImpl(id, name);
+    public Panel createPanel(Item.Name name, String label) {
+        return new PanelImpl(name.toString(), label);
     }
 
     @Override
-    public Editor createEditor(String id, String name) {
-        return new EditorImpl(id, name);
+    public Aspect createAspect(Item.Name name) {
+        return new AspectImpl(name.toString(), null);
+    }
+
+    @Override
+    public Aspect createAspect(Item.Name name, String label) {
+        return new AspectImpl(name.toString(), label);
     }
 
     @Override
     public InputWidgets.InputFactory getInputFactory() {
-        return WriteFactoryImpl.getFactory();
+        return InputFactoryImpl.getFactory();
     }
 
     @Override
-    public OutputWidgets.ReadFactory getOutputFactory() {
-        return ReadFactoryImpl.getFactory();
+    public OutputWidgets.OutputFactory getOutputFactory() {
+        return OutputFactoryImpl.getFactory();
     }
 
     @Override
@@ -84,4 +89,5 @@ public class UIProviderImpl implements UIProvider {
     public CSS.CssFactory getCSSFactory() {
         return CssFactoryImpl.getFactory();
     }
+
 }

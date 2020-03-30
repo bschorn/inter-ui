@@ -23,6 +23,8 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.UIProvider;
+
 /**
  *
  * @author bschorn
@@ -35,6 +37,23 @@ public interface Panel extends Container<Item> {
     @Override
     default Type type() {
         return Type.get(Panel.class);
+    }
+
+    default Aspect newAspect() {
+        try {
+            Aspect aspect = UIProvider.provider().createAspect(Item.Name.create(this.name()), this.label());
+            this.accept(aspect);
+            return aspect;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    default Aspect newAspect(Item.Name name, String label) {
+        Aspect aspect = UIProvider.provider().createAspect(name, label);
+        this.accept(aspect);
+        return aspect;
     }
 
 }

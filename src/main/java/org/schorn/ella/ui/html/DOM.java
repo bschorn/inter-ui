@@ -51,6 +51,7 @@ public enum DOM {
     HTMLFieldSetElement,
     HTMLFrameSetElement,
     HTMLHeadElement,
+    HTMLHeadingElement,
     HTMLHRElement,
     HTMLHtmlElement,
     HTMLIFrameElement,

@@ -30,10 +30,10 @@ import org.schorn.ella.ui.widget.InputWidgets;
  *
  * @author bschorn
  */
-public class ComboBoxImpl extends InputWidgetImpl implements InputWidgets.ComboBox {
+class ComboBoxImpl extends InputWidgetImpl implements InputWidgets.ComboBox {
 
     public ComboBoxImpl(String name, String label, String[] datalist) {
-        super("inter-combobox", HTML.Input.Type.TEXT, name, label);
+        super("inter-combobox", HTML.Input.InputType.TEXT, name, label);
         this.setDatalist(datalist);
     }
 

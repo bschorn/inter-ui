@@ -23,6 +23,7 @@
  */
 package org.schorn.ella.ui.ref;
 
+import java.util.regex.Pattern;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.InputWidgets;
 
@@ -30,10 +31,27 @@ import org.schorn.ella.ui.widget.InputWidgets;
  *
  * @author bschorn
  */
-class TextBoxImpl extends InputWidgetImpl implements InputWidgets.TextBox {
+final class TextBoxImpl extends InputWidgetImpl implements InputWidgets.TextBox {
 
-    public TextBoxImpl(String name, String label) {
-        super("inter-textbox", HTML.Input.Type.TEXT, name, label);
+    private Pattern pattern;
+
+    public TextBoxImpl(String name, String label, Pattern pattern) {
+        super("inter-textbox", HTML.Input.InputType.TEXT, name, label);
+        this.setPattern(pattern);
+    }
+
+    @Override
+    public void setPattern(Pattern pattern) {
+        this.pattern = pattern;
+    }
+
+    @Override
+    protected HTML.Element postBuild(HTML.Element element) {
+        if (element instanceof HTML.Input) {
+            HTML.Input inputElement = (HTML.Input) element;
+            inputElement.setPattern(this.pattern);
+        }
+        return element;
     }
 
 }

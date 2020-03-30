@@ -23,16 +23,53 @@
  */
 package org.schorn.ella.ui.layout;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.schorn.ella.ui.html.CSS;
+
 /**
  *
  * @author bschorn
- * @param <T>
  */
 public interface Item extends Build {
+
+    public class Name {
+
+        static final Pattern REGEX = Pattern.compile("[a-z][a-zA-Z0-9_]{1,30}");
+
+        static public Name create(String name) throws Exception {
+            Matcher matcher = REGEX.matcher(name);
+            if (matcher.matches()) {
+                return new Name(name);
+            }
+            throw new Exception(String.format("'%s' is not a valid name for an Item object.",
+                    name));
+        }
+        private final String name;
+
+        private Name(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
+    }
+
     public String id();
 
     public String name();
 
+    public String label();
+
+    public void setLabel(String label);
+
     public Type type();
 
+    default List<CSS.Style> styles() {
+        return new ArrayList<>(0);
+    }
 }

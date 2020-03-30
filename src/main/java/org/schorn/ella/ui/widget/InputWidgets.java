@@ -23,7 +23,9 @@
  */
 package org.schorn.ella.ui.widget;
 
+import java.util.regex.Pattern;
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +78,8 @@ public enum InputWidgets {
         default Type type() {
             return Type.get(Button.class);
         }
-        static public Button create(String name, String label) throws Exception {
-            return InputWidgets.BUTTON.create(name, label);
+        static public Button create(Item.Name name, String label) throws Exception {
+            return InputWidgets.BUTTON.create(name.toString(), label);
         }
     }
 
@@ -87,8 +89,8 @@ public enum InputWidgets {
             return Type.get(Button.class);
         }
 
-        static public CheckBoxGroup create(String name, String label) throws Exception {
-            return InputWidgets.CHECKBOXGROUP.create(name, label);
+        static public CheckBoxGroup create(Item.Name name, String label) throws Exception {
+            return InputWidgets.CHECKBOXGROUP.create(name.toString(), label);
         }
     }
 
@@ -98,8 +100,8 @@ public enum InputWidgets {
             return Type.get(Button.class);
         }
 
-        static public ComboBox create(String name, String label, String[] datalist) throws Exception {
-            return InputWidgets.COMBOBOX.create(name, label, datalist);
+        static public ComboBox create(Item.Name name, String label, String[] datalist) throws Exception {
+            return InputWidgets.COMBOBOX.create(name.toString(), label, datalist);
         }
     }
 
@@ -110,8 +112,8 @@ public enum InputWidgets {
             return Type.get(DataGrid.class);
         }
 
-        static public DataGrid create(String name, String label) throws Exception {
-            return InputWidgets.DATAGRID.create(name, label);
+        static public DataGrid create(Item.Name name, String label) throws Exception {
+            return InputWidgets.DATAGRID.create(name.toString(), label);
         }
     }
 
@@ -121,8 +123,8 @@ public enum InputWidgets {
             return Type.get(Button.class);
         }
 
-        static public DatePicker create(String name, String label) throws Exception {
-            return InputWidgets.DATEPICKER.create(name, label);
+        static public DatePicker create(Item.Name name, String label) throws Exception {
+            return InputWidgets.DATEPICKER.create(name.toString(), label);
         }
     }
 
@@ -132,8 +134,8 @@ public enum InputWidgets {
             return Type.get(DateRangePicker.class);
         }
 
-        static public DateRangePicker create(String name, String label) throws Exception {
-            return InputWidgets.DATERANGEPICKER.create(name, label);
+        static public DateRangePicker create(Item.Name name, String label) throws Exception {
+            return InputWidgets.DATERANGEPICKER.create(name.toString(), label);
         }
     }
 
@@ -143,19 +145,22 @@ public enum InputWidgets {
             return Type.get(RadioBoxGroup.class);
         }
 
-        static public RadioBoxGroup create(String name, String label) throws Exception {
-            return InputWidgets.RADIOBOXGROUP.create(name, label);
+        static public RadioBoxGroup create(Item.Name name, String label) throws Exception {
+            return InputWidgets.RADIOBOXGROUP.create(name.toString(), label);
         }
     }
 
     public interface TextBox extends Input {
+
+        public void setPattern(Pattern pattern);
+
         @Override
         default Type type() {
             return Type.get(TextBox.class);
         }
 
-        static public TextBox create(String name, String label) throws Exception {
-            return InputWidgets.TEXTBOX.create(name, label);
+        static public TextBox create(Item.Name name, String label, Pattern pattern) throws Exception {
+            return InputWidgets.TEXTBOX.create(name.toString(), label, pattern);
         }
     }
 

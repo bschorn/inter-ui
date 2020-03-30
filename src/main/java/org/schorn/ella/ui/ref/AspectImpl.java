@@ -27,28 +27,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Container;
+import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.widget.Widget;
 
 /**
  *
  * @author bschorn
  */
-abstract class WidgetContainerImpl implements Container<Widget> {
+class AspectImpl implements Aspect {
 
-    private final String id;
+    private final String containerId;
+    private final String formId;
     private final String name;
+    private String label;
+    private String actionURL = null;
+    private HTML.Enctype enctype = null;
+    private HTML.Method method = null;
+    private HTML.Target target = null;
+
     private final List<Widget> widgets = new ArrayList<>();
     private Exception exception = null;
 
-    WidgetContainerImpl(String id, String name) {
-        this.id = id;
+    AspectImpl(String name, String label) {
+        this.containerId = String.format("aspect-%s-ID", name);
+        this.formId = String.format("form-%s-ID", name);
         this.name = name;
+        this.label = label;
     }
 
     @Override
     public String id() {
-        return this.id;
+        return this.containerId;
+    }
+
+    @Override
+    public String formId() {
+        return this.formId;
     }
 
     @Override
@@ -57,8 +71,38 @@ abstract class WidgetContainerImpl implements Container<Widget> {
     }
 
     @Override
+    public String label() {
+        return this.label;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    @Override
     public void accept(Widget widget) {
         this.widgets.add(widget);
+    }
+
+    @Override
+    public void setAction(String actionURL) {
+        this.actionURL = actionURL;
+    }
+
+    @Override
+    public void setMethod(HTML.Method method) {
+        this.method = method;
+    }
+
+    @Override
+    public void setEnctype(HTML.Enctype enctype) {
+        this.enctype = enctype;
+    }
+
+    @Override
+    public void setTarget(HTML.Target target) {
+        this.target = target;
     }
 
     @Override
@@ -88,11 +132,28 @@ abstract class WidgetContainerImpl implements Container<Widget> {
         containerElement.setId(this.id());
         containerElement.addClass(this.name());
         containerElement.addClass(this.type().className());
+        HTML.Form formElement = HTML.Form.create();
+        containerElement.append(formElement);
+        formElement.setId(this.formId);
+        if (this.actionURL != null) {
+            formElement.setAction(this.actionURL);
+        }
+        if (this.enctype != null) {
+            formElement.setEnctype(this.enctype);
+        }
+        if (this.method != null) {
+            formElement.setMethod(this.method);
+        }
+        if (this.target != null) {
+            formElement.setTarget(this.target);
+        }
+
         this.widgets().stream()
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())
                 .map(o -> o.get())
-                .forEachOrdered(e -> containerElement.append(e));
+                .forEachOrdered(e -> formElement.append(e));
         return containerElement;
     }
+
 }

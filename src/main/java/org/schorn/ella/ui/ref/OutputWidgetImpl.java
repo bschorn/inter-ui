@@ -91,6 +91,16 @@ abstract class OutputWidgetImpl implements Output {
     }
 
     @Override
+    public String label() {
+        return this.label;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    @Override
     public void throwException() throws Exception {
         if (this.exception != null) {
             throw this.exception;
