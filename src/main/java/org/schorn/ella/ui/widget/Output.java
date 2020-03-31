@@ -23,17 +23,12 @@
  */
 package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.layout.Type;
+import org.schorn.ella.ui.layout.Widget;
 
 /**
  *
  * @author bschorn
  */
 public interface Output extends Widget {
-
-    @Override
-    default Type type() {
-        return Type.get(Output.class);
-    }
 
 }

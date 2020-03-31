@@ -21,9 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
-
-import org.schorn.ella.ui.layout.Item;
+package org.schorn.ella.ui.layout;
 
 /**
  *
@@ -31,6 +29,15 @@ import org.schorn.ella.ui.layout.Item;
  */
 public interface Widget extends Item {
 
+    public String widgetId();
+
     public String customTag();
+
+    @Override
+    default Type type() {
+        return Type.WIDGET;
+    }
+
+    public String widgetName();
 
 }

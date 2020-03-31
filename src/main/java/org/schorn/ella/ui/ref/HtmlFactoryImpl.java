@@ -69,7 +69,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
             html.setImpl(HtmlElementImpl.class);
         }
         HTML.HTML.setImpl(HtmlPageImpl.class);
-        HTML.A.setImpl(HtmlAImpl.class);
+        HTML.A_.setImpl(HtmlAImpl.class);
         HTML.ABBR.setImpl(HtmlAbbrImpl.class);
         //HTML.ACRONYM.setImpl(HtmlAcronymImpl.class);
         HTML.ADDRESS.setImpl(HtmlAddressImpl.class);
@@ -78,7 +78,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         HTML.ARTICLE.setImpl(HtmlArticleImpl.class);
         HTML.ASIDE.setImpl(HtmlAsideImpl.class);
         HTML.AUDIO.setImpl(HtmlAudioImpl.class);
-        HTML.B.setImpl(HtmlBImpl.class);
+        HTML.B_.setImpl(HtmlBImpl.class);
         HTML.BASE.setImpl(HtmlBaseImpl.class);
         HTML.BASEFONT.setImpl(HtmlBasefontImpl.class);
         HTML.BB.setImpl(HtmlBbImpl.class);
@@ -126,7 +126,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         HTML.HEADER.setImpl(HtmlHeaderImpl.class);
         HTML.HGROUP.setImpl(HtmlHgroupImpl.class);
         HTML.HR.setImpl(HtmlHrImpl.class);
-        HTML.I.setImpl(HtmlIImpl.class);
+        HTML.I_.setImpl(HtmlIImpl.class);
         HTML.IFRAME.setImpl(HtmlIframeImpl.class);
         HTML.IMG.setImpl(HtmlImgImpl.class);
         HTML.INPUT.setImpl(HtmlInputImpl.class);
@@ -150,15 +150,15 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         HTML.OPTGROUP.setImpl(HtmlOptgroupImpl.class);
         HTML.OPTION.setImpl(HtmlOptionImpl.class);
         HTML.OUTPUT.setImpl(HtmlOutputImpl.class);
-        HTML.P.setImpl(HtmlPImpl.class);
+        HTML.P_.setImpl(HtmlPImpl.class);
         HTML.PARAM.setImpl(HtmlParamImpl.class);
         HTML.PRE.setImpl(HtmlPreImpl.class);
         HTML.PROGRESS.setImpl(HtmlProgressImpl.class);
-        HTML.Q.setImpl(HtmlQImpl.class);
+        HTML.Q_.setImpl(HtmlQImpl.class);
         HTML.RUBY.setImpl(HtmlRubyImpl.class);
         HTML.RP.setImpl(HtmlRpImpl.class);
         HTML.RT.setImpl(HtmlRtImpl.class);
-        HTML.S.setImpl(HtmlSImpl.class);
+        HTML.S_.setImpl(HtmlSImpl.class);
         HTML.SAMP.setImpl(HtmlSampImpl.class);
         HTML.SCRIPT.setImpl(HtmlScriptImpl.class);
         HTML.SECTION.setImpl(HtmlSectionImpl.class);
@@ -182,7 +182,7 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         HTML.TITLE.setImpl(HtmlTitleImpl.class);
         HTML.TR.setImpl(HtmlTrImpl.class);
         HTML.TT.setImpl(HtmlTtImpl.class);
-        HTML.U.setImpl(HtmlUImpl.class);
+        HTML.U_.setImpl(HtmlUImpl.class);
         HTML.UL.setImpl(HtmlUlImpl.class);
         HTML.VAR.setImpl(HtmlVarImpl.class);
         HTML.VIDEO.setImpl(HtmlVideoImpl.class);

@@ -42,18 +42,14 @@ public interface Page extends Container<Item>, Item {
     @Override
     public void accept(Item item);
 
-    //public void addStyleSheet(StyleSheet styleSheet);
-
-    //public void addStyle(CSS.Style style);
-
     public void setViewport(String width, String initialScale);
 
     @Override
     default Type type() {
-        return Type.get(Page.class);
+        return Type.PAGE;
     }
 
-    String produce(StyleSheet styleSheet) throws Exception;
+    public String produce(StyleSheet styleSheet) throws Exception;
 
     default Panel newFramePanel(Item.Name name, String label) {
         Frame frame = UIProvider.provider().createFrame(name);

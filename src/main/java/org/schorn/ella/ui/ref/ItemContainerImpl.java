@@ -26,6 +26,7 @@ package org.schorn.ella.ui.ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Container;
 import org.schorn.ella.ui.layout.Item;
@@ -43,7 +44,7 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
     private Exception exception = null;
 
     ItemContainerImpl(String name, String label) {
-        this.id = String.format("%s-%s-ID", this.type().className().toLowerCase(), name);
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.label = label;
     }
@@ -97,12 +98,17 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
 
     protected HTML.Element build0() throws Exception {
         HTML.Div containerElement = HTML.Div.create();
-        if (this.label != null) {
-            containerElement.setTextContent(this.label);
-        }
         containerElement.setId(this.id());
         containerElement.addClass(this.name());
         containerElement.addClass(this.type().className());
+        containerElement.addClass("container");
+        if (this.label != null) {
+            HTML.Span span = HTML.Span.create();
+            span.setId(String.format("%s-label", this.id()));
+            span.addClass("label");
+            span.setTextContent(this.label());
+            containerElement.append(span);
+        }
         this.items().stream()
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())

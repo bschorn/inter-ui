@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
@@ -63,10 +62,6 @@ public class WidgetApp {
             page.setViewport("device-width", "1");
 
             Aspect widgetsAspect = page.newFramePanel(Item.Name.create("widgets"), "Widget List").newAspect();
-            widgetsAspect.setEnctype(HTML.Enctype.FILE);
-            widgetsAspect.setMethod(HTML.Method.POST);
-            widgetsAspect.setTarget(HTML.Target._BLANK);
-            widgetsAspect.setAction("./test.html");
 
             widgetsAspect.accept(OutputWidgets.Title.create("customerAddress", "Customer Address"));
             widgetsAspect.accept(InputWidgets.TextBox.create(Item.Name.create("streetAddress"), "Street Address", Pattern.compile("^.*$")));

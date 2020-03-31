@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.Input;
@@ -43,8 +44,8 @@ abstract class InputWidgetImpl implements Input {
 
     protected final String customTag;
     protected final HTML.Input.InputType inputType;
-    protected final String containerId;
-    protected final String inputId;
+    protected final String widgetId = UUID.randomUUID().toString();
+    protected final String id = UUID.randomUUID().toString();
     protected final String name;
     protected final List<String> datalist = new ArrayList<>();
     protected String label = null;
@@ -53,10 +54,33 @@ abstract class InputWidgetImpl implements Input {
     InputWidgetImpl(String customTag, HTML.Input.InputType inputType, String name, String label) {
         this.customTag = customTag;
         this.inputType = inputType;
-        this.containerId = String.format("widget-%s-ID", name);
-        this.inputId = String.format("input-%s-ID", name);
         this.name = name;
         this.label = label;
+    }
+
+    @Override
+    public String customTag() {
+        return this.customTag;
+    }
+
+    @Override
+    public String widgetId() {
+        return this.widgetId;
+    }
+
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    @Override
+    public String label() {
+        return this.label;
     }
 
     @Override
@@ -81,17 +105,20 @@ abstract class InputWidgetImpl implements Input {
     }
 
     protected HTML.Element build0() throws Exception {
-        HTML.Div containerElement = HTML.Div.create();
-        containerElement.setId(this.id());
-        containerElement.addClass(this.name());
-        containerElement.addClass(this.type().className());
+        HTML.Div divElement = HTML.Div.create();
+        divElement.setId(this.id());
+        divElement.addClass(this.name());
+        divElement.addClass(this.widgetName());
+        divElement.addClass("input");
+        divElement.addClass(this.type().className());
         HTML.Input inputElement = HTML.Input.create();
+        inputElement.setId(this.widgetId());
         this.preBuild(inputElement);
         inputElement.addAttribute(this.inputType.asAttribute());
         HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, this.name);
         inputElement.addAttribute(attribute);
         if (!this.datalist.isEmpty()) {
-            String datalistId = String.format("%s-list", this.containerId);
+            String datalistId = String.format("%s-list", this.widgetId());
             HTML.Datalist datalistElement = HTML.Datalist.create();
             datalistElement.setId(datalistId);
             for (String optionStr : this.datalist) {
@@ -107,13 +134,13 @@ abstract class InputWidgetImpl implements Input {
             labelElement.append(inputElement);
             labelElement.setTextContent(this.label);
             labelElement.append(inputElement);
-            containerElement.append(labelElement);
+            divElement.append(labelElement);
         } else {
-            containerElement.append(inputElement);
+            divElement.append(inputElement);
         }
 
         this.postBuild(inputElement);
-        return containerElement;
+        return divElement;
     }
 
     protected HTML.Element preBuild(HTML.Element element) {
@@ -122,26 +149,6 @@ abstract class InputWidgetImpl implements Input {
 
     protected HTML.Element postBuild(HTML.Element element) {
         return element;
-    }
-
-    @Override
-    public String customTag() {
-        return this.customTag;
-    }
-
-    @Override
-    public String id() {
-        return this.containerId;
-    }
-
-    @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public String label() {
-        return this.label;
     }
 
     @Override

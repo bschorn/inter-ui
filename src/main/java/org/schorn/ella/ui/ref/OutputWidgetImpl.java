@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.widget.Output;
 import org.slf4j.Logger;
@@ -41,7 +42,8 @@ abstract class OutputWidgetImpl implements Output {
     static private final Logger LGR = LoggerFactory.getLogger(OutputWidgetImpl.class);
 
     protected final String customTag;
-    protected final String id;
+    protected final String widgetId = UUID.randomUUID().toString();
+    protected final String id = UUID.randomUUID().toString();
     protected final String name;
     protected final List<String> datalist = new ArrayList<>();
     protected String label = null;
@@ -49,35 +51,18 @@ abstract class OutputWidgetImpl implements Output {
 
     OutputWidgetImpl(String customTag, String name, String label) {
         this.customTag = customTag;
-        this.id = String.format("%s_ID", name);
         this.name = name;
         this.label = label;
     }
 
-    public void addLabel(String label) {
-        this.label = label;
-    }
-
-    public void addDatalist(String[] datalist) {
-        this.datalist.addAll(Arrays.asList(datalist));
-    }
-
-    @Override
-    public Optional<HTML.Element> build() {
-        HTML.Element element = null;
-        try {
-            element = this.build0();
-        } catch (Exception ex) {
-            this.exception = ex;
-        }
-        return Optional.ofNullable(element);
-    }
-
-    abstract HTML.Element build0() throws Exception;
-
     @Override
     public String customTag() {
         return this.customTag;
+    }
+
+    @Override
+    public String widgetId() {
+        return this.widgetId;
     }
 
     @Override
@@ -99,6 +84,35 @@ abstract class OutputWidgetImpl implements Output {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public void addLabel(String label) {
+        this.label = label;
+    }
+
+    public void addDatalist(String[] datalist) {
+        this.datalist.addAll(Arrays.asList(datalist));
+    }
+
+    @Override
+    public Optional<HTML.Element> build() {
+        HTML.Element element = null;
+        try {
+            HTML.Div divElement = HTML.Div.create();
+            divElement.setId(this.id());
+            divElement.addClass(this.name());
+            divElement.addClass(this.widgetName());
+            divElement.addClass("output");
+            divElement.addClass(this.type().className());
+            element = this.build0();
+            element.setId(this.widgetId());
+            divElement.append(element);
+        } catch (Exception ex) {
+            this.exception = ex;
+        }
+        return Optional.ofNullable(element);
+    }
+
+    abstract protected HTML.Element build0() throws Exception;
 
     @Override
     public void throwException() throws Exception {

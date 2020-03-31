@@ -24,7 +24,6 @@
 package org.schorn.ella.ui.ref;
 
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Type;
 import org.schorn.ella.ui.widget.OutputWidgets;
 
 /**
@@ -41,24 +40,16 @@ class TitleImpl extends OutputWidgetImpl implements OutputWidgets.Title {
     }
 
     @Override
-    public Type type() {
-        return Type.get(OutputWidgets.Title.class);
-    }
-
-    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
     @Override
     protected HTML.Element build0() throws Exception {
-        HTML.Div divElement = HTML.Div.create();
-        divElement.setId(this.id);
-        divElement.addClass(this.name);
-        divElement.addClass("output");
-        divElement.addClass("title");
-        divElement.setTextContent(this.title);
-        return divElement;
+        HTML.Span spanElement = HTML.Span.create();
+        spanElement.addClass(this.widgetName());
+        spanElement.setTextContent(this.title);
+        return spanElement;
     }
 
 }

@@ -26,7 +26,6 @@ package org.schorn.ella.ui.widget;
 import java.util.regex.Pattern;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.layout.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,8 +74,8 @@ public enum InputWidgets {
 
     public interface Button extends Input {
         @Override
-        default Type type() {
-            return Type.get(Button.class);
+        default String widgetName() {
+            return Button.class.getSimpleName().toLowerCase();
         }
         static public Button create(Item.Name name, String label) throws Exception {
             return InputWidgets.BUTTON.create(name.toString(), label);
@@ -85,8 +84,8 @@ public enum InputWidgets {
 
     public interface CheckBoxGroup extends Input {
         @Override
-        default Type type() {
-            return Type.get(Button.class);
+        default String widgetName() {
+            return CheckBoxGroup.class.getSimpleName().toLowerCase();
         }
 
         static public CheckBoxGroup create(Item.Name name, String label) throws Exception {
@@ -96,8 +95,8 @@ public enum InputWidgets {
 
     public interface ComboBox extends Input {
         @Override
-        default Type type() {
-            return Type.get(Button.class);
+        default String widgetName() {
+            return ComboBox.class.getSimpleName().toLowerCase();
         }
 
         static public ComboBox create(Item.Name name, String label, String[] datalist) throws Exception {
@@ -108,8 +107,8 @@ public enum InputWidgets {
     public interface DataGrid extends Input {
 
         @Override
-        default Type type() {
-            return Type.get(DataGrid.class);
+        default String widgetName() {
+            return DataGrid.class.getSimpleName().toLowerCase();
         }
 
         static public DataGrid create(Item.Name name, String label) throws Exception {
@@ -119,8 +118,8 @@ public enum InputWidgets {
 
     public interface DatePicker extends Input {
         @Override
-        default Type type() {
-            return Type.get(Button.class);
+        default String widgetName() {
+            return DatePicker.class.getSimpleName().toLowerCase();
         }
 
         static public DatePicker create(Item.Name name, String label) throws Exception {
@@ -130,8 +129,8 @@ public enum InputWidgets {
 
     public interface DateRangePicker extends Input {
         @Override
-        default Type type() {
-            return Type.get(DateRangePicker.class);
+        default String widgetName() {
+            return DateRangePicker.class.getSimpleName().toLowerCase();
         }
 
         static public DateRangePicker create(Item.Name name, String label) throws Exception {
@@ -141,8 +140,8 @@ public enum InputWidgets {
 
     public interface RadioBoxGroup extends Input {
         @Override
-        default Type type() {
-            return Type.get(RadioBoxGroup.class);
+        default String widgetName() {
+            return RadioBoxGroup.class.getSimpleName().toLowerCase();
         }
 
         static public RadioBoxGroup create(Item.Name name, String label) throws Exception {
@@ -152,11 +151,21 @@ public enum InputWidgets {
 
     public interface TextBox extends Input {
 
+        public void setLength(int minLength, int maxLength);
+
         public void setPattern(Pattern pattern);
 
+        public void setPlaceholder(String placeholder);
+
+        public void setReadonly(boolean readonly);
+
+        public void setSize(int size);
+
+        public void setSpellcheck(boolean spellcheck);
+
         @Override
-        default Type type() {
-            return Type.get(TextBox.class);
+        default String widgetName() {
+            return TextBox.class.getSimpleName().toLowerCase();
         }
 
         static public TextBox create(Item.Name name, String label, Pattern pattern) throws Exception {

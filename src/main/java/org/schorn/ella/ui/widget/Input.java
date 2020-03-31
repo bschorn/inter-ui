@@ -23,7 +23,7 @@
  */
 package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.layout.Type;
+import org.schorn.ella.ui.layout.Widget;
 
 /**
  *
@@ -33,9 +33,5 @@ public interface Input extends Widget {
 
     public void setDatalist(String[] datalist);
 
-    @Override
-    default Type type() {
-        return Type.get(Input.class);
-    }
 
 }

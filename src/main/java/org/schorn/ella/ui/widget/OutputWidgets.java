@@ -24,7 +24,7 @@
 package org.schorn.ella.ui.widget;
 
 import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.layout.Type;
+import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,8 +74,8 @@ public enum OutputWidgets {
 
     public interface Chart extends Output {
         @Override
-        default Type type() {
-            return Type.get(Chart.class);
+        default String widgetName() {
+            return Chart.class.getSimpleName().toLowerCase();
         }
 
         static public Chart create(String name, String url) throws Exception {
@@ -85,8 +85,8 @@ public enum OutputWidgets {
 
     public interface Image extends Output {
         @Override
-        default Type type() {
-            return Type.get(Image.class);
+        default String widgetName() {
+            return Image.class.getSimpleName().toLowerCase();
         }
 
         static public Image create(String name, String url) throws Exception {
@@ -96,8 +96,8 @@ public enum OutputWidgets {
 
     public interface Progress extends Output {
         @Override
-        default Type type() {
-            return Type.get(Progress.class);
+        default String widgetName() {
+            return Progress.class.getSimpleName().toLowerCase();
         }
 
         static public Progress create(String name) throws Exception {
@@ -107,8 +107,8 @@ public enum OutputWidgets {
 
     public interface Scroll extends Output {
         @Override
-        default Type type() {
-            return Type.get(Chart.class);
+        default String widgetName() {
+            return Scroll.class.getSimpleName().toLowerCase();
         }
 
         static public Scroll create(String name) throws Exception {
@@ -118,8 +118,8 @@ public enum OutputWidgets {
 
     public interface Text extends Output {
         @Override
-        default Type type() {
-            return Type.get(Text.class);
+        default String widgetName() {
+            return Text.class.getSimpleName().toLowerCase();
         }
 
         static public Text create(String name, String text) throws Exception {
@@ -128,6 +128,10 @@ public enum OutputWidgets {
     }
 
     public interface Title extends Output {
+        @Override
+        default String widgetName() {
+            return Title.class.getSimpleName().toLowerCase();
+        }
 
         void setTitle(String title);
 

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -34,6 +34,6 @@ public interface Frame extends Container<Item> {
 
     @Override
     default Type type() {
-        return Type.get(Frame.class);
+        return Type.FRAME;
     }
 }

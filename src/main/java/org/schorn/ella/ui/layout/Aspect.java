@@ -24,7 +24,6 @@
 package org.schorn.ella.ui.layout;
 
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.Widget;
 
 /**
  *
@@ -32,14 +31,14 @@ import org.schorn.ella.ui.widget.Widget;
  */
 public interface Aspect extends Container<Widget> {
 
-    public String formId();
+    public String aspectId();
 
     @Override
     public void accept(Widget widget);
 
     @Override
     default Type type() {
-        return Type.get(Aspect.class);
+        return Type.ASPECT;
     }
 
     public void setAction(String actionURL);

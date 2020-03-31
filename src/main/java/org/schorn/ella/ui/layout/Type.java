@@ -23,82 +23,37 @@
  */
 package org.schorn.ella.ui.layout;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.schorn.ella.ui.widget.Input;
-import org.schorn.ella.ui.widget.Output;
-import org.schorn.ella.ui.widget.Widget;
-
 /**
  *
  * @author bschorn
  */
-public interface Type {
+public enum Type {
+    PAGE(Page.class),
+    FRAME(Frame.class),
+    PANEL(Panel.class),
+    ASPECT(Aspect.class),
+    WIDGET(Widget.class);
 
-    static Type get(Class<?> classFor) {
-        return Helper.MAP.get(classFor);
+    private final Class<? extends Item> itemClass;
+
+    Type(Class<? extends Item> itemClass) {
+        this.itemClass = itemClass;
     }
 
-    /**
-     * Add Custom
-     *
-     * @param itemType
-     */
-    static void add(Type itemType) {
-        Helper.MAP.put(itemType.classFor(), itemType);
+    static Type get(Class<? extends Item> classFor) {
+        for (Type type : Type.values()) {
+            if (type.itemClass.equals(classFor)) {
+                return type;
+            }
+        }
+        return null;
     }
 
-    /**
-     * These are the default style components
-     */
-    enum Types implements Type {
-        PAGE(Page.class),
-        PANEL(Panel.class),
-        FRAME(Frame.class),
-        ASPECT(Aspect.class),
-        WIDGET(Widget.class),
-        INPUT(Input.class),
-        OUTPUT(Output.class);
-
-        private final Class<?> classFor;
-        private final String className;
-
-        Types(Class<?> classFor) {
-            this.classFor = classFor;
-            this.className = classFor.getSimpleName().toLowerCase();
-            Type.add(this);
-        }
-
-        @Override
-        public Class<?> classFor() {
-            return this.classFor;
-        }
-
-        @Override
-        public String className() {
-            return this.className;
-        }
+    public Class<?> classFor() {
+        return this.itemClass;
     }
 
-    /**
-     * Who is this style for?
-     *
-     * @return
-     */
-    Class<?> classFor();
-
-    String className();
-
-    /**
-     * Support Class (so the MAP is private)
-     */
-    static class Helper {
-
-        static private Map<Class<?>, Type> MAP = new HashMap<>();
-
-        static {
-            Types.values();
-        }
+    public String className() {
+        return this.itemClass.getSimpleName().toLowerCase();
     }
-
 }

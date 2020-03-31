@@ -36,7 +36,7 @@ public interface Panel extends Container<Item> {
 
     @Override
     default Type type() {
-        return Type.get(Panel.class);
+        return Type.PANEL;
     }
 
     default Aspect newAspect() {

@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  */
 public enum HTML {
     //ELEMENT(Element.class, DOM.HTMLElement),
-    A(A.class, DOM.HTMLAnchorElement),
+    A_(A.class, DOM.HTMLAnchorElement),
     ABBR(Abbr.class, DOM.HTMLElement),
     ACRONYM(Acronym.class, DOM.HTMLElement),
     ADDRESS(Address.class, DOM.HTMLElement),
@@ -56,7 +56,7 @@ public enum HTML {
     ARTICLE(Article.class, DOM.HTMLElement),
     ASIDE(Aside.class, DOM.HTMLElement),
     AUDIO(Audio.class, DOM.HTMLAudioElement),
-    B(B.class, DOM.HTMLElement),
+    B_(B.class, DOM.HTMLElement),
     BASE(Base.class, DOM.HTMLBaseElement),
     BASEFONT(Basefont.class, DOM.HTMLBaseFontElement),
     BB(Bb.class, DOM.HTMLElement),
@@ -106,7 +106,7 @@ public enum HTML {
     HGROUP(Hgroup.class, DOM.HTMLElement),
     HR(Hr.class, DOM.HTMLHRElement),
     HTML(Page.class, DOM.HTMLHtmlElement),
-    I(I.class, DOM.HTMLElement),
+    I_(I.class, DOM.HTMLElement),
     IFRAME(Iframe.class, DOM.HTMLIFrameElement),
     IMG(Img.class, DOM.HTMLImageElement),
     INPUT(Input.class, DOM.HTMLInputElement),
@@ -130,15 +130,15 @@ public enum HTML {
     OPTGROUP(Optgroup.class, DOM.HTMLOptGroupElement),
     OPTION(Option.class, DOM.HTMLOptionElement),
     OUTPUT(Output.class, DOM.HTMLOutputElement),
-    P(P.class, DOM.HTMLParagraphElement),
+    P_(P.class, DOM.HTMLParagraphElement),
     PARAM(Param.class, DOM.HTMLParamElement),
     PRE(Pre.class, DOM.HTMLPreElement),
     PROGRESS(Progress.class, DOM.HTMLProgressElement),
-    Q(Q.class, DOM.HTMLQuoteElement),
+    Q_(Q.class, DOM.HTMLQuoteElement),
     RUBY(Ruby.class, DOM.HTMLElement),
     RP(Rp.class, DOM.HTMLElement),
     RT(Rt.class, DOM.HTMLElement),
-    S(S.class, DOM.HTMLElement),
+    S_(S.class, DOM.HTMLElement),
     SAMP(Samp.class, DOM.HTMLElement),
     SCRIPT(Script.class, DOM.HTMLScriptElement),
     SECTION(Section.class, DOM.HTMLElement),
@@ -163,7 +163,7 @@ public enum HTML {
     TITLE(Title.class, DOM.HTMLTitleElement),
     TR(Tr.class, DOM.HTMLTableRowElement),
     TT(Tt.class, DOM.HTMLElement),
-    U(U.class, DOM.HTMLElement),
+    U_(U.class, DOM.HTMLElement),
     UL(Ul.class, DOM.HTMLUListElement),
     VAR(Var.class, DOM.HTMLElement),
     VIDEO(Video.class, DOM.HTMLVideoElement),
@@ -865,7 +865,7 @@ public enum HTML {
 
     public interface A extends HtmlElement {
         static public A create(Object... params) throws Exception {
-            return HTML.A.create(params);
+            return HTML.A_.create(params);
         }
 
     }
@@ -1046,6 +1046,18 @@ public enum HTML {
         public Element setValue(Object value);
 
         public Element setPattern(Pattern pattern);
+
+        public Element setMinLength(int minLength);
+
+        public Element setMaxLength(int maxLength);
+
+        public Element setPlaceholder(String placeholder);
+
+        public Element setReadonly(boolean readonly);
+
+        public Element setSize(int size);
+
+        public Element setSpellcheck(boolean spellcheck);
 
         public enum InputAttributes implements AttributeType {
             ACCEPT(AttributeType.ValidationType.PATTERN, Pattern.compile("^.*$")),
@@ -1236,7 +1248,7 @@ public enum HTML {
     public interface B extends HtmlElement {
 
         static public B create(Object... params) throws Exception {
-            return HTML.B.create(params);
+            return HTML.B_.create(params);
         }
     }
 
@@ -1538,7 +1550,7 @@ public enum HTML {
     public interface I extends HtmlElement {
 
         static public I create(Object... params) throws Exception {
-            return HTML.I.create(params);
+            return HTML.I_.create(params);
         }
     }
 
@@ -1678,7 +1690,7 @@ public enum HTML {
     public interface P extends HtmlElement {
 
         static public P create(Object... params) throws Exception {
-            return HTML.P.create(params);
+            return HTML.P_.create(params);
         }
     }
 
@@ -1706,7 +1718,7 @@ public enum HTML {
     public interface Q extends HtmlElement {
 
         static public Q create(Object... params) throws Exception {
-            return HTML.Q.create(params);
+            return HTML.Q_.create(params);
         }
     }
 
@@ -1734,7 +1746,7 @@ public enum HTML {
     public interface S extends HtmlElement {
 
         static public S create(Object... params) throws Exception {
-            return HTML.S.create(params);
+            return HTML.S_.create(params);
         }
     }
 
@@ -1860,7 +1872,7 @@ public enum HTML {
     public interface U extends HtmlElement {
 
         static public U create(Object... params) throws Exception {
-            return HTML.U.create(params);
+            return HTML.U_.create(params);
         }
     }
 

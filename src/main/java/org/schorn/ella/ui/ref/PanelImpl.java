@@ -35,8 +35,8 @@ class PanelImpl extends ItemContainerImpl implements Panel {
 
     static final Logger LGR = LoggerFactory.getLogger(PanelImpl.class);
 
-    PanelImpl(String id, String name) {
-        super(id, name);
+    PanelImpl(String name, String label) {
+        super(name, label);
     }
 
 }

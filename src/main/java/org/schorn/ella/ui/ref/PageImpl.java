@@ -35,10 +35,10 @@ import org.schorn.ella.ui.style.StyleSheet;
  */
 class PageImpl extends ItemContainerImpl implements Page {
 
-    protected String title = "page";
-    protected boolean isViewport = false;
-    protected String viewportWidth = "";
-    protected String viewportScale = "";
+    private String title = "page";
+    private boolean isViewport = false;
+    private String viewportWidth = "";
+    private String viewportScale = "";
 
     public PageImpl() {
         super("", "");
@@ -85,11 +85,9 @@ class PageImpl extends ItemContainerImpl implements Page {
         pageElement.append(titleElement);
 
         this.items().stream()
-                //.peek(i -> System.out.println(String.format("Pre-build: %s.%s", i.getClass().getSimpleName(), i.id())))
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())
                 .map(o -> o.get())
-                //.peek(e -> System.out.println(String.format("Post-build: %s.%s", e.tag(), e.getId())))
                 .forEachOrdered(e -> pageElement.append(e));
         return pageElement;
     }

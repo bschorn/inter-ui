@@ -26,9 +26,11 @@ package org.schorn.ella.ui.ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Aspect;
-import org.schorn.ella.ui.widget.Widget;
+import org.schorn.ella.ui.layout.Widget;
+import org.schorn.ella.ui.util.ToString;
 
 /**
  *
@@ -36,10 +38,10 @@ import org.schorn.ella.ui.widget.Widget;
  */
 class AspectImpl implements Aspect {
 
-    private final String containerId;
+    private final String id;
     private final String formId;
     private final String name;
-    private String label;
+    private String label = null;
     private String actionURL = null;
     private HTML.Enctype enctype = null;
     private HTML.Method method = null;
@@ -49,19 +51,19 @@ class AspectImpl implements Aspect {
     private Exception exception = null;
 
     AspectImpl(String name, String label) {
-        this.containerId = String.format("aspect-%s-ID", name);
-        this.formId = String.format("form-%s-ID", name);
+        this.id = UUID.randomUUID().toString();
+        this.formId = UUID.randomUUID().toString();
         this.name = name;
         this.label = label;
     }
 
     @Override
     public String id() {
-        return this.containerId;
+        return this.id;
     }
 
     @Override
-    public String formId() {
+    public String aspectId() {
         return this.formId;
     }
 
@@ -106,6 +108,13 @@ class AspectImpl implements Aspect {
     }
 
     @Override
+    public void throwException() throws Exception {
+        if (this.exception != null) {
+            throw this.exception;
+        }
+    }
+
+    @Override
     public Optional<HTML.Element> build() {
         HTML.Element element = null;
         try {
@@ -114,17 +123,6 @@ class AspectImpl implements Aspect {
             this.exception = ex;
         }
         return Optional.ofNullable(element);
-    }
-
-    @Override
-    public void throwException() throws Exception {
-        if (this.exception != null) {
-            throw this.exception;
-        }
-    }
-
-    protected List<Widget> widgets() {
-        return this.widgets;
     }
 
     protected HTML.Element build0() throws Exception {
@@ -148,12 +146,31 @@ class AspectImpl implements Aspect {
             formElement.setTarget(this.target);
         }
 
-        this.widgets().stream()
-                .map(i -> i.build())
-                .filter(o -> o.isPresent())
-                .map(o -> o.get())
-                .forEachOrdered(e -> formElement.append(e));
+        for (Widget widget : this.widgets) {
+            Optional<HTML.Element> optElement = widget.build();
+            if (optElement.isPresent()) {
+                HTML.Element element = optElement.get();
+                formElement.append(element);
+            } else {
+                try {
+                    widget.throwException();
+                } catch (Exception ex) {
+                    HTML.Div exElement = HTML.Div.create();
+                    exElement.addClass("widget");
+                    exElement.addClass("exception");
+                    exElement.setTextContent(widget.label());
+                    HTML.P pElement = HTML.P.create();
+                    exElement.append(pElement);
+                    pElement.setTextContent(ToString.stackTrace(ex));
+                    formElement.append(exElement);
+                }
+            }
+        }
         return containerElement;
+    }
+
+    protected List<Widget> widgets() {
+        return this.widgets;
     }
 
 }

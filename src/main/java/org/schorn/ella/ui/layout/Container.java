@@ -31,5 +31,4 @@ import java.util.function.Consumer;
  * @param <I>
  */
 public interface Container<I extends Item> extends Item, Consumer<I> {
-
 }
