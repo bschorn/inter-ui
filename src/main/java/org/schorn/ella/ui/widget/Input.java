@@ -33,5 +33,12 @@ public interface Input extends Widget {
 
     public void setDatalist(String[] datalist);
 
+    public void setPlaceholder(String placeholder);
+
+    public void setReadonly(boolean readonly);
+
+    public String placeholder();
+
+    public boolean isReadonly();
 
 }

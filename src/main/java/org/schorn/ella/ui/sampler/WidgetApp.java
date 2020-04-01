@@ -61,7 +61,7 @@ public class WidgetApp {
             page.setTitle(this.getClass().getSimpleName());
             page.setViewport("device-width", "1");
 
-            Aspect widgetsAspect = page.newFramePanel(Item.Name.create("widgets"), "Widget List").newAspect();
+            Aspect widgetsAspect = page.newFramePanel(Item.Name.create("library"), "Widget List").newAspect();
 
             widgetsAspect.accept(OutputWidgets.Title.create("customerAddress", "Customer Address"));
             widgetsAspect.accept(InputWidgets.TextBox.create(Item.Name.create("streetAddress"), "Street Address", Pattern.compile("^.*$")));
@@ -90,6 +90,7 @@ public class WidgetApp {
             this.add(FrameStyles.DEBUG);
             this.add(PanelStyles.DEBUG);
             this.add(WidgetStyles.LABEL_OVER_VALUE);
+            this.add(WidgetStyles.SIERRA);
         }
 
         @Override

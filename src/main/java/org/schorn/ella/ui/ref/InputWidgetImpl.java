@@ -50,6 +50,8 @@ abstract class InputWidgetImpl implements Input {
     protected final List<String> datalist = new ArrayList<>();
     protected String label = null;
     protected Exception exception = null;
+    protected boolean readonly = false;
+    protected String placeholder = null;
 
     InputWidgetImpl(String customTag, HTML.Input.InputType inputType, String name, String label) {
         this.customTag = customTag;
@@ -84,6 +86,16 @@ abstract class InputWidgetImpl implements Input {
     }
 
     @Override
+    public String placeholder() {
+        return this.placeholder;
+    }
+
+    @Override
+    public boolean isReadonly() {
+        return this.readonly;
+    }
+
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }
@@ -91,6 +103,16 @@ abstract class InputWidgetImpl implements Input {
     @Override
     final public void setDatalist(String[] datalist) {
         this.datalist.addAll(Arrays.asList(datalist));
+    }
+
+    @Override
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
+
+    @Override
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 
     @Override
@@ -109,10 +131,12 @@ abstract class InputWidgetImpl implements Input {
         divElement.setId(this.id());
         divElement.addClass(this.name());
         divElement.addClass(this.widgetName());
-        divElement.addClass("input");
         divElement.addClass(this.type().className());
         HTML.Input inputElement = HTML.Input.create();
         inputElement.setId(this.widgetId());
+        inputElement.addClass(this.name());
+        inputElement.addClass(this.widgetName());
+        inputElement.addClass("input");
         this.preBuild(inputElement);
         inputElement.addAttribute(this.inputType.asAttribute());
         HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, this.name);
@@ -132,13 +156,21 @@ abstract class InputWidgetImpl implements Input {
         if (this.label != null) {
             HTML.Label labelElement = HTML.Label.create();
             labelElement.append(inputElement);
+            labelElement.addClass(this.name());
+            labelElement.addClass(this.widgetName());
+            labelElement.addClass("label");
             labelElement.setTextContent(this.label);
             labelElement.append(inputElement);
             divElement.append(labelElement);
         } else {
             divElement.append(inputElement);
         }
-
+        if (this.isReadonly()) {
+            inputElement.setReadonly(true);
+        }
+        if (this.placeholder() != null) {
+            inputElement.setPlaceholder(this.placeholder());
+        }
         this.postBuild(inputElement);
         return divElement;
     }

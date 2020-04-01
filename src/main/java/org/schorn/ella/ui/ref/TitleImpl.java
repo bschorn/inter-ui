@@ -47,6 +47,7 @@ class TitleImpl extends OutputWidgetImpl implements OutputWidgets.Title {
     @Override
     protected HTML.Element build0() throws Exception {
         HTML.Span spanElement = HTML.Span.create();
+        spanElement.addClass(this.name());
         spanElement.addClass(this.widgetName());
         spanElement.setTextContent(this.title);
         return spanElement;

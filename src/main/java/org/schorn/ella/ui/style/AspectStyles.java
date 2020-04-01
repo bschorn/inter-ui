@@ -38,7 +38,8 @@ public enum AspectStyles implements StyleFactory.FactorySupplier {
     }
 
     static public void init() {
-        StyleFactory.set(DUMMY, CSS.Block.create());
+        StyleFactory.set(DUMMY, CSS.Block.create()
+                .append(CSS.Selector.create(".aspect")));
     }
 
 }

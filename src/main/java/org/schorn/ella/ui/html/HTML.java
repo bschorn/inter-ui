@@ -232,6 +232,18 @@ public enum HTML {
         String tag();
 
         ValidationType validationType();
+
+        public List<String> allowables();
+
+        public Pattern pattern();
+
+        default String convertFlag(boolean flag) {
+            if (this.allowables().size() == 2) {
+                return this.allowables().get(flag ? 0 : 1);
+            }
+            return null;
+        }
+
     }
 
     static public enum GlobalAttributes implements AttributeType {
@@ -260,19 +272,19 @@ public enum HTML {
         TITLE(AttributeType.ValidationType.PATTERN, Pattern.compile("^.*$"));
 
         private final String attributeTag;
-        private final AttributeType.ValidationType attributesType;
+        private final AttributeType.ValidationType attributeValidationType;
         private final List<String> allowables;
         private final Pattern pattern;
 
-        GlobalAttributes(AttributeType.ValidationType attributesType, String[] allowables) {
+        GlobalAttributes(AttributeType.ValidationType attributeValidationType, String[] allowables) {
             this.attributeTag = this.name().toLowerCase();
-            this.attributesType = attributesType;
+            this.attributeValidationType = attributeValidationType;
             this.allowables = Arrays.asList(allowables);
             this.pattern = Pattern.compile("^.*$");
         }
-        GlobalAttributes(AttributeType.ValidationType attributesType, Pattern pattern) {
+        GlobalAttributes(AttributeType.ValidationType attributeValidationType, Pattern pattern) {
             this.attributeTag = this.name().toLowerCase();
-            this.attributesType = attributesType;
+            this.attributeValidationType = attributeValidationType;
             this.allowables = new ArrayList<>(0);
             this.pattern = pattern;
         }
@@ -284,13 +296,15 @@ public enum HTML {
 
         @Override
         public AttributeType.ValidationType validationType() {
-            return this.attributesType;
+            return this.attributeValidationType;
         }
 
+        @Override
         public List<String> allowables() {
             return this.allowables;
         }
 
+        @Override
         public Pattern pattern() {
             return this.pattern;
         }

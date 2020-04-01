@@ -38,8 +38,8 @@ public enum PanelStyles implements StyleFactory.FactorySupplier {
     }
 
     static public void init() {
-        StyleFactory.set(DEBUG, CSS.Block.create().append(CSS.Selector.createClass("panel"))
-                .append(CSS.Rule.create(CSS.Property.display, "inline-grid"))
+        StyleFactory.set(DEBUG, CSS.Block.create().append(CSS.Selector.createClass("panel", "container"))
+                //.append(CSS.Rule.create(CSS.Property.display, "inline-grid"))
                 .append(CSS.Rule.create(CSS.Property.padding, "10px"))
                 .append(CSS.Rule.create(CSS.Property.border, "solid white 1px"))
                 .append(CSS.Rule.create(CSS.Property.border_radius, "5px"))

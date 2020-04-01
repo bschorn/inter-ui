@@ -130,9 +130,13 @@ class AspectImpl implements Aspect {
         containerElement.setId(this.id());
         containerElement.addClass(this.name());
         containerElement.addClass(this.type().className());
+        containerElement.addClass("container");
         HTML.Form formElement = HTML.Form.create();
         containerElement.append(formElement);
         formElement.setId(this.formId);
+        formElement.addClass(this.name());
+        formElement.addClass(this.type().className());
+        formElement.addClass("entity");
         if (this.actionURL != null) {
             formElement.setAction(this.actionURL);
         }

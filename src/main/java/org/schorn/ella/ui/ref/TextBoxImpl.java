@@ -34,6 +34,10 @@ import org.schorn.ella.ui.widget.InputWidgets;
 final class TextBoxImpl extends InputWidgetImpl implements InputWidgets.TextBox {
 
     private Pattern pattern;
+    private Integer minLength = null;
+    private Integer maxLength = null;
+    private Integer size = null;
+    private Boolean spellcheck = null;
 
     public TextBoxImpl(String name, String label, Pattern pattern) {
         super("inter-textbox", HTML.Input.InputType.TEXT, name, label);
@@ -41,15 +45,69 @@ final class TextBoxImpl extends InputWidgetImpl implements InputWidgets.TextBox 
     }
 
     @Override
+    public Integer minLength() {
+        return this.minLength;
+    }
+
+    @Override
+    public Integer maxLength() {
+        return this.maxLength;
+    }
+
+    @Override
+    public Pattern pattern() {
+        return this.pattern;
+    }
+
+    @Override
+    public Integer size() {
+        return this.size;
+    }
+
+    @Override
+    public Boolean isSpellcheck() {
+        return this.spellcheck;
+    }
+
+    @Override
     public void setPattern(Pattern pattern) {
         this.pattern = pattern;
+    }
+    @Override
+    public void setLength(int minLength, int maxLength) {
+        this.minLength = minLength;
+        this.maxLength = maxLength;
+    }
+
+    @Override
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    @Override
+    public void setSpellcheck(boolean spellcheck) {
+        this.spellcheck = spellcheck;
     }
 
     @Override
     protected HTML.Element postBuild(HTML.Element element) {
         if (element instanceof HTML.Input) {
             HTML.Input inputElement = (HTML.Input) element;
-            inputElement.setPattern(this.pattern);
+            if (this.pattern() != null) {
+                inputElement.setPattern(this.pattern());
+            }
+            if (this.minLength() != null) {
+                inputElement.setMinLength(this.minLength());
+            }
+            if (this.maxLength() != null) {
+                inputElement.setMaxLength(this.maxLength());
+            }
+            if (this.size() != null) {
+                inputElement.setSize(this.size());
+            }
+            if (this.isSpellcheck() != null) {
+                inputElement.setSpellcheck(this.isSpellcheck());
+            }
         }
         return element;
     }

@@ -40,6 +40,7 @@ import org.schorn.ella.ui.html.HTML.A;
 import org.schorn.ella.ui.html.HTML.Attribute;
 import org.schorn.ella.ui.html.HTML.CustomElement;
 import org.schorn.ella.ui.html.HTML.Element;
+import org.schorn.ella.ui.html.HTML.GlobalAttributes;
 import org.schorn.ella.ui.html.HTML.HtmlElement;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
@@ -1132,7 +1133,9 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
             try {
                 this.addAttribute(HTML.Attribute.create("name", name));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LGR.error("{}.setName() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
             }
             return this;
         }
@@ -1148,7 +1151,8 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
             String acceptType = Arrays.asList(acceptTypes).stream()
                     .collect(Collectors.joining(","));
             try {
-                this.addAttribute(HTML.Attribute.create("accept", acceptType));
+                this.addAttribute(HTML.Attribute.create(InputAttributes.ACCEPT,
+                        acceptType));
             } catch (Exception ex) {
                 LGR.error("{}.setAccept() - Caught Exception: {}",
                         this.getClass().getSimpleName(),
@@ -1160,7 +1164,8 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         @Override
         public Element setValue(Object value) {
             try {
-                this.addAttribute(HTML.Attribute.create("value", value.toString()));
+                this.addAttribute(HTML.Attribute.create(InputAttributes.VALUE,
+                        value.toString()));
             } catch (Exception ex) {
                 LGR.error("{}.setValue() - Caught Exception: {}",
                         this.getClass().getSimpleName(),
@@ -1172,9 +1177,88 @@ class HtmlFactoryImpl implements HTML.HtmlFactory {
         @Override
         public Element setPattern(Pattern pattern) {
             try {
-                this.addAttribute(HTML.Attribute.create("pattern", pattern.toString()));
+                this.addAttribute(HTML.Attribute.create(InputAttributes.PATTERN,
+                        pattern.toString()));
             } catch (Exception ex) {
                 LGR.error("{}.setPattern() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setMinLength(int minLength) {
+            try {
+                this.addAttribute(HTML.Attribute.create(InputAttributes.MINLENGTH,
+                        String.valueOf(minLength)));
+            } catch (Exception ex) {
+                LGR.error("{}.setMinLength() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setMaxLength(int maxLength) {
+            try {
+                this.addAttribute(HTML.Attribute.create(InputAttributes.MAXLENGTH,
+                        String.valueOf(maxLength)));
+            } catch (Exception ex) {
+                LGR.error("{}.setMaxLength() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setPlaceholder(String placeholder) {
+            try {
+                this.addAttribute(HTML.Attribute.create(InputAttributes.PLACEHOLDER,
+                        placeholder));
+            } catch (Exception ex) {
+                LGR.error("{}.setPlaceholder() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setReadonly(boolean readonly) {
+            try {
+                this.addAttribute(HTML.Attribute.create(InputAttributes.READONLY,
+                        InputAttributes.READONLY.convertFlag(readonly)));
+            } catch (Exception ex) {
+                LGR.error("{}.setReadonly() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setSize(int size) {
+            try {
+                this.addAttribute(HTML.Attribute.create(InputAttributes.PLACEHOLDER,
+                        Integer.toString(size)));
+            } catch (Exception ex) {
+                LGR.error("{}.setSize() - Caught Exception: {}",
+                        this.getClass().getSimpleName(),
+                        ToString.stackTrace(ex));
+            }
+            return this;
+        }
+
+        @Override
+        public Element setSpellcheck(boolean spellcheck) {
+            try {
+                this.addAttribute(HTML.Attribute.create(GlobalAttributes.SPELLCHECK,
+                        GlobalAttributes.SPELLCHECK.convertFlag(spellcheck)));
+            } catch (Exception ex) {
+                LGR.error("{}.setSpellcheck() - Caught Exception: {}",
                         this.getClass().getSimpleName(),
                         ToString.stackTrace(ex));
             }

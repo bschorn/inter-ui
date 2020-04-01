@@ -95,21 +95,21 @@ abstract class OutputWidgetImpl implements Output {
 
     @Override
     public Optional<HTML.Element> build() {
-        HTML.Element element = null;
+        HTML.Div divElement = null;
         try {
-            HTML.Div divElement = HTML.Div.create();
+            divElement = HTML.Div.create();
             divElement.setId(this.id());
             divElement.addClass(this.name());
             divElement.addClass(this.widgetName());
             divElement.addClass("output");
             divElement.addClass(this.type().className());
-            element = this.build0();
+            HTML.Element element = this.build0();
             element.setId(this.widgetId());
             divElement.append(element);
         } catch (Exception ex) {
             this.exception = ex;
         }
-        return Optional.ofNullable(element);
+        return Optional.ofNullable(divElement);
     }
 
     abstract protected HTML.Element build0() throws Exception;

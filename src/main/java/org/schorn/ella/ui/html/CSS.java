@@ -223,13 +223,17 @@ public enum CSS {
             return null;
         }
 
-        static public Selector createClass(String className) {
+        static public Selector createClass(String... classNames) {
             try {
-                return CSS.SELECTOR.create(Selector.class, String.format(".%s", className));
+                StringJoiner joiner = new StringJoiner(".", ".", "");
+                for (String className : classNames) {
+                    joiner.add(className);
+                }
+                return CSS.SELECTOR.create(Selector.class, joiner.toString());
             } catch (Exception ex) {
                 LGR.error("{}.createClass({}) - Caught Exception: {}",
                         Selector.class.getSimpleName(),
-                        className,
+                        Arrays.toString(classNames),
                         ToString.stackTrace(ex));
             }
             return null;

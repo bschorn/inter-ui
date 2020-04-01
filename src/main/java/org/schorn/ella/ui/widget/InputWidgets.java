@@ -151,13 +151,19 @@ public enum InputWidgets {
 
     public interface TextBox extends Input {
 
+        public Integer minLength();
+
+        public Integer maxLength();
+
+        public Pattern pattern();
+
+        public Integer size();
+
+        public Boolean isSpellcheck();
+
         public void setLength(int minLength, int maxLength);
 
         public void setPattern(Pattern pattern);
-
-        public void setPlaceholder(String placeholder);
-
-        public void setReadonly(boolean readonly);
 
         public void setSize(int size);
 

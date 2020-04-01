@@ -33,7 +33,8 @@ import org.schorn.ella.ui.html.HTML;
 public enum WidgetStyles implements StyleFactory.FactorySupplier {
     LABEL_OVER_VALUE,
     OUTPUT_VALUE,
-    HIGHLIGHT_ON_HOVER;
+    HIGHLIGHT_ON_HOVER,
+    SIERRA;
 
     @Override
     public CSS.Style get() {
@@ -57,6 +58,16 @@ public enum WidgetStyles implements StyleFactory.FactorySupplier {
                 .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
                 .append(CSS.Rule.create(CSS.Property.color, "black"))
                 .append(CSS.Rule.create(CSS.Property.background, "white")));
+
+        StyleFactory.set(SIERRA, CSS.Block.create()
+                .append(CSS.Selector.createClass("widget"))
+                .append(CSS.Rule.create(CSS.Property.border, "solid black 1px"))
+                .append(CSS.Rule.create(CSS.Property.color, "black"))
+                .append(CSS.Rule.create(CSS.Property.background_color, "rgba(162, 160, 160, 1);"))
+                .append(CSS.Rule.create(CSS.Property.border_radius, "2px"))
+                .append(CSS.Rule.create(CSS.Property.margin, "1px"))
+                .append(CSS.Rule.create(CSS.Property.padding, "1px"))
+        );
     }
 
 }

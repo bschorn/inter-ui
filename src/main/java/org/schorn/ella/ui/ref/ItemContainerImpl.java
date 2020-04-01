@@ -105,6 +105,8 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
         if (this.label != null) {
             HTML.Span span = HTML.Span.create();
             span.setId(String.format("%s-label", this.id()));
+            span.addClass(this.name());
+            span.addClass(this.type().className());
             span.addClass("label");
             span.setTextContent(this.label());
             containerElement.append(span);
