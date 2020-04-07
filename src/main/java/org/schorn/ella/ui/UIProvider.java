@@ -33,6 +33,7 @@ import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
@@ -59,6 +60,8 @@ public interface UIProvider {
     public Aspect createAspect(Item.Name name);
 
     public Aspect createAspect(Item.Name name, String label);
+
+    public Style.Reset getStyleSheetReset();
 
     /**
      * Gets a new instance of the UIProvider's implementation as found by the

@@ -21,28 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
+package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
  * @author bschorn
  */
-public enum FrameStyles implements StyleFactory.FactorySupplier {
-    DEBUG;
+public enum FrameStyle implements Style.Supplier {
+    DEFAULT_CONTAINER;
 
     @Override
-    public CSS.Style get() {
-        return StyleFactory.get(this);
+    public CSS.Style style() {
+        return Style.Repo.get(this);
     }
 
     static public void init() {
-        StyleFactory.set(DEBUG, CSS.Block.create().append(CSS.Selector.createClass("frame"))
-                .append(CSS.Rule.create(CSS.Property.display, "flex"))
-                .append(CSS.Rule.create(CSS.Property.width, "50vw"))
-                //.append(CSS.Rule.create(CSS.Property.min_height, "100px"))
-                .append(CSS.Rule.create(CSS.Property.border, "dashed lightgray 2px")));
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Frame.Selectors.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.margin, "0px"))
+                .append(CSS.Rule.create(CSS.Property.background_color, "rgb(205,205,205)"))
+                .append(CSS.Rule.create(CSS.Property.flex_direction, "row"))
+                .append(CSS.Rule.create(CSS.Property.flex_wrap, "wrap"))
+                //.append(CSS.Rule.create(CSS.Property.justify_content, "space-evenly"))
+                .append(CSS.Rule.create(CSS.Property.align_content, "space-evenly"))
+                .append(CSS.Rule.create(CSS.Property.display, "flex")));
     }
 
 }

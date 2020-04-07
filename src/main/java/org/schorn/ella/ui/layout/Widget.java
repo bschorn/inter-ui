@@ -23,6 +23,8 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.html.CSS;
+
 /**
  *
  * @author bschorn
@@ -36,6 +38,27 @@ public interface Widget extends Item {
     @Override
     default Type type() {
         return Type.WIDGET;
+    }
+
+    public enum Selector implements Style.Selectors {
+        CONTAINER(CSS.Selector.createClass("widget")),
+        INPUT(CSS.Selector.createClass("widget", "input")),
+        LABEL(CSS.Selector.create(".widget > label"));
+
+        private final CSS.Selector selector;
+
+        Selector(CSS.Selector selector) {
+            this.selector = selector;
+        }
+
+        @Override
+        public CSS.Selector selector() {
+            return this.selector;
+        }
+
+        public CSS.Selector selector(Widget widget) {
+            return CSS.Selector.createClass(this.selector.render().substring(1), widget.name());
+        }
     }
 
     public String widgetName();

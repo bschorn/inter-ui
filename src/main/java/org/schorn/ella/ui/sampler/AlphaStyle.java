@@ -23,41 +23,21 @@
  */
 package org.schorn.ella.ui.sampler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.style.FontStyles;
-import org.schorn.ella.ui.style.FrameStyles;
-import org.schorn.ella.ui.style.GenericStyles;
-import org.schorn.ella.ui.style.PanelStyles;
-import org.schorn.ella.ui.style.StyleSheet;
-import org.schorn.ella.ui.style.WidgetStyles;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
  * @author bschorn
  */
-public final class AlphaStyle implements StyleSheet {
-
-    private final List<CSS.Style> styles = new ArrayList<>();
+public final class AlphaStyle extends Style.Sheet {
 
     public AlphaStyle() {
-        this.reset();
-        this.add(FontStyles.ARIAL85);
-        this.add(GenericStyles.GLOBAL_BOX_SIZING_BORDER_BOX);
-        this.add(FrameStyles.DEBUG);
-        this.add(PanelStyles.DEBUG);
-        this.add(WidgetStyles.LABEL_OVER_VALUE);
+        //this.reset();
+        //this.add(FontStyles.ARIAL85);
+        //this.add(GenericStyles.BOX_SIZING_BORDER_BOX);
+        //this.add(FrameStyles.DEFAULT_CONTAINER);
+        //this.add(PanelStyles.PANEL_CONTAINER_STYLE);
+        //this.add(WidgetStyles.LABEL_OVER_VALUE);
     }
 
-    @Override
-    public List<CSS.Style> styles() {
-        return this.styles;
-    }
-
-    @Override
-    public String toString() {
-        return this.styles.stream().map(s -> s.render()).collect(Collectors.joining("\n"));
-    }
 }

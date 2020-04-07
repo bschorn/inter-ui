@@ -23,13 +23,27 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
 public interface Aspect extends Container<Widget> {
+
+    static final Logger LGR = LoggerFactory.getLogger(Aspect.class);
+
+    static Aspect create(Item.Name name) {
+        return UIProvider.provider().createAspect(name);
+    }
+
+    static Aspect create(Item.Name name, String label) {
+        return UIProvider.provider().createAspect(name, label);
+    }
 
     public String aspectId();
 
@@ -40,6 +54,28 @@ public interface Aspect extends Container<Widget> {
     default Type type() {
         return Type.ASPECT;
     }
+
+    public enum Selector implements Style.Selectors {
+        CONTAINER(CSS.Selector.createClass("aspect", "container")),
+        LABEL(CSS.Selector.createClass("aspect", "label")),
+        ENTITY(CSS.Selector.createClass("aspect", "entity"));
+
+        private final CSS.Selector selector;
+
+        Selector(CSS.Selector selector) {
+            this.selector = selector;
+        }
+
+        @Override
+        public CSS.Selector selector() {
+            return this.selector;
+        }
+
+        public CSS.Selector selector(Aspect aspect) {
+            return CSS.Selector.createClass(this.selector.render().substring(1), aspect.name());
+        }
+    }
+
 
     public void setAction(String actionURL);
 

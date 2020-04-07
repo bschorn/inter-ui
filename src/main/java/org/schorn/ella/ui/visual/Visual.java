@@ -21,29 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
-
-import org.schorn.ella.ui.html.CSS;
+package org.schorn.ella.ui.visual;
 
 /**
  *
  * @author bschorn
  */
-public enum PanelStyles implements StyleFactory.FactorySupplier {
-    DEBUG;
-
-    @Override
-    public CSS.Style get() {
-        return StyleFactory.get(this);
-    }
+public class Visual {
 
     static public void init() {
-        StyleFactory.set(DEBUG, CSS.Block.create().append(CSS.Selector.createClass("panel", "container"))
-                //.append(CSS.Rule.create(CSS.Property.display, "inline-grid"))
-                .append(CSS.Rule.create(CSS.Property.padding, "10px"))
-                .append(CSS.Rule.create(CSS.Property.border, "solid white 1px"))
-                .append(CSS.Rule.create(CSS.Property.border_radius, "5px"))
-                .append(CSS.Rule.create(CSS.Property.background, "tan")));
+        GenericStyle.init();
+        PageStyle.init();
+        FrameStyle.init();
+        PanelStyle.init();
+        AspectStyle.init();
+        WidgetStyle.init();
+        FontStyle.init();
     }
-
 }

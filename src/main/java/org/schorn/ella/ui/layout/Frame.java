@@ -23,11 +23,22 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.html.CSS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author bschorn
  */
 public interface Frame extends Container<Item> {
+
+    static final Logger LGR = LoggerFactory.getLogger(Frame.class);
+
+    static Frame create(Item.Name name) {
+        return UIProvider.provider().createFrame(name);
+    }
 
     @Override
     public void accept(Item item);
@@ -36,4 +47,19 @@ public interface Frame extends Container<Item> {
     default Type type() {
         return Type.FRAME;
     }
+    public enum Selectors implements Style.Selectors {
+        CONTAINER(CSS.Selector.createClass("frame", "container"));
+
+        private final CSS.Selector selector;
+
+        Selectors(CSS.Selector selector) {
+            this.selector = selector;
+        }
+
+        @Override
+        public CSS.Selector selector() {
+            return this.selector;
+        }
+    }
+
 }

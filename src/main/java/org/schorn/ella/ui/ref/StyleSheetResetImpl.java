@@ -21,12 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
+package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,13 +36,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-final public class StyleReset implements StyleSheet {
+final public class StyleSheetResetImpl implements Style.Reset {
 
-    static private final Logger LGR = LoggerFactory.getLogger(StyleReset.class);
+    static private final Logger LGR = LoggerFactory.getLogger(StyleSheetResetImpl.class);
+    static private final Style.Reset INSTANCE = new StyleSheetResetImpl();
+
+    static public Style.Reset getReset() {
+        return INSTANCE;
+    }
 
     private final List<CSS.Style> styles = new ArrayList<>();
 
-    StyleReset() {
+    private StyleSheetResetImpl() {
         try {
             this.styles.add(CSS.Block.create()
                     .append(CSS.Selector.createType(HTML.HTML))
@@ -177,13 +184,40 @@ final public class StyleReset implements StyleSheet {
                     .append(CSS.Rule.create(CSS.Property.border_spacing, "0"))
             );
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LGR.error("{}.ctor() - Caught Exception: {}",
+                    this.getClass().getSimpleName(),
+                    ToString.stackTrace(ex));
         }
     }
 
     @Override
     public List<CSS.Style> styles() {
         return this.styles;
+    }
+
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void add(CSS.Style style) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void add(Supplier supplier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void add(Factory factory, Selectors selector) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void add(Factory factory, CSS.Selector selector) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

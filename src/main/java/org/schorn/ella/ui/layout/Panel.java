@@ -24,12 +24,25 @@
 package org.schorn.ella.ui.layout;
 
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.util.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
 public interface Panel extends Container<Item> {
+
+    static final Logger LGR = LoggerFactory.getLogger(Panel.class);
+
+    static Panel create(Item.Name name) {
+        return UIProvider.provider().createPanel(name);
+    }
+    static Panel create(Item.Name name, String label) {
+        return UIProvider.provider().createPanel(name, label);
+    }
 
     @Override
     public void accept(Item item);
@@ -39,13 +52,31 @@ public interface Panel extends Container<Item> {
         return Type.PANEL;
     }
 
+    public enum Selector implements Style.Selectors {
+        CONTAINER(CSS.Selector.createClass("panel", "container")),
+        LABEL(CSS.Selector.create(".panel.label > *"));
+
+        private final CSS.Selector selector;
+
+        Selector(CSS.Selector selector) {
+            this.selector = selector;
+        }
+
+        @Override
+        public CSS.Selector selector() {
+            return this.selector;
+        }
+    }
+
     default Aspect newAspect() {
         try {
             Aspect aspect = UIProvider.provider().createAspect(Item.Name.create(this.name()), this.label());
             this.accept(aspect);
             return aspect;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LGR.error("{}.newAspect() - Caught Exception: {}",
+                    Panel.class.getSimpleName(),
+                    ToString.stackTrace(ex));
         }
         return null;
     }

@@ -21,53 +21,71 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
+package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.layout.Widget;
 
 /**
  *
  * @author bschorn
  */
-public enum WidgetStyles implements StyleFactory.FactorySupplier {
-    LABEL_OVER_VALUE,
+public enum WidgetStyle implements Style.Supplier {
+    DEFAULT_CONTAINER,
+    DEFAULT_LABEL,
+    DEFAULT_INPUT,
+    LABEL_OVER_INPUT,
+    LABEL_LEFT_INPUT,
     OUTPUT_VALUE,
-    HIGHLIGHT_ON_HOVER,
-    SIERRA;
+    HIGHLIGHT_ON_HOVER;
+
 
     @Override
-    public CSS.Style get() {
-        return StyleFactory.get(this);
+    public CSS.Style style() {
+        return Style.Repo.get(this);
     }
 
     static public void init() {
-        StyleFactory.set(LABEL_OVER_VALUE, CSS.Block.create()
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create()
+                .append(Widget.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.margin, "1px"))
+                .append(CSS.Rule.create(CSS.Property.padding, "4px"))
+        );
+        Style.Repo.set(DEFAULT_LABEL, CSS.Block.create()
+                .append(Widget.Selector.LABEL.selector())
+                .append(CSS.Rule.create(CSS.Property.margin, "1px"))
+                .append(CSS.Rule.create(CSS.Property.padding, "2px"))
+        );
+        Style.Repo.set(DEFAULT_INPUT, CSS.Block.create()
+                .append(Widget.Selector.INPUT.selector())
+                .append(CSS.Rule.create(CSS.Property.margin, "1px"))
+                .append(CSS.Rule.create(CSS.Property.padding, "2px"))
+        );
+
+        Style.Repo.set(LABEL_OVER_INPUT, CSS.Block.create()
                 .append(CSS.Selector.createType(HTML.INPUT))
                 .append(CSS.Selector.createType(HTML.LABEL))
                 .append(CSS.Rule.create(CSS.Property.display, "block")));
 
-        StyleFactory.set(OUTPUT_VALUE, CSS.Block.create()
+        Style.Repo.set(LABEL_LEFT_INPUT, CSS.Block.create()
+                .append(CSS.Selector.createType(HTML.INPUT))
+                .append(CSS.Selector.createType(HTML.LABEL))
+                .append(CSS.Rule.create(CSS.Property.display, "inline")));
+
+        Style.Repo.set(OUTPUT_VALUE, CSS.Block.create()
                 .append(CSS.Selector.createClass("value"))
                 .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
                 .append(CSS.Rule.create(CSS.Property.color, "black"))
                 .append(CSS.Rule.create(CSS.Property.background, "white")));
 
-        StyleFactory.set(HIGHLIGHT_ON_HOVER, CSS.Block.create()
+        Style.Repo.set(HIGHLIGHT_ON_HOVER, CSS.Block.create()
                 .append(CSS.Selector.createClass("value"))
                 .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
                 .append(CSS.Rule.create(CSS.Property.color, "black"))
                 .append(CSS.Rule.create(CSS.Property.background, "white")));
 
-        StyleFactory.set(SIERRA, CSS.Block.create()
-                .append(CSS.Selector.createClass("widget"))
-                .append(CSS.Rule.create(CSS.Property.border, "solid black 1px"))
-                .append(CSS.Rule.create(CSS.Property.color, "black"))
-                .append(CSS.Rule.create(CSS.Property.background_color, "rgba(162, 160, 160, 1);"))
-                .append(CSS.Rule.create(CSS.Property.border_radius, "2px"))
-                .append(CSS.Rule.create(CSS.Property.margin, "1px"))
-                .append(CSS.Rule.create(CSS.Property.padding, "1px"))
-        );
     }
 
 }

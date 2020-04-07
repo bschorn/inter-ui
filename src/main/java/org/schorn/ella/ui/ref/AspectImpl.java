@@ -131,6 +131,18 @@ class AspectImpl implements Aspect {
         containerElement.addClass(this.name());
         containerElement.addClass(this.type().className());
         containerElement.addClass("container");
+        if (this.label != null) {
+            HTML.Div labelElement = HTML.Div.create();
+            HTML.Span span = HTML.Span.create();
+            labelElement.append(span);
+            span.setId(String.format("%s-label", this.id()));
+            labelElement.addClass(this.name());
+            labelElement.addClass(this.type().className());
+            labelElement.addClass("label");
+            span.setTextContent(this.label());
+            containerElement.append(labelElement);
+        }
+
         HTML.Form formElement = HTML.Form.create();
         containerElement.append(formElement);
         formElement.setId(this.formId);

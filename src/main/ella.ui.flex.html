@@ -1,0 +1,163 @@
+<head>
+<meta name='viewport' content='width=device-width, initial-scale=1' />
+<style>
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p_, blockquote, pre, a_, abbr, acronym, address, big, cite, code, big, del, dfn, em, img, ins, kbd, q_, s_, samp, small, strike, strong, sub, sup, tt, var, b_, u_, i_, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, th, article, aside, canvas, details, embed, figure, footer, header, hgroup, menu, nav, output, ruby, section, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+blockquote, q_ {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+  padding: 0px;
+  font: 1em Rubik, Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+}
+
+input, label {
+  display: block;
+}
+
+.frame {
+  border: 3px solid black;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: space-evenly;
+  /*justify-content: space-evenly;*/
+/*  width: 100vmax;
+  justify-content: center;
+  align-items: center;*/
+  margin: 0px;
+  background-color: rgb(205,205,205);
+}
+
+.panel {
+  border-width: 1px;
+  border-style: solid;
+  border-color: blue;
+  border-radius: 4px;
+  display: block;
+  padding: 10px;
+  padding-top: 25px;
+  margin: 5px;
+  background-color: rgb(225,225,225);
+  width: 195px; 
+  height: initial;
+}
+
+.aspect {
+  border: 1px solid green;
+  border-radius: 4px;
+  display: block;
+  padding: 5px;
+  padding-top: 2em;
+  margin: 1px;
+  width: 180px;
+}
+
+.item {
+  background-color: lightgray;
+  border-radius: 2px;
+  display: block;
+  padding: 4px;
+  margin: 1px;
+  width: 167px;
+  height: 40px;
+}
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="panel">
+      <div class="aspect">
+        <div class="item">
+          <label>Item One
+            <input type="text"/>
+          </label>
+        </div>
+        <div class="item">
+          <label>Item Two
+            <input type="text"/>
+          </label>
+        </div>
+        <div class="item">
+          <label>Item Three
+            <input type="text"/>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="aspect">
+        <div class="item">
+          <label>Item Four
+            <input type="text"/>
+          </label>
+        </div>
+        <div class="item">
+          <label>Item Five
+            <input type="text"/>
+          </label>
+        </div>
+        <div class="item">
+          <label>Item Six
+            <input type="text"/>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="aspect">
+        <div class="item">
+          <label>Item Four
+            <input type="text"/>
+          </label>
+        </div>
+        <div class="item">
+          <label>Item Five
+            <input type="text"/>
+          </label>
+        </div>
+        <div class="item">
+          <label>Item Six
+            <input type="text"/>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

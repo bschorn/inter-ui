@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.util.ToString;
@@ -150,7 +151,7 @@ public enum CSS {
         Role role();
     }
 
-    public interface Block extends Style {
+    public interface Block extends Style, Consumer<Style> {
 
         static final Logger LGR = LoggerFactory.getLogger(Block.class);
 
@@ -304,7 +305,7 @@ public enum CSS {
         }
     }
 
-    public interface Rule extends Style {
+    public interface Rule extends Style, Comparable<Rule> {
 
         Property property();
 

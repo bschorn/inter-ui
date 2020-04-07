@@ -21,25 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
+package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
  * @author bschorn
  */
-public enum AspectStyles implements StyleFactory.FactorySupplier {
-    DUMMY;
+public enum FontStyle implements Style.Factory {
+    ARIAL85;
 
     @Override
-    public CSS.Style get() {
-        return StyleFactory.get(this);
+    public CSS.Style style() {
+        return Style.Repo.get(this);
     }
 
     static public void init() {
-        StyleFactory.set(DUMMY, CSS.Block.create()
-                .append(CSS.Selector.create(".aspect")));
+        Style.Repo.set(ARIAL85, CSS.Block.create()
+                .append(CSS.Rule.create(CSS.Property.font, ".85em Arial, sans-serif")));
+    }
+    static private CSS.Style compose(CSS.Block newBlock, CSS.Style style) {
+        switch (style.role()) {
+            case BLOCK:
+                CSS.Block oldBlock = (CSS.Block) style;
+                oldBlock.rules().stream().forEach(newBlock);
+                break;
+            case RULE:
+                CSS.Rule rule = (CSS.Rule) style;
+                newBlock.accept(rule);
+                break;
+        }
+        return newBlock;
+    }
+
+    @Override
+    public CSS.Style add(CSS.Selector selector) {
+        CSS.Style style = this.style();
+        CSS.Block newBlock = CSS.Block.create().append(selector);
+        return compose(newBlock, style);
     }
 
 }

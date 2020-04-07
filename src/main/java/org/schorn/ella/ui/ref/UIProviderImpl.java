@@ -33,6 +33,7 @@ import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
@@ -90,4 +91,8 @@ public class UIProviderImpl implements UIProvider {
         return CssFactoryImpl.getFactory();
     }
 
+    @Override
+    public Style.Reset getStyleSheetReset() {
+        return StyleSheetResetImpl.getReset();
+    }
 }

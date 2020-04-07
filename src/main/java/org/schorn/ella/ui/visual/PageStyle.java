@@ -21,24 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.style;
+package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
  * @author bschorn
  */
-public enum PageStyles implements StyleFactory.FactorySupplier {
-    DUMMY;
+public enum PageStyle implements Style.Supplier {
+    DEFAULT_CONTAINER;
 
     @Override
-    public CSS.Style get() {
-        return StyleFactory.get(this);
+    public CSS.Style style() {
+        return Style.Repo.get(this);
     }
 
     static public void init() {
-        StyleFactory.set(DUMMY, CSS.Block.create());
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Page.Selector.CONTAINER.selector())
+                .append(CSS.Selector.createType(HTML.BODY))
+                .append(CSS.Rule.create(CSS.Property.padding, "0px"))
+                .append(CSS.Rule.create(CSS.Property.display, "flex"))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
+                .append(CSS.Rule.create(CSS.Property.flex_direction, "column"))
+                .append(CSS.Rule.create(CSS.Property.align_content, "center")));
     }
 
 }

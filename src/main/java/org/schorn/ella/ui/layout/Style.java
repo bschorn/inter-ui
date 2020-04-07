@@ -24,40 +24,127 @@
 package org.schorn.ella.ui.layout;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.style.StyleSheet;
 
 /**
  *
  * @author bschorn
  */
-public class Style implements StyleSheet {
+public interface Style {
 
-    private final Map<Type, List<CSS.Style>> map = new HashMap<>();
-
-    public void addStyle(Type type, CSS.Style style) {
-        List<CSS.Style> partStyles = this.map.get(type);
-        if (partStyles == null) {
-            partStyles = new ArrayList<>();
-            this.map.put(type, partStyles);
+    public interface Reset extends Style {
+        static Reset get() {
+            return UIProvider.provider().getStyleSheetReset();
         }
-        partStyles.add(style);
+    }
+    public interface Supplier {
+
+        CSS.Style style();
     }
 
-    public List<CSS.Style> getStyles(Type type) {
-        return this.map.get(type);
+    public interface Factory extends Supplier {
+
+        CSS.Style add(CSS.Selector selector);
     }
 
-    @Override
-    public List<CSS.Style> styles() {
-        return this.map.values().stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+    public interface Selectors {
+
+        public CSS.Selector selector();
     }
 
+    public void reset();
+
+    public void add(CSS.Style style);
+
+    public void add(Supplier supplier);
+
+    public void add(Factory factory, Selectors selector);
+
+    public void add(Factory factory, CSS.Selector selector);
+
+    public List<CSS.Style> styles();
+
+    public class Repo {
+
+        private static final Map<Supplier, CSS.Style> STYLES = new HashMap<>();
+
+        static public void set(Supplier id, CSS.Style style) {
+            STYLES.put(id, style);
+        }
+
+        static public CSS.Style get(Supplier id) {
+            return STYLES.get(id);
+        }
+    }
+
+    public class Sheet implements Style {
+
+        private final List<CSS.Style> styles = new ArrayList<>();
+        private final Map<CSS.Selector, CSS.Block> blocksBySelector = new HashMap<>();
+
+        @Override
+        final public void reset() {
+            this.styles.clear();
+            this.styles.addAll(Reset.get().styles());
+        }
+
+        @Override
+        public void add(CSS.Style style) {
+            this.styles().add(style);
+        }
+
+        final public void map(CSS.Style style) {
+            switch (style.role()) {
+                case BLOCK:
+                    CSS.Block iBlock = (CSS.Block) style;
+                    for (CSS.Selector selector : iBlock.selectors()) {
+                        CSS.Block block1 = this.blocksBySelector.get(selector);
+                        if (block1 == null) {
+                            this.blocksBySelector.put(selector, iBlock);
+                        } else {
+                            iBlock.rules().stream().forEachOrdered(r -> block1.append(r));
+                        }
+                    }
+                    break;
+                case RULE:
+                    break;
+            }
+        }
+
+        @Override
+        public List<CSS.Style> styles() {
+            List<CSS.Style> temp = new ArrayList<>();
+            temp.addAll(this.styles);
+            temp.addAll(this.blocksBySelector.values().stream()
+                    .map(x -> (CSS.Style) x)
+                    .collect(Collectors.toList()));
+            return temp;
+        }
+        @Override
+        public String toString() {
+            return this.styles().stream()
+                    .map(s -> s.render())
+                    .collect(Collectors.joining("\n"));
+        }
+
+        @Override
+        public void add(Supplier supplier) {
+            this.map(supplier.style());
+        }
+
+        @Override
+        public void add(Factory factory, Selectors selector) {
+            this.map(factory.add(selector.selector()));
+        }
+
+        @Override
+        public void add(Factory factory, CSS.Selector selector) {
+            this.map(factory.add(selector));
+        }
+    }
 }

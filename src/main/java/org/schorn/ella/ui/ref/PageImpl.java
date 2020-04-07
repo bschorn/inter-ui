@@ -27,7 +27,7 @@ import java.util.Optional;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Page;
-import org.schorn.ella.ui.style.StyleSheet;
+import org.schorn.ella.ui.layout.Style;
 
 /**
  *
@@ -57,7 +57,7 @@ class PageImpl extends ItemContainerImpl implements Page {
     }
 
     @Override
-    public String produce(StyleSheet styleSheet) throws Exception {
+    public String produce(Style styleSheet) throws Exception {
         Optional<HTML.Element> optPageElement = this.build();
         if (optPageElement.isPresent()) {
             HTML.Page pageElement = (HTML.Page) optPageElement.get();

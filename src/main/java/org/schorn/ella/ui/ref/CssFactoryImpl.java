@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import org.schorn.ella.ui.html.CSS;
 
@@ -105,13 +106,29 @@ final class CssFactoryImpl implements CSS.CssFactory {
         private final List<CSS.Rule> rules = new ArrayList<>();
 
         @Override
+        public void accept(CSS.Style style) {
+            switch (style.role()) {
+                case SELECTOR:
+                    this.append((CSS.Selector) style);
+                    break;
+                case RULE:
+                    this.append((CSS.Rule) style);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
         public CSS.Block append(CSS.Selector selector) {
+            this.selectors.remove(selector);
             this.selectors.add(selector);
             return this;
         }
 
         @Override
         public CSS.Block append(CSS.Rule rule) {
+            this.rules.remove(rule);
             this.rules.add(rule);
             return this;
         }
@@ -142,7 +159,6 @@ final class CssFactoryImpl implements CSS.CssFactory {
         public String toString() {
             return this.render();
         }
-
     }
 
     static public class SelectorImpl implements CSS.Selector {
@@ -165,6 +181,35 @@ final class CssFactoryImpl implements CSS.CssFactory {
     }
 
     static public class RuleImpl implements CSS.Rule {
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 31 * hash + Objects.hashCode(this.property);
+            hash = 31 * hash + Objects.hashCode(this.value);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final RuleImpl other = (RuleImpl) obj;
+            if (!Objects.equals(this.value, other.value)) {
+                return false;
+            }
+            if (this.property != other.property) {
+                return false;
+            }
+            return true;
+        }
 
         private final CSS.Property property;
         private final String value;
@@ -192,6 +237,11 @@ final class CssFactoryImpl implements CSS.CssFactory {
         @Override
         public String value() {
             return this.value;
+        }
+
+        @Override
+        public int compareTo(CSS.Rule that) {
+            return this.render().compareTo(that.render());
         }
     }
 

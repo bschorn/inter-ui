@@ -24,7 +24,10 @@
 package org.schorn.ella.ui.layout;
 
 import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.style.StyleSheet;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.HTML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -32,6 +35,8 @@ import org.schorn.ella.ui.style.StyleSheet;
  * @author bschorn
  */
 public interface Page extends Container<Item>, Item {
+
+    static final Logger LGR = LoggerFactory.getLogger(Page.class);
 
     static Page create() {
         return UIProvider.provider().createPage();
@@ -49,7 +54,23 @@ public interface Page extends Container<Item>, Item {
         return Type.PAGE;
     }
 
-    public String produce(StyleSheet styleSheet) throws Exception;
+    public enum Selector implements Style.Selectors {
+        GLOBAL(CSS.Selector.createGlobal()),
+        CONTAINER(CSS.Selector.createType(HTML.BODY));
+
+        private final CSS.Selector selector;
+
+        Selector(CSS.Selector selector) {
+            this.selector = selector;
+        }
+
+        @Override
+        public CSS.Selector selector() {
+            return this.selector;
+        }
+    }
+
+    public String produce(Style styleSheet) throws Exception;
 
     default Panel newFramePanel(Item.Name name, String label) {
         Frame frame = UIProvider.provider().createFrame(name);
