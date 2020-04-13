@@ -21,46 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.html.CSS;
+import java.net.URL;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.html.HTML.Attribute;
+import org.schorn.ella.ui.widget.ControlWidgets;
 
 /**
  *
  * @author bschorn
  */
-public interface Widget extends Item {
+class MenuItemImpl extends ControlWidgetImpl implements ControlWidgets.MenuItem {
 
-    public String widgetId();
+    private URL menuURL;
+    private URL imageURL;
 
-    public String customTag();
+    public MenuItemImpl(String name) {
+        super("menu-item", name, null);
+    }
 
     @Override
-    default Type type() {
-        return Type.WIDGET;
+    public void setAnchor(URL url) {
+        this.menuURL = url;
     }
 
-    public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.createClass("widget")),
-        INPUT(CSS.Selector.create(".widget input")),
-        LABEL(CSS.Selector.create(".widget > label"));
-
-        private final CSS.Selector selector;
-
-        Selector(CSS.Selector selector) {
-            this.selector = selector;
-        }
-
-        @Override
-        public CSS.Selector selector() {
-            return this.selector;
-        }
-
-        public CSS.Selector selector(Widget widget) {
-            return CSS.Selector.createClass(this.selector.render().substring(1), widget.name());
-        }
+    @Override
+    public void setImage(URL url) {
+        this.imageURL = url;
     }
 
-    public String widgetName();
+    @Override
+    protected HTML.Element build0() throws Exception {
+        HTML.Li liElement = HTML.Li.create();
+        liElement.addClass(this.name());
+        liElement.addClass(this.customTag());
+        liElement.addClass(this.widgetName());
+        HTML.A aElement = HTML.A.create();
+        aElement.addAttribute(Attribute.create("href", this.menuURL.toString()));
+        liElement.append(aElement);
+        HTML.Img imgElement = HTML.Img.create();
+        imgElement.addAttribute(Attribute.create("src", this.imageURL.toString()));
+        liElement.append(imgElement);
+        return liElement;
+    }
 
 }

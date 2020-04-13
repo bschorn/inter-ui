@@ -23,6 +23,7 @@
  */
 package org.schorn.ella.ui.layout;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -31,4 +32,5 @@ import java.util.function.Consumer;
  * @param <I>
  */
 public interface Container<I extends Item> extends Item, Consumer<I> {
+    public List<I> items();
 }

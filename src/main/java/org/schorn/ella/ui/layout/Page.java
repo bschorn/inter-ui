@@ -23,6 +23,7 @@
  */
 package org.schorn.ella.ui.layout;
 
+import java.util.List;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
@@ -46,6 +47,9 @@ public interface Page extends Container<Item>, Item {
 
     @Override
     public void accept(Item item);
+
+    @Override
+    public List<Item> items();
 
     public void setViewport(String width, String initialScale);
 

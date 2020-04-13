@@ -31,9 +31,10 @@ import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Panel;
+import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.widget.ControlWidgets;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
-import org.schorn.ella.ui.layout.Style;
 
 /**
  *
@@ -48,6 +49,8 @@ public interface UIProvider {
     public InputWidgets.InputFactory getInputFactory();
 
     public OutputWidgets.OutputFactory getOutputFactory();
+
+    public ControlWidgets.ControlFactory getControlFactory();
 
     public Page createPage();
 

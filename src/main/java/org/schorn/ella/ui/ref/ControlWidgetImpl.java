@@ -24,30 +24,44 @@
 package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Container;
-import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.widget.Control;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
-abstract class ItemContainerImpl implements Container<Item>, Item {
+abstract class ControlWidgetImpl implements Control {
 
-    private final String id;
-    private final String name;
-    private String label;
-    private final List<Item> items = new ArrayList<>();
-    private Exception exception = null;
+    static private final Logger LGR = LoggerFactory.getLogger(ControlWidgetImpl.class);
 
-    ItemContainerImpl(String name, String label) {
-        this.id = UUID.randomUUID().toString();
+    protected final String customTag;
+    protected final String widgetId = UUID.randomUUID().toString();
+    protected final String id = UUID.randomUUID().toString();
+    protected final String name;
+    protected final List<String> datalist = new ArrayList<>();
+    protected String label = null;
+    protected Exception exception = null;
+
+    ControlWidgetImpl(String customTag, String name, String label) {
+        this.customTag = customTag;
         this.name = name;
         this.label = label;
+    }
+
+    @Override
+    public String customTag() {
+        return this.customTag;
+    }
+
+    @Override
+    public String widgetId() {
+        return this.widgetId;
     }
 
     @Override
@@ -70,26 +84,30 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
         this.label = label;
     }
 
-    @Override
-    public void accept(Item item) {
-        this.items.add(item);
-    }
-
-    @Override
-    public List<Item> items() {
-        return Collections.unmodifiableList(this.items);
+    public void addLabel(String label) {
+        this.label = label;
     }
 
     @Override
     public Optional<HTML.Element> build() {
-        HTML.Element element = null;
+        HTML.Div divElement = null;
         try {
-            element = this.build0();
+            divElement = HTML.Div.create();
+            divElement.setId(this.id());
+            divElement.addClass(this.name());
+            divElement.addClass(this.widgetName());
+            divElement.addClass("control");
+            divElement.addClass(this.type().className());
+            HTML.Element element = this.build0();
+            element.setId(this.widgetId());
+            divElement.append(element);
         } catch (Exception ex) {
             this.exception = ex;
         }
-        return Optional.ofNullable(element);
+        return Optional.ofNullable(divElement);
     }
+
+    abstract protected HTML.Element build0() throws Exception;
 
     @Override
     public void throwException() throws Exception {
@@ -98,28 +116,4 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
         }
     }
 
-    protected HTML.Element build0() throws Exception {
-        HTML.Div containerElement = HTML.Div.create();
-        containerElement.setId(this.id());
-        containerElement.addClass(this.name());
-        containerElement.addClass(this.type().className());
-        containerElement.addClass("container");
-        if (this.label != null) {
-            HTML.Div labelElement = HTML.Div.create();
-            HTML.Span span = HTML.Span.create();
-            labelElement.append(span);
-            span.setId(String.format("%s-label", this.id()));
-            labelElement.addClass(this.name());
-            labelElement.addClass(this.type().className());
-            labelElement.addClass("label");
-            span.setTextContent(this.label());
-            containerElement.append(labelElement);
-        }
-        this.items().stream()
-                .map(i -> i.build())
-                .filter(o -> o.isPresent())
-                .map(o -> o.get())
-                .forEachOrdered(e -> containerElement.append(e));
-        return containerElement;
-    }
 }

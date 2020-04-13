@@ -49,7 +49,26 @@ public interface Style {
 
     public interface Factory extends Supplier {
 
-        CSS.Style add(CSS.Selector selector);
+        default CSS.Style add(CSS.Selector selector) {
+            CSS.Style style = this.style();
+            CSS.Block newBlock = CSS.Block.create().append(selector);
+            return compose(newBlock, style);
+        }
+
+        static CSS.Style compose(CSS.Block newBlock, CSS.Style style) {
+            switch (style.role()) {
+                case BLOCK:
+                    CSS.Block oldBlock = (CSS.Block) style;
+                    oldBlock.rules().stream().forEach(newBlock);
+                    break;
+                case RULE:
+                    CSS.Rule rule = (CSS.Rule) style;
+                    newBlock.accept(rule);
+                    break;
+            }
+            return newBlock;
+        }
+
     }
 
     public interface Selectors {
@@ -133,12 +152,12 @@ public interface Style {
         }
 
         @Override
-        public void add(Supplier supplier) {
+        final public void add(Supplier supplier) {
             this.map(supplier.style());
         }
 
         @Override
-        public void add(Factory factory, Selectors selector) {
+        final public void add(Factory factory, Selectors selector) {
             this.map(factory.add(selector.selector()));
         }
 

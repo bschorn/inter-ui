@@ -31,9 +31,10 @@ import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Panel;
+import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.widget.ControlWidgets;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
-import org.schorn.ella.ui.layout.Style;
 
 /**
  *
@@ -79,6 +80,11 @@ public class UIProviderImpl implements UIProvider {
     @Override
     public OutputWidgets.OutputFactory getOutputFactory() {
         return OutputFactoryImpl.getFactory();
+    }
+
+    @Override
+    public ControlWidgets.ControlFactory getControlFactory() {
+        return ControlFactoryImpl.getFactory();
     }
 
     @Override

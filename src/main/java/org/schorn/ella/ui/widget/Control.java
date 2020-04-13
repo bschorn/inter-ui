@@ -21,46 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.layout.Widget;
 
 /**
  *
  * @author bschorn
  */
-public interface Widget extends Item {
-
-    public String widgetId();
-
-    public String customTag();
-
-    @Override
-    default Type type() {
-        return Type.WIDGET;
-    }
-
-    public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.createClass("widget")),
-        INPUT(CSS.Selector.create(".widget input")),
-        LABEL(CSS.Selector.create(".widget > label"));
-
-        private final CSS.Selector selector;
-
-        Selector(CSS.Selector selector) {
-            this.selector = selector;
-        }
-
-        @Override
-        public CSS.Selector selector() {
-            return this.selector;
-        }
-
-        public CSS.Selector selector(Widget widget) {
-            return CSS.Selector.createClass(this.selector.render().substring(1), widget.name());
-        }
-    }
-
-    public String widgetName();
+public interface Control extends Widget {
 
 }

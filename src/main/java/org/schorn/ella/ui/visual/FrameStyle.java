@@ -34,6 +34,8 @@ import org.schorn.ella.ui.layout.Style;
 public enum FrameStyle implements Style.Supplier {
     DEFAULT_CONTAINER;
 
+    ;
+
     @Override
     public CSS.Style style() {
         return Style.Repo.get(this);
@@ -49,5 +51,34 @@ public enum FrameStyle implements Style.Supplier {
                 .append(CSS.Rule.create(CSS.Property.align_content, "space-evenly"))
                 .append(CSS.Rule.create(CSS.Property.display, "flex")));
     }
+    /*
+.header,
+.footer {
+  height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(180deg, #fff, #ddd 40%, #ccc);
+  padding: 5px;
+}
+
+.main {
+  flex-grow: 1;
+  background-color: tan;
+  padding: 5px;
+}
+
+ul.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu-item {
+  border: 1px solid white;
+  padding: 5px;
+}
+.fit-picture {
+    width: 16px;
+}
+     */
 
 }

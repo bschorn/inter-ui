@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -85,6 +86,11 @@ class AspectImpl implements Aspect {
     @Override
     public void accept(Widget widget) {
         this.widgets.add(widget);
+    }
+
+    @Override
+    public List<Widget> items() {
+        return Collections.unmodifiableList(this.widgets);
     }
 
     @Override

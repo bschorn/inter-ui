@@ -51,7 +51,7 @@ public enum WidgetStyle implements Style.Supplier {
         Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create()
                 .append(Widget.Selector.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.margin, "1px"))
-                .append(CSS.Rule.create(CSS.Property.padding, "4px"))
+                .append(CSS.Rule.create(CSS.Property.padding, "1px"))
         );
         Style.Repo.set(DEFAULT_LABEL, CSS.Block.create()
                 .append(Widget.Selector.LABEL.selector())
@@ -60,7 +60,7 @@ public enum WidgetStyle implements Style.Supplier {
         );
         Style.Repo.set(DEFAULT_INPUT, CSS.Block.create()
                 .append(Widget.Selector.INPUT.selector())
-                .append(CSS.Rule.create(CSS.Property.margin, "1px"))
+                .append(CSS.Rule.create(CSS.Property.margin, "2px"))
                 .append(CSS.Rule.create(CSS.Property.padding, "2px"))
         );
 

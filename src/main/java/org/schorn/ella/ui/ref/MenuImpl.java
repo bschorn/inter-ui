@@ -21,46 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.html.CSS;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.html.HTML.Element;
+import org.schorn.ella.ui.widget.ControlWidgets;
+import org.schorn.ella.ui.widget.ControlWidgets.MenuItem;
 
 /**
  *
  * @author bschorn
  */
-public interface Widget extends Item {
+class MenuImpl extends ControlWidgetImpl implements ControlWidgets.Menu {
 
-    public String widgetId();
+    private List<MenuItem> items = new ArrayList<>();
 
-    public String customTag();
+    public MenuImpl(String name) {
+        super("menu", name, null);
+    }
 
     @Override
-    default Type type() {
-        return Type.WIDGET;
+    public void addItem(MenuItem item) {
+        this.items.add(item);
     }
 
-    public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.createClass("widget")),
-        INPUT(CSS.Selector.create(".widget input")),
-        LABEL(CSS.Selector.create(".widget > label"));
-
-        private final CSS.Selector selector;
-
-        Selector(CSS.Selector selector) {
-            this.selector = selector;
+    @Override
+    protected HTML.Element build0() throws Exception {
+        HTML.Ul ulElement = HTML.Ul.create();
+        ulElement.addClass(this.name());
+        ulElement.addClass(this.customTag());
+        ulElement.addClass(this.widgetName());
+        for (MenuItem menuItem : this.items) {
+            Optional<Element> optElement = menuItem.build();
+            if (optElement.isPresent()) {
+                ulElement.append(optElement.get());
+            }
         }
-
-        @Override
-        public CSS.Selector selector() {
-            return this.selector;
-        }
-
-        public CSS.Selector selector(Widget widget) {
-            return CSS.Selector.createClass(this.selector.render().substring(1), widget.name());
-        }
+        return ulElement;
     }
-
-    public String widgetName();
 
 }

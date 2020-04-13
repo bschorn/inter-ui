@@ -24,7 +24,6 @@
 package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Style;
 
@@ -33,7 +32,8 @@ import org.schorn.ella.ui.layout.Style;
  * @author bschorn
  */
 public enum PageStyle implements Style.Supplier {
-    DEFAULT_CONTAINER;
+    DEFAULT_CONTAINER,
+    FLEX_COLUMN_CONTAINER;
 
     @Override
     public CSS.Style style() {
@@ -41,13 +41,22 @@ public enum PageStyle implements Style.Supplier {
     }
 
     static public void init() {
-        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Page.Selector.CONTAINER.selector())
-                .append(CSS.Selector.createType(HTML.BODY))
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create()
+                .append(Page.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.padding, "0px"))
+                .append(CSS.Rule.create(CSS.Property.display, "grid"))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
+                .append(CSS.Rule.create(CSS.Property.justify_content, "center"))
+                .append(CSS.Rule.create(CSS.Property.align_content, "center"))
+        );
+        Style.Repo.set(FLEX_COLUMN_CONTAINER, CSS.Block.create()
+                .append(Page.Selector.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.padding, "0px"))
                 .append(CSS.Rule.create(CSS.Property.display, "flex"))
-                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
                 .append(CSS.Rule.create(CSS.Property.flex_direction, "column"))
-                .append(CSS.Rule.create(CSS.Property.align_content, "center")));
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
+        );
+
     }
 
 }

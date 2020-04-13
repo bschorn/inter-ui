@@ -113,10 +113,9 @@ public class WidgetApp {
             this.add(PanelStyle.DEFAULT_LABEL);
             this.add(AspectStyle.DEFAULT_CONTAINER);
             this.add(AspectStyle.DEFAULT_LABEL);
-            this.add(GenericStyle.GRID_FULL_SOLID_BLACK_ON_CYAN, Aspect.Selector.CONTAINER);
+            this.add(GenericStyle.GRID_FULL_SOLID_BLACK_ON_TGREY, Aspect.Selector.CONTAINER);
             this.add(GenericStyle.TEXT_ALIGN_CENTER_PADDING_2PX, Aspect.Selector.LABEL);
-            this.add(GenericStyle.DASHED_BORDER, Aspect.Selector.CONTAINER);
-            this.add(GenericStyle.ORANGE_BORDER, Aspect.Selector.CONTAINER);
+            this.add(GenericStyle.BORDER_2PX, Aspect.Selector.CONTAINER);
             this.add(WidgetStyle.DEFAULT_CONTAINER);
             this.add(WidgetStyle.DEFAULT_LABEL);
             this.add(WidgetStyle.DEFAULT_INPUT);
