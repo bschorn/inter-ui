@@ -44,7 +44,8 @@ public enum GenericStyle implements Style.Factory {
     GRID_WITH_ONE_COLUMN,
     GRID_WITH_TWO_COLUMNS,
     GRID_WITH_THREE_COLUMNS,
-    GRID_WITH_FOUR_COLUMNS,;
+    GRID_WITH_FOUR_COLUMNS,
+    IMG_OBJECT_FIT_CONTAIN;
 
     @Override
     public CSS.Style style() {
@@ -117,6 +118,10 @@ public enum GenericStyle implements Style.Factory {
         Style.Repo.set(GRID_WITH_FOUR_COLUMNS, CSS.Block.create()
                 .append(CSS.Rule.create(CSS.Property.display, "grid"))
                 .append(CSS.Rule.create(CSS.Property.grid_template_columns, "1fr 1fr 1fr 1fr"))
+        );
+        //IMG_OBJECT_FIT_CONTAIN
+        Style.Repo.set(IMG_OBJECT_FIT_CONTAIN, CSS.Block.create()
+                .append(CSS.Rule.create(CSS.Property.object_fit, "contain"))
         );
     }
 

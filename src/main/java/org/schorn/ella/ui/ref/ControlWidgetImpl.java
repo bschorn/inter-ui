@@ -96,6 +96,7 @@ abstract class ControlWidgetImpl implements Control {
             divElement.setId(this.id());
             divElement.addClass(this.name());
             divElement.addClass(this.widgetName());
+            divElement.addClass(this.customTag());
             divElement.addClass("control");
             divElement.addClass(this.type().className());
             HTML.Element element = this.build0();

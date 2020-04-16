@@ -44,12 +44,13 @@ public enum FrameStyle implements Style.Supplier {
     static public void init() {
         Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Frame.Selectors.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.margin, "0px"))
-                .append(CSS.Rule.create(CSS.Property.background_color, "rgb(205,205,205)"))
-                .append(CSS.Rule.create(CSS.Property.flex_direction, "row"))
-                .append(CSS.Rule.create(CSS.Property.flex_wrap, "wrap"))
+                .append(CSS.Rule.create(CSS.Property.background_color, "white"))
+        //.append(CSS.Rule.create(CSS.Property.flex_direction, "row"))
+        //.append(CSS.Rule.create(CSS.Property.flex_wrap, "wrap"))
                 //.append(CSS.Rule.create(CSS.Property.justify_content, "space-evenly"))
-                .append(CSS.Rule.create(CSS.Property.align_content, "space-evenly"))
-                .append(CSS.Rule.create(CSS.Property.display, "flex")));
+                //.append(CSS.Rule.create(CSS.Property.align_content, "space-evenly"))
+        //.append(CSS.Rule.create(CSS.Property.display, "flex")));
+        );
     }
     /*
 .header,

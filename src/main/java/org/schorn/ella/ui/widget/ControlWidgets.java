@@ -25,6 +25,8 @@ package org.schorn.ella.ui.widget;
 
 import java.net.URL;
 import org.schorn.ella.ui.UIProvider;
+import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,26 +77,39 @@ public enum ControlWidgets {
             return Menu.class.getSimpleName().toLowerCase();
         }
 
-        public void addItem(MenuItem item);
+        public interface MenuItem {
+
+            public MenuItem setAnchor(URL url);
+
+            public MenuItem setImage(URL url);
+        }
+
+        public MenuItem addItem(String name, String label);
 
         static public Menu create(String name) throws Exception {
             return ControlWidgets.MENU.create(name);
         }
-    }
+        public enum Selector implements Style.Selectors {
+            CONTAINER(CSS.Selector.createClass("menu", "control", "widget")),
+            MENU(CSS.Selector.create("ul.menu")),
+            MENU_ITEM(CSS.Selector.create("ul.menu li")),
+            ITEM_ANCHOR(CSS.Selector.create("ul.menu li a")),
+            ANCHOR_IMAGE(CSS.Selector.create("ul.menu li a img"));
 
-    public interface MenuItem extends Control {
-        @Override
-        default String widgetName() {
-            return MenuItem.class.getSimpleName().toLowerCase();
-        }
+            private final CSS.Selector selector;
 
-        public void setAnchor(URL url);
+            Selector(CSS.Selector selector) {
+                this.selector = selector;
+            }
 
-        public void setImage(URL url);
+            @Override
+            public CSS.Selector selector() {
+                return this.selector;
+            }
 
-
-        static public MenuItem create(String name) throws Exception {
-            return ControlWidgets.MENU_ITEM.create(name);
+            public CSS.Selector selector(Menu menu) {
+                return CSS.Selector.createClass(this.selector.render().substring(1), menu.name());
+            }
         }
     }
 

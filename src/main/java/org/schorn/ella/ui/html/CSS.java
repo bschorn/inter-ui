@@ -25,6 +25,7 @@ package org.schorn.ella.ui.html;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
@@ -316,6 +317,15 @@ public enum CSS {
             return Role.RULE;
         }
 
+        static public Rule create(CSSProperty cssProperty) {
+            try {
+                return CSS.RULE.create(Rule.class, cssProperty.property(), cssProperty.value());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
         static public Rule create(Property property, String value) {
             try {
                 return CSS.RULE.create(Rule.class, property, value);
@@ -571,7 +581,7 @@ public enum CSS {
         cursor,
         deg,
         direction,
-        display,
+        display("inline", "box", "flex", "grid", "none"),
         dpcm,
         dpi,
         dppx,
@@ -877,14 +887,26 @@ public enum CSS {
 
         private final String propertyName;
         private final String atRule;
-        Property(String atRule) {
-            this.propertyName = this.name().replace("__", "").replace("_", "-");
-            this.atRule = atRule;
-        }
+        private final List<String> values;
 
-        Property() {
+        Property(String... params) {
             this.propertyName = this.name().replace("__", "").replace("_", "-");
-            this.atRule = null;
+            int idx = 0;
+            if (params.length > 0) {
+                if (params[0].startsWith("@")) {
+                    this.atRule = params[0];
+                    idx += 1;
+                } else {
+                    this.atRule = null;
+                }
+                this.values = new ArrayList<>(params.length - idx);
+                for (; idx < params.length; idx += 1) {
+                    values.add(params[idx]);
+                }
+            } else {
+                this.atRule = null;
+                this.values = new ArrayList<>(0);
+            }
         }
 
         public String atRule() {
