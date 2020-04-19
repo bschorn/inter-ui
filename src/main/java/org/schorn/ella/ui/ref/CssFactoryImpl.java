@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.CSS;
 
 /**
@@ -102,6 +104,7 @@ final class CssFactoryImpl implements CSS.CssFactory {
 
     static public class BlockImpl implements CSS.Block {
 
+        private final String dummyKey = UUID.randomUUID().toString();
         private final List<CSS.Selector> selectors = new ArrayList<>();
         private final List<CSS.Rule> rules = new ArrayList<>();
 
@@ -131,6 +134,16 @@ final class CssFactoryImpl implements CSS.CssFactory {
             this.rules.remove(rule);
             this.rules.add(rule);
             return this;
+        }
+
+        @Override
+        public String selectorKey() {
+            if (this.selectors.isEmpty()) {
+                return this.dummyKey;
+            }
+            return this.selectors.stream()
+                    .map(s -> s.render())
+                    .collect(Collectors.joining("~"));
         }
 
         @Override

@@ -56,6 +56,8 @@ public interface UIProvider {
 
     public Frame createFrame(Item.Name name);
 
+    public Frame createFrame(Item.Name name, Frame.Intent intent);
+
     public Panel createPanel(Item.Name name);
 
     public Panel createPanel(Item.Name name, String label);

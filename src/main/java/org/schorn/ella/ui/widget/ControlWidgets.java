@@ -93,8 +93,8 @@ public enum ControlWidgets {
             CONTAINER(CSS.Selector.createClass("menu", "control", "widget")),
             MENU(CSS.Selector.create("ul.menu")),
             MENU_ITEM(CSS.Selector.create("ul.menu li")),
-            ITEM_ANCHOR(CSS.Selector.create("ul.menu li a")),
-            ANCHOR_IMAGE(CSS.Selector.create("ul.menu li a img"));
+            //ITEM_ANCHOR(CSS.Selector.create("ul.menu li a")),
+            ANCHOR_IMAGE(CSS.Selector.create("ul.menu li img"));
 
             private final CSS.Selector selector;
 

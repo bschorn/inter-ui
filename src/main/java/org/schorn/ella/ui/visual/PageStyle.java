@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.CSSProperty;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Style;
 
@@ -33,7 +34,8 @@ import org.schorn.ella.ui.layout.Style;
  */
 public enum PageStyle implements Style.Supplier {
     DEFAULT_CONTAINER,
-    FLEX_COLUMN_CONTAINER;
+    FLEX_COLUMN_CONTAINER,
+    BLUE_STEEL;
 
     @Override
     public CSS.Style style() {
@@ -44,16 +46,23 @@ public enum PageStyle implements Style.Supplier {
         Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create()
                 .append(Page.Selector.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.padding, "0px"))
-                .append(CSS.Rule.create(CSS.Property.display, "grid"))
+                .append(CSS.Rule.create(CSSProperty.display.grid))
                 .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
-                .append(CSS.Rule.create(CSS.Property.justify_content, "center"))
-                .append(CSS.Rule.create(CSS.Property.align_content, "center"))
+                .append(CSS.Rule.create(CSSProperty.justify_content.center))
+                .append(CSS.Rule.create(CSSProperty.align_content.center))
         );
         Style.Repo.set(FLEX_COLUMN_CONTAINER, CSS.Block.create()
                 .append(Page.Selector.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.padding, "0px"))
-                .append(CSS.Rule.create(CSS.Property.display, "flex"))
-                .append(CSS.Rule.create(CSS.Property.flex_direction, "column"))
+                .append(CSS.Rule.create(CSSProperty.display.flex))
+                .append(CSS.Rule.create(CSSProperty.flex_flow.column_nowrap))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
+        );
+        Style.Repo.set(BLUE_STEEL, CSS.Block.create()
+                .append(Page.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.padding, "0px"))
+                .append(CSS.Rule.create(CSSProperty.display.flex))
+                .append(CSS.Rule.create(CSSProperty.flex_flow.column_nowrap))
                 .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
         );
 

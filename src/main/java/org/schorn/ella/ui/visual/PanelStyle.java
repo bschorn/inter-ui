@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.CSSProperty;
 import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.layout.Style;
 
@@ -33,7 +34,8 @@ import org.schorn.ella.ui.layout.Style;
  */
 public enum PanelStyle implements Style.Supplier {
     DEFAULT_CONTAINER,
-    DEFAULT_LABEL;
+    DEFAULT_LABEL,
+    BLUE_STEEL;
 
     @Override
     public CSS.Style style() {
@@ -41,7 +43,8 @@ public enum PanelStyle implements Style.Supplier {
     }
 
     static public void init() {
-        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Panel.Selector.CONTAINER.selector())
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create()
+                .append(Panel.Selector.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.display, "block"))
                 .append(CSS.Rule.create(CSS.Property.height, "initial"))
                 .append(CSS.Rule.create(CSS.Property.margin, "5px"))
@@ -50,13 +53,20 @@ public enum PanelStyle implements Style.Supplier {
                 .append(CSS.Rule.create(CSS.Property.border_radius, "4px"))
                 .append(CSS.Rule.create(CSS.Property.border_style, "solid"))
                 .append(CSS.Rule.create(CSS.Property.border_color, "rgba(225, 225, 225, 1)"))
-                .append(CSS.Rule.create(CSS.Property.border_width, "1px")));
-        Style.Repo.set(DEFAULT_LABEL, CSS.Block.create().append(Panel.Selector.LABEL.selector())
+                .append(CSS.Rule.create(CSS.Property.border_width, "1px"))
+        );
+        Style.Repo.set(DEFAULT_LABEL, CSS.Block.create()
+                .append(Panel.Selector.LABEL.selector())
                 .append(CSS.Rule.create(CSS.Property.text_align, "center"))
-                .append(CSS.Rule.create(CSS.Property.padding, "2px")));
-        //.append(CSS.Rule.create(CSS.Property.border, "solid white 1px"))
-        //.append(CSS.Rule.create(CSS.Property.border_radius, "5px"))
-        //.append(CSS.Rule.create(CSS.Property.background, "tan")));
+                .append(CSS.Rule.create(CSS.Property.padding, "2px"))
+        );
+        Style.Repo.set(BLUE_STEEL, CSS.Block.create()
+                .append(Panel.Selector.FORM.selector())
+                .append(CSS.Rule.create(CSSProperty.display.flex))
+                .append(CSS.Rule.create(CSSProperty.flex_flow.column_wrap))
+                .append(CSS.Rule.create(CSSProperty.flex_grow.unit(1)))
+                .append(CSS.Rule.create(CSS.Property.padding, "5px"))
+        );
     }
 
 }

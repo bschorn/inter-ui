@@ -160,6 +160,8 @@ public enum CSS {
 
         Block append(Rule rule);
 
+        String selectorKey();
+
         List<Selector> selectors();
 
         List<Rule> rules();

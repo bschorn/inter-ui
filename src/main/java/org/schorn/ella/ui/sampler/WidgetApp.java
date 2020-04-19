@@ -104,8 +104,7 @@ public class WidgetApp {
 
         public AppStyle() {
             Visual.init();
-            this.reset();
-            this.add(FontStyle.ARIAL85, Page.Selector.CONTAINER);
+            this.add(FontStyle.ARIAL, Page.Selector.CONTAINER);
             this.add(GenericStyle.BOX_SIZING_BORDER_BOX, Page.Selector.GLOBAL);
             this.add(PageStyle.DEFAULT_CONTAINER);
             this.add(FrameStyle.DEFAULT_CONTAINER);

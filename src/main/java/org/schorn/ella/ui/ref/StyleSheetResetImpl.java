@@ -133,6 +133,7 @@ final public class StyleSheetResetImpl implements Style.Reset {
                     .append(CSS.Selector.createType(HTML.VIDEO))
                     .append(CSS.Rule.create(CSS.Property.margin, "0"))
                     .append(CSS.Rule.create(CSS.Property.padding, "0"))
+                    .append(CSS.Rule.create(CSS.Property.padding_inline_start, "0"))
                     .append(CSS.Rule.create(CSS.Property.border, "0"))
                     .append(CSS.Rule.create(CSS.Property.font_size, "100%"))
                     .append(CSS.Rule.create(CSS.Property.font, "inherit"))
@@ -193,16 +194,6 @@ final public class StyleSheetResetImpl implements Style.Reset {
     @Override
     public List<CSS.Style> styles() {
         return this.styles;
-    }
-
-    @Override
-    public void reset() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void add(CSS.Style style) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

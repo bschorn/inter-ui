@@ -39,7 +39,8 @@ public enum WidgetStyle implements Style.Supplier {
     LABEL_OVER_INPUT,
     LABEL_LEFT_INPUT,
     OUTPUT_VALUE,
-    HIGHLIGHT_ON_HOVER;
+    HIGHLIGHT_ON_HOVER,
+    BLUE_STEEL;
 
 
     @Override
@@ -64,28 +65,42 @@ public enum WidgetStyle implements Style.Supplier {
                 .append(CSS.Rule.create(CSS.Property.padding, "2px"))
         );
 
+        /**
+         * [label] [input]
+         */
         Style.Repo.set(LABEL_OVER_INPUT, CSS.Block.create()
                 .append(CSS.Selector.createType(HTML.INPUT))
                 .append(CSS.Selector.createType(HTML.LABEL))
-                .append(CSS.Rule.create(CSS.Property.display, "block")));
+                .append(CSS.Rule.create(CSS.Property.display, "block"))
+        );
 
+        /**
+         * [label][input]
+         */
         Style.Repo.set(LABEL_LEFT_INPUT, CSS.Block.create()
                 .append(CSS.Selector.createType(HTML.INPUT))
                 .append(CSS.Selector.createType(HTML.LABEL))
-                .append(CSS.Rule.create(CSS.Property.display, "inline")));
+                .append(CSS.Rule.create(CSS.Property.display, "inline"))
+        );
 
         Style.Repo.set(OUTPUT_VALUE, CSS.Block.create()
                 .append(CSS.Selector.createClass("value"))
                 .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
                 .append(CSS.Rule.create(CSS.Property.color, "black"))
-                .append(CSS.Rule.create(CSS.Property.background, "white")));
+                .append(CSS.Rule.create(CSS.Property.background, "white"))
+        );
 
         Style.Repo.set(HIGHLIGHT_ON_HOVER, CSS.Block.create()
                 .append(CSS.Selector.createClass("value"))
                 .append(CSS.Rule.create(CSS.Property.border, "solid grey 1px"))
                 .append(CSS.Rule.create(CSS.Property.color, "black"))
-                .append(CSS.Rule.create(CSS.Property.background, "white")));
-
+                .append(CSS.Rule.create(CSS.Property.background, "white"))
+        );
+        Style.Repo.set(BLUE_STEEL, CSS.Block.create()
+                .append(Widget.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.padding, "5px"))
+                .append(CSS.Rule.create(CSS.Property.background_color, "rgba(225,225,255,0.7)"))
+        );
     }
 
 }

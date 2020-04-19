@@ -53,8 +53,9 @@ public interface Panel extends Container<Item> {
     }
 
     public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.createClass("panel", "container")),
-        LABEL(CSS.Selector.create(".panel.label > *"));
+        CONTAINER(CSS.Selector.create("div.panel.container")),
+        LABEL(CSS.Selector.create("div.panel.label > *")),
+        FORM(CSS.Selector.create("div.panel form"));
 
         private final CSS.Selector selector;
 

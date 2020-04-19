@@ -76,10 +76,6 @@ public interface Style {
         public CSS.Selector selector();
     }
 
-    public void reset();
-
-    public void add(CSS.Style style);
-
     public void add(Supplier supplier);
 
     public void add(Factory factory, Selectors selector);
@@ -103,31 +99,31 @@ public interface Style {
 
     public class Sheet implements Style {
 
-        private final List<CSS.Style> styles = new ArrayList<>();
-        private final Map<CSS.Selector, CSS.Block> blocksBySelector = new HashMap<>();
+        private final List<CSS.Style> styles;
+        private final Map<String, CSS.Block> blocksBySelector = new HashMap<>();
+        private final List<CSS.Block> blocksRenderOrder = new ArrayList<>();
 
-        @Override
-        final public void reset() {
-            this.styles.clear();
+        public Sheet() {
+            this.styles = new ArrayList<>();
             this.styles.addAll(Reset.get().styles());
         }
 
-        @Override
-        public void add(CSS.Style style) {
-            this.styles().add(style);
-        }
-
-        final public void map(CSS.Style style) {
+        final void map(CSS.Style style) {
             switch (style.role()) {
                 case BLOCK:
                     CSS.Block iBlock = (CSS.Block) style;
-                    for (CSS.Selector selector : iBlock.selectors()) {
-                        CSS.Block block1 = this.blocksBySelector.get(selector);
-                        if (block1 == null) {
-                            this.blocksBySelector.put(selector, iBlock);
-                        } else {
-                            iBlock.rules().stream().forEachOrdered(r -> block1.append(r));
-                        }
+                    String selectorKey = iBlock.selectorKey();
+                    CSS.Block block1 = this.blocksBySelector.get(selectorKey);
+                    if (block1 == null) {
+                        this.blocksBySelector.put(selectorKey, iBlock);
+                        this.blocksRenderOrder.add(iBlock);
+                    } else {
+                        this.blocksRenderOrder.remove(iBlock);
+                        iBlock.rules().stream().forEachOrdered(r -> block1.append(r));
+                        String postKey = iBlock.selectorKey();
+                        this.blocksBySelector.remove(selectorKey);
+                        this.blocksBySelector.put(postKey, iBlock);
+                        this.blocksRenderOrder.add(iBlock);
                     }
                     break;
                 case RULE:
@@ -139,8 +135,8 @@ public interface Style {
         public List<CSS.Style> styles() {
             List<CSS.Style> temp = new ArrayList<>();
             temp.addAll(this.styles);
-            temp.addAll(this.blocksBySelector.values().stream()
-                    .map(x -> (CSS.Style) x)
+            temp.addAll(this.blocksRenderOrder.stream()
+                    .map(b -> (CSS.Style) b)
                     .collect(Collectors.toList()));
             return temp;
         }

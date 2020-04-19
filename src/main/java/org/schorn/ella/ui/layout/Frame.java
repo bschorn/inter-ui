@@ -36,8 +36,22 @@ public interface Frame extends Container<Item> {
 
     static final Logger LGR = LoggerFactory.getLogger(Frame.class);
 
+    public enum Intent {
+        HEADER,
+        FOOTER,
+        CONTENT,
+        CONTAINER;
+
+        public String className() {
+            return this.name().toLowerCase();
+        }
+    }
+
     static Frame create(Item.Name name) {
         return UIProvider.provider().createFrame(name);
+    }
+    static Frame create(Item.Name name, Intent intent) {
+        return UIProvider.provider().createFrame(name, intent);
     }
 
     @Override
@@ -48,7 +62,11 @@ public interface Frame extends Container<Item> {
         return Type.FRAME;
     }
     public enum Selectors implements Style.Selectors {
-        CONTAINER(CSS.Selector.createClass("frame", "container"));
+        CONTAINER(CSS.Selector.create("div.frame." + Intent.CONTAINER.className())),
+        CONTENT(CSS.Selector.create("div.frame." + Intent.CONTENT.className())),
+        HEADER(CSS.Selector.create("div.frame." + Intent.HEADER.className())),
+        FOOTER(CSS.Selector.create("div.frame." + Intent.FOOTER.className()));
+
 
         private final CSS.Selector selector;
 

@@ -53,20 +53,21 @@ class MenuImpl extends ControlWidgetImpl implements ControlWidgets.Menu {
             HTML.Li liElement = HTML.Li.create();
             URL aurl = menuItem.getAnchor();
             URL imgurl = menuItem.getImage();
-            HTML.A aElement = HTML.A.create();
-            liElement.append(aElement);
+            //HTML.A aElement = HTML.A.create();
+            //liElement.append(aElement);
             if (aurl != null) {
-                aElement.addAttribute(Attribute.create("href", aurl.toString()));
+                //aElement.addAttribute(Attribute.create("href", aurl.toString()));
+                liElement.addAttribute(Attribute.create("data-href", aurl.toString()));
             }
             if (imgurl != null) {
                 HTML.Img imgElement = HTML.Img.create();
                 imgElement.addAttribute(Attribute.create("src", imgurl.toString()));
-                aElement.append(imgElement);
+                liElement.append(imgElement);
             }
             if (menuItem.label() != null) {
                 HTML.Span spanElement = HTML.Span.create();
                 spanElement.setTextContent(menuItem.label());
-                aElement.append(spanElement);
+                liElement.append(spanElement);
             }
             ulElement.append(liElement);
         }

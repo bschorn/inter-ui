@@ -51,6 +51,10 @@ public class UIProviderImpl implements UIProvider {
     public Frame createFrame(Item.Name name) {
         return new FrameImpl(name.toString());
     }
+    @Override
+    public Frame createFrame(Item.Name name, Frame.Intent intent) {
+        return new FrameImpl(name.toString(), intent);
+    }
 
     @Override
     public Panel createPanel(Item.Name name) {

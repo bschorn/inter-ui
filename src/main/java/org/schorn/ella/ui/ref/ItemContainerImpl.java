@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -98,12 +99,14 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
         }
     }
 
+    protected List<String> containerClasses() {
+        return Arrays.asList((new String[]{this.name(), this.type().className(), "container"}));
+    }
+
     protected HTML.Element build0() throws Exception {
         HTML.Div containerElement = HTML.Div.create();
         containerElement.setId(this.id());
-        containerElement.addClass(this.name());
-        containerElement.addClass(this.type().className());
-        containerElement.addClass("container");
+        containerClasses().forEach(className -> containerElement.addClass(className));
         if (this.label != null) {
             HTML.Div labelElement = HTML.Div.create();
             HTML.Span span = HTML.Span.create();

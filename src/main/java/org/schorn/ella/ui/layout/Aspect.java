@@ -56,7 +56,7 @@ public interface Aspect extends Container<Widget> {
     }
 
     public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.createClass("aspect", "container")),
+        CONTAINER(CSS.Selector.create("div.aspect.container")),
         LABEL(CSS.Selector.createClass("aspect", "label")),
         ENTITY(CSS.Selector.createClass("aspect", "entity"));
 

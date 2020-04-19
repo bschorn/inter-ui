@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.visual;
 
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.html.CSSProperty;
 import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Style;
 
@@ -32,9 +33,8 @@ import org.schorn.ella.ui.layout.Style;
  * @author bschorn
  */
 public enum FrameStyle implements Style.Supplier {
-    DEFAULT_CONTAINER;
-
-    ;
+    DEFAULT_CONTAINER,
+    BLUE_STEEL;
 
     @Override
     public CSS.Style style() {
@@ -50,6 +50,12 @@ public enum FrameStyle implements Style.Supplier {
                 //.append(CSS.Rule.create(CSS.Property.justify_content, "space-evenly"))
                 //.append(CSS.Rule.create(CSS.Property.align_content, "space-evenly"))
         //.append(CSS.Rule.create(CSS.Property.display, "flex")));
+        );
+        Style.Repo.set(BLUE_STEEL, CSS.Block.create()
+                .append(Frame.Selectors.CONTENT.selector())
+                .append(CSS.Rule.create(CSSProperty.display.flex))
+                .append(CSS.Rule.create(CSSProperty.flex_flow.row_nowrap))
+                .append(CSS.Rule.create(CSSProperty.flex_grow.unit(1)))
         );
     }
     /*

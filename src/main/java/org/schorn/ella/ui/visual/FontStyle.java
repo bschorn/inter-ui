@@ -31,7 +31,9 @@ import org.schorn.ella.ui.layout.Style;
  * @author bschorn
  */
 public enum FontStyle implements Style.Factory {
-    ARIAL85;
+    ARIAL,
+    CALIBRI,
+    VERDANA;
 
     @Override
     public CSS.Style style() {
@@ -39,8 +41,15 @@ public enum FontStyle implements Style.Factory {
     }
 
     static public void init() {
-        Style.Repo.set(ARIAL85, CSS.Block.create()
-                .append(CSS.Rule.create(CSS.Property.font, ".85em Arial, sans-serif")));
+        Style.Repo.set(ARIAL, CSS.Block.create()
+                .append(CSS.Rule.create(CSS.Property.font_family, "Arial, sans-serif"))
+        );
+        Style.Repo.set(CALIBRI, CSS.Block.create()
+                .append(CSS.Rule.create(CSS.Property.font_family, "Calibri, sans-serif"))
+        );
+        Style.Repo.set(VERDANA, CSS.Block.create()
+                .append(CSS.Rule.create(CSS.Property.font_family, "Verdana, sans-serif"))
+        );
     }
     static private CSS.Style compose(CSS.Block newBlock, CSS.Style style) {
         switch (style.role()) {

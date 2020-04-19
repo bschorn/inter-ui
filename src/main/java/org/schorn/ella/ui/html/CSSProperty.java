@@ -51,20 +51,72 @@ public class CSSProperty {
     }
 
     public interface display {
+
+        /**
+         * Turns off the display of an element so that it has no effect on
+         * layout (the document is rendered as though the element did not
+         * exist). All descendant elements also have their display turned off.
+         * To have an element take up the space that it would normally take, but
+         * without actually rendering anything, use the *visibility* property
+         * instead. |display-box|
+         */
         static CSSProperty none = new CSSProperty(CSS.Property.display, "none");
+        /**
+         * The element generates a block element box, generating line breaks
+         * both before and after the element when in the normal flow.
+         * |display-outside|
+         */
+        static CSSProperty block = new CSSProperty(CSS.Property.display, "block");
+        /**
+         * The element generates one or more inline element boxes that do not
+         * generate line breaks before or after themselves. In normal flow, the
+         * next element will be on the same line if there is space.
+         * |display-outside|
+         */
         static CSSProperty inline = new CSSProperty(CSS.Property.display, "inline");
-        static CSSProperty box = new CSSProperty(CSS.Property.display, "box");
+        /**
+         * The element behaves like a block element and lays out its content
+         * according to the flexbox model. |display-inside|
+         */
         static CSSProperty flex = new CSSProperty(CSS.Property.display, "flex");
+        /**
+         * The element behaves like a block element and lays out its content
+         * according to the grid model. |display-inside|
+         */
         static CSSProperty grid = new CSSProperty(CSS.Property.display, "grid");
+        /**
+         * These elements behave like HTML <table> elements. It defines a
+         * block-level box. |display-inside|
+         */
+        static CSSProperty table = new CSSProperty(CSS.Property.display, "table");
     }
 
     /**
      * Flex Container Property
      */
     public interface flex_direction {
+
+        /**
+         * [->][->][->][->]
+         */
         static CSSProperty row = new CSSProperty(CSS.Property.flex_direction, "row");
+        /**
+         * [<-][<-][<-][<-]
+         */
         static CSSProperty row_reverse = new CSSProperty(CSS.Property.flex_direction, "row-reverse");
+        /*
+         * [->]
+         * [->]
+         * [->]
+         * [->]
+         */
         static CSSProperty column = new CSSProperty(CSS.Property.flex_direction, "column");
+        /*
+         * [<-]
+         * [<-]
+         * [<-]
+         * [<-]
+         */
         static CSSProperty column_reverse = new CSSProperty(CSS.Property.flex_direction, "column-reverse");
     }
 
@@ -72,20 +124,81 @@ public class CSSProperty {
      * Flex Container Property
      */
     public interface flex_wrap {
+
+        /*
+         * [->][->]...|
+         */
         static CSSProperty nowrap = new CSSProperty(CSS.Property.flex_wrap, "nowrap");
+        /*
+         * [->][->]|
+         * [->][->]|
+         */
         static CSSProperty wrap = new CSSProperty(CSS.Property.flex_wrap, "wrap");
+        /*
+         * [<-][<-]|
+         * [<-][<-]|
+         */
         static CSSProperty wrap_reverse = new CSSProperty(CSS.Property.flex_wrap, "wrap-reverse");
+    }
+
+    /**
+     * Flex Container Property (flex_direction + flex_flow)
+     */
+    public interface flex_flow {
+        /**
+         * flex-flow: row; flex-wrap: nowrap;
+         */
+        static CSSProperty row_nowrap = new CSSProperty(CSS.Property.flex_flow, "row nowrap");
+        /**
+         * flex-flow: row; flex-wrap: wrap;
+         */
+        static CSSProperty row_wrap = new CSSProperty(CSS.Property.flex_flow, "row wrap");
+        /**
+         * flex-flow: row; flex-wrap: wrap-reverse;
+         */
+        static CSSProperty row_wrap_reverse = new CSSProperty(CSS.Property.flex_flow, "row wrap-reverse");
+        /**
+         * flex-flow: column; flex-wrap: nowrap;
+         */
+        static CSSProperty column_nowrap = new CSSProperty(CSS.Property.flex_flow, "column nowrap");
+        /**
+         * flex-flow: column; flex-wrap: wrap;
+         */
+        static CSSProperty column_wrap = new CSSProperty(CSS.Property.flex_flow, "column wrap");
+        /**
+         * flex-flow: column; flex-wrap: wrap-reverse;
+         */
+        static CSSProperty column_wrap_reverse = new CSSProperty(CSS.Property.flex_flow, "column wrap-reverse");
     }
 
     /**
      * Flex Container Property
      */
     public interface justify_content {
+
+        /**
+         * {[1 ][2 ][3 ] }
+         */
         static CSSProperty flex_start = new CSSProperty(CSS.Property.justify_content, "flex-start");
+        /**
+         * { [1 ][2 ][3 ]}
+         */
         static CSSProperty flex_end = new CSSProperty(CSS.Property.justify_content, "flex-end");
+        /**
+         * { [1 ][2 ][3 ] }
+         */
         static CSSProperty center = new CSSProperty(CSS.Property.justify_content, "center");
+        /**
+         * {[1 ] [2 ] [3 ]}
+         */
         static CSSProperty space_between = new CSSProperty(CSS.Property.justify_content, "space-between");
+        /**
+         * { [1 ] [2 ] [3 ] }
+         */
         static CSSProperty space_around = new CSSProperty(CSS.Property.justify_content, "space-around");
+        /**
+         * { [1 ] [2 ] [3 ] }
+         */
         static CSSProperty space_evenly = new CSSProperty(CSS.Property.justify_content, "space-evenly");
     }
 
