@@ -76,11 +76,11 @@ public interface Page extends Container<Item>, Item {
 
     public String produce(Style styleSheet) throws Exception;
 
-    default Panel newFramePanel(Item.Name name, String label) {
+    default Window newWindowFrame(Identifier name, String label) {
         Frame frame = UIProvider.provider().createFrame(name);
-        Panel panel = UIProvider.provider().createPanel(name, label);
-        frame.accept(panel);
+        Window window = UIProvider.provider().createWindow(name, label);
+        frame.accept(window);
         this.accept(frame);
-        return panel;
+        return window;
     }
 }

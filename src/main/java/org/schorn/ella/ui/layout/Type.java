@@ -30,9 +30,10 @@ package org.schorn.ella.ui.layout;
 public enum Type {
     PAGE(Page.class),
     FRAME(Frame.class),
-    PANEL(Panel.class),
-    ASPECT(Aspect.class),
-    WIDGET(Widget.class);
+    WINDOW(Window.class),
+    PANE(Pane.class),
+    WIDGET(Widget.class),
+    ITEM(Item.class);
 
     private final Class<? extends Item> itemClass;
 

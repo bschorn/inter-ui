@@ -25,7 +25,7 @@ package org.schorn.ella.ui.layout;
 
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,32 +33,29 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public interface Aspect extends Container<Widget> {
+public interface Window extends Container<Item> {
 
-    static final Logger LGR = LoggerFactory.getLogger(Aspect.class);
+    static final Logger LGR = LoggerFactory.getLogger(Window.class);
 
-    static Aspect create(Item.Name name) {
-        return UIProvider.provider().createAspect(name);
+    static Window create(Identifier name) {
+        return UIProvider.provider().createWindow(name);
     }
-
-    static Aspect create(Item.Name name, String label) {
-        return UIProvider.provider().createAspect(name, label);
+    static Window create(Identifier name, String label) {
+        return UIProvider.provider().createWindow(name, label);
     }
-
-    public String aspectId();
 
     @Override
-    public void accept(Widget widget);
+    public void accept(Item item);
 
     @Override
     default Type type() {
-        return Type.ASPECT;
+        return Type.WINDOW;
     }
 
     public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.create("div.aspect.container")),
-        LABEL(CSS.Selector.createClass("aspect", "label")),
-        ENTITY(CSS.Selector.createClass("aspect", "entity"));
+        CONTAINER(CSS.Selector.create("div.window.container")),
+        LABEL(CSS.Selector.create("div.window.label > *")),
+        FORM(CSS.Selector.create("div.window form"));
 
         private final CSS.Selector selector;
 
@@ -70,18 +67,25 @@ public interface Aspect extends Container<Widget> {
         public CSS.Selector selector() {
             return this.selector;
         }
-
-        public CSS.Selector selector(Aspect aspect) {
-            return CSS.Selector.createClass(this.selector.render().substring(1), aspect.name());
-        }
     }
 
+    default Pane newPane() {
+        try {
+            Pane pane = UIProvider.provider().createPane(Identifier.create(this.name()), this.label());
+            this.accept(pane);
+            return pane;
+        } catch (Exception ex) {
+            LGR.error("{}.newPane() - Caught Exception: {}",
+                    Window.class.getSimpleName(),
+                    ToString.stackTrace(ex));
+        }
+        return null;
+    }
 
-    public void setAction(String actionURL);
+    default Pane newPane(Identifier name, String label) {
+        Pane pane = UIProvider.provider().createPane(name, label);
+        this.accept(pane);
+        return pane;
+    }
 
-    public void setMethod(HTML.Method method);
-
-    public void setEnctype(HTML.Enctype enctype);
-
-    public void setTarget(HTML.Target target);
 }

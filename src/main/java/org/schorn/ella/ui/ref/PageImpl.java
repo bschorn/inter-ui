@@ -26,6 +26,7 @@ package org.schorn.ella.ui.ref;
 import java.util.Optional;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Style;
 
@@ -59,6 +60,7 @@ class PageImpl extends ItemContainerImpl implements Page {
     @Override
     public String produce(Style styleSheet) throws Exception {
         Optional<HTML.Element> optPageElement = this.build();
+        this.throwException();
         if (optPageElement.isPresent()) {
             HTML.Page pageElement = (HTML.Page) optPageElement.get();
 
@@ -84,67 +86,20 @@ class PageImpl extends ItemContainerImpl implements Page {
         titleElement.setTextContent(this.title);
         pageElement.append(titleElement);
 
-        this.items().stream()
-                .map(i -> i.build())
-                .filter(o -> o.isPresent())
-                .map(o -> o.get())
-                .forEachOrdered(e -> pageElement.append(e));
+        for (Item item : this.items()) {
+            Optional<HTML.Element> optElement = item.build();
+            item.throwException();
+            if (optElement.isPresent()) {
+                pageElement.append(optElement.get());
+            }
+        }
         return pageElement;
+    }
+
+    @Override
+    public boolean visible() {
+        return true;
     }
 
 }
 
-
-/*
-    @Override
-    protected HTML.Page build0() throws Exception {
-        List<CSS.Style> cssStyles = new ArrayList<>();
-        cssStyles.addAll(this.styles.stream()
-                .filter(css -> css instanceof CSS.Block)
-                .collect(Collectors.toList()));
-
-        final CSS.Block cssBlock = CSS.Block.create();
-        cssBlock.append(CSS.Selector.createType(HTML.BODY));
-        this.styles.stream()
-                .filter(css -> css instanceof CSS.Rule)
-                .map(css -> (CSS.Rule) css)
-                .forEachOrdered(cssr -> cssBlock.append(cssr));
-        cssStyles.add(cssBlock);
-
-        HTML.Page page = HTML.Page.create();
-        if (this.isViewport) {
-            page.append(HTML.Meta.createViewport(this.viewportWidth, this.viewportScale));
-        }
-        for (Frame frame : this.frames) {
-            HTML.Div div = HTML.Div.create();
-            page.append(div);
-            div.setId(frame.id());
-            div.addClass(frame.name());
-            div.addClass("frame");
-            Frame.Styler frameStyler = this.frameStylers.get(frame);
-            if (frameStyler != null) {
-                CSS.Block frameBlock = frameStyler.apply(frame);
-                cssStyles.add(frameBlock);
-                frameStyler.throwException();
-            }
-            Panel panel = this.panels.get(frame);
-            if (panel != null) {
-                HTML.Element panelElement = panel.build();
-                if (panelElement != null) {
-                    div.append(panelElement);
-                    cssStyles.addAll(panel.styles());
-                }
-            }
-        }
-
-        HTML.Style style = HTML.Style.create();
-        cssStyles.stream()
-                .filter(s -> s instanceof CSS.Block)
-                .map(s -> (CSS.Block) s)
-                .forEachOrdered(b -> style.append(b));
-
-        page.append(style);
-
-        return page;
-    }
- */

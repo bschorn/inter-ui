@@ -53,7 +53,7 @@ public enum FrameStyle implements Style.Supplier {
         );
         Style.Repo.set(BLUE_STEEL, CSS.Block.create()
                 .append(Frame.Selectors.CONTENT.selector())
-                .append(CSS.Rule.create(CSSProperty.display.flex))
+                //.append(CSS.Rule.create(CSSProperty.display.flex))
                 .append(CSS.Rule.create(CSSProperty.flex_flow.row_nowrap))
                 .append(CSS.Rule.create(CSSProperty.flex_grow.unit(1)))
         );

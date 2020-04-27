@@ -26,15 +26,15 @@ package org.schorn.ella.ui.ref;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Page;
-import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.widget.ControlWidgets;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
+import org.schorn.ella.ui.layout.Window;
+import org.schorn.ella.ui.layout.Pane;
 
 /**
  *
@@ -48,32 +48,32 @@ public class UIProviderImpl implements UIProvider {
     }
 
     @Override
-    public Frame createFrame(Item.Name name) {
+    public Frame createFrame(Identifier name) {
         return new FrameImpl(name.toString());
     }
     @Override
-    public Frame createFrame(Item.Name name, Frame.Intent intent) {
+    public Frame createFrame(Identifier name, Frame.Intent intent) {
         return new FrameImpl(name.toString(), intent);
     }
 
     @Override
-    public Panel createPanel(Item.Name name) {
-        return new PanelImpl(name.toString(), null);
+    public Window createWindow(Identifier name) {
+        return new WindowImpl(name.toString(), null);
     }
 
     @Override
-    public Panel createPanel(Item.Name name, String label) {
-        return new PanelImpl(name.toString(), label);
+    public Window createWindow(Identifier name, String label) {
+        return new WindowImpl(name.toString(), label);
     }
 
     @Override
-    public Aspect createAspect(Item.Name name) {
-        return new AspectImpl(name.toString(), null);
+    public Pane createPane(Identifier name) {
+        return new PaneImpl(name.toString(), null);
     }
 
     @Override
-    public Aspect createAspect(Item.Name name, String label) {
-        return new AspectImpl(name.toString(), label);
+    public Pane createPane(Identifier name, String label) {
+        return new PaneImpl(name.toString(), label);
     }
 
     @Override

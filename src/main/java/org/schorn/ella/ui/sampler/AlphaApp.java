@@ -27,16 +27,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Page;
-import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.util.ToString;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.layout.Window;
+import org.schorn.ella.ui.layout.Pane;
 
 /**
  *
@@ -54,36 +54,36 @@ public class AlphaApp {
             page.setTitle("AlphaApp");
             page.setViewport("device-width", "1");
 
-            Item.Name menuName = Item.Name.create("menu");
+            Identifier menuName = Identifier.create("menu");
             Frame menuFrame = UIProvider.provider().createFrame(menuName);
-            Panel menuPanel = UIProvider.provider().createPanel(menuName, "Menu");
+            Window menuPanel = UIProvider.provider().createWindow(menuName, "Menu");
             menuFrame.accept(menuPanel);
             page.accept(menuFrame);
 
-            Item.Name navName = Item.Name.create("nav");
+            Identifier navName = Identifier.create("nav");
             Frame navFrame = UIProvider.provider().createFrame(navName);
-            Panel navPanel = UIProvider.provider().createPanel(navName, "Navigation");
+            Window navPanel = UIProvider.provider().createWindow(navName, "Navigation");
             navFrame.accept(navPanel);
             page.accept(navFrame);
 
-            Item.Name viewerName = Item.Name.create("viewer");
+            Identifier viewerName = Identifier.create("viewer");
             Frame viewerFrame = UIProvider.provider().createFrame(viewerName);
-            Panel viewerPanel = UIProvider.provider().createPanel(viewerName, "Viewer");
+            Window viewerPanel = UIProvider.provider().createWindow(viewerName, "Viewer");
             viewerFrame.accept(viewerPanel);
             page.accept(viewerFrame);
 
-            Item.Name editorName = Item.Name.create("editor");
+            Identifier editorName = Identifier.create("editor");
             Frame editorFrame = UIProvider.provider().createFrame(editorName);
-            Panel editorPanel = UIProvider.provider().createPanel(editorName, "Editor");
+            Window editorPanel = UIProvider.provider().createWindow(editorName, "Editor");
             editorFrame.accept(editorPanel);
             page.accept(editorFrame);
 
-            Aspect formAddress = UIProvider.provider().createAspect(Item.Name.create("addr"), "Address");
+            Pane formAddress = UIProvider.provider().createPane(Identifier.create("addr"), "Address");
             formAddress.accept(OutputWidgets.Title.create("customerAddress", "Customer Address"));
-            formAddress.accept(InputWidgets.TextBox.create(Item.Name.create("streetAddress"), "Street Address", Pattern.compile("^.*$")));
-            formAddress.accept(InputWidgets.ComboBox.create(Item.Name.create("city"), "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
-            formAddress.accept(InputWidgets.ComboBox.create(Item.Name.create("state"), "State", new String[]{"Illinois", "Texas", "New York", "California"}));
-            formAddress.accept(InputWidgets.TextBox.create(Item.Name.create("postal"), "Postal", Pattern.compile("^\\d\\d\\d\\d\\d$")));
+            formAddress.accept(InputWidgets.TextBox.create(Identifier.create("streetAddress"), "Street Address", Pattern.compile("^.*$")));
+            formAddress.accept(InputWidgets.ComboBox.create(Identifier.create("city"), "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));
+            formAddress.accept(InputWidgets.ComboBox.create(Identifier.create("state"), "State", new String[]{"Illinois", "Texas", "New York", "California"}));
+            formAddress.accept(InputWidgets.TextBox.create(Identifier.create("postal"), "Postal", Pattern.compile("^\\d\\d\\d\\d\\d$")));
             editorPanel.accept(formAddress);
 
             Files.write(Paths.get(OUTFILE), page.produce(new AlphaStyle()).getBytes());

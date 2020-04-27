@@ -26,6 +26,7 @@ package org.schorn.ella.ui.widget;
 import java.net.URL;
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public enum ControlWidgets {
         return this.implOf;
     }
 
+    /**
+     * Factory
+     */
     public interface ControlFactory {
 
         public void register();
@@ -68,33 +72,63 @@ public enum ControlWidgets {
         FACTORY = UIProvider.provider().getControlFactory();
     }
 
-    public interface Control extends Widget {
+    /**
+     * MenuItem
+     */
+    public interface MenuItem extends Widget.Control {
+        @Override
+        default String widgetName() {
+            return MenuItem.class.getSimpleName().toLowerCase();
+        }
+
+        public MenuItem setAnchor(URL url);
+
+        public MenuItem setImage(URL url);
+
+        static public MenuItem create(Identifier name, String label) throws Exception {
+            return ControlWidgets.MENU_ITEM.create(name.toString(), label);
+        }
+
+        public enum Selector implements Style.Selectors {
+            MENU_ITEM(CSS.Selector.create("ul.menu li")),
+            //ITEM_ANCHOR(CSS.Selector.create("ul.menu li a")),
+            ANCHOR_IMAGE(CSS.Selector.create("ul.menu li img"));
+
+            private final CSS.Selector selector;
+
+            Selector(CSS.Selector selector) {
+                this.selector = selector;
+            }
+
+            @Override
+            public CSS.Selector selector() {
+                return this.selector;
+            }
+
+            public CSS.Selector selector(Menu menu) {
+                return CSS.Selector.createClass(this.selector.render().substring(1), menu.name());
+            }
+
+        }
     }
 
-    public interface Menu extends Control {
+    /**
+     * Menu
+     */
+    public interface Menu extends Widget.Control {
         @Override
         default String widgetName() {
             return Menu.class.getSimpleName().toLowerCase();
         }
 
-        public interface MenuItem {
+        public Menu addItem(MenuItem menuItem);
 
-            public MenuItem setAnchor(URL url);
-
-            public MenuItem setImage(URL url);
-        }
-
-        public MenuItem addItem(String name, String label);
-
-        static public Menu create(String name) throws Exception {
-            return ControlWidgets.MENU.create(name);
+        static public Menu create(Identifier name) throws Exception {
+            return ControlWidgets.MENU.create(name.toString());
         }
         public enum Selector implements Style.Selectors {
             CONTAINER(CSS.Selector.createClass("menu", "control", "widget")),
-            MENU(CSS.Selector.create("ul.menu")),
-            MENU_ITEM(CSS.Selector.create("ul.menu li")),
-            //ITEM_ANCHOR(CSS.Selector.create("ul.menu li a")),
-            ANCHOR_IMAGE(CSS.Selector.create("ul.menu li img"));
+            MENU(CSS.Selector.create("ul.menu"));
 
             private final CSS.Selector selector;
 

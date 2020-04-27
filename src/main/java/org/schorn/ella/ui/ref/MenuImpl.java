@@ -23,12 +23,11 @@
  */
 package org.schorn.ella.ui.ref;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.html.HTML.Attribute;
 import org.schorn.ella.ui.widget.ControlWidgets;
+import org.schorn.ella.ui.widget.ControlWidgets.MenuItem;
 
 
 /**
@@ -37,7 +36,7 @@ import org.schorn.ella.ui.widget.ControlWidgets;
  */
 class MenuImpl extends ControlWidgetImpl implements ControlWidgets.Menu {
 
-    private final List<MenuItemImpl> items = new ArrayList<>();
+    private final List<MenuItem> items = new ArrayList<>();
 
     public MenuImpl(String name) {
         super("menu", name, null);
@@ -49,77 +48,19 @@ class MenuImpl extends ControlWidgetImpl implements ControlWidgets.Menu {
         ulElement.addClass(this.name());
         ulElement.addClass(this.customTag());
         ulElement.addClass(this.widgetName());
-        for (MenuItemImpl menuItem : this.items) {
-            HTML.Li liElement = HTML.Li.create();
-            URL aurl = menuItem.getAnchor();
-            URL imgurl = menuItem.getImage();
-            //HTML.A aElement = HTML.A.create();
-            //liElement.append(aElement);
-            if (aurl != null) {
-                //aElement.addAttribute(Attribute.create("href", aurl.toString()));
-                liElement.addAttribute(Attribute.create("data-href", aurl.toString()));
-            }
-            if (imgurl != null) {
-                HTML.Img imgElement = HTML.Img.create();
-                imgElement.addAttribute(Attribute.create("src", imgurl.toString()));
-                liElement.append(imgElement);
-            }
-            if (menuItem.label() != null) {
-                HTML.Span spanElement = HTML.Span.create();
-                spanElement.setTextContent(menuItem.label());
-                liElement.append(spanElement);
-            }
-            ulElement.append(liElement);
-        }
+        this.items.stream()
+                .map(mi -> mi.build())
+                .filter(opt -> opt.isPresent())
+                .map(opt -> opt.get())
+                .forEachOrdered(el -> ulElement.append(el));
         return ulElement;
     }
 
     @Override
-    public MenuItem addItem(String name, String label) {
-        MenuItemImpl menuItem = new MenuItemImpl(name, label);
+    public ControlWidgets.Menu addItem(MenuItem menuItem) {
+        //MenuItemImpl menuItem = new MenuItemImpl(name, label);
         this.items.add(menuItem);
-        return menuItem;
+        return this;
     }
 
-    class MenuItemImpl implements ControlWidgets.Menu.MenuItem {
-
-        private final String name;
-        private final String label;
-        private URL menuURL = null;
-        private URL imageURL = null;
-
-        public MenuItemImpl(String name, String label) {
-            this.name = name;
-            this.label = label;
-        }
-
-        public String name() {
-            return this.name;
-        }
-
-        public String label() {
-            return this.label;
-        }
-
-        @Override
-        public MenuItem setAnchor(URL url) {
-            this.menuURL = url;
-            return this;
-        }
-
-        URL getAnchor() {
-            return this.menuURL;
-        }
-
-        @Override
-        public MenuItem setImage(URL url) {
-            this.imageURL = url;
-            return this;
-        }
-
-        URL getImage() {
-            return this.imageURL;
-        }
-
-    }
 }

@@ -25,8 +25,6 @@ package org.schorn.ella.ui.layout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.schorn.ella.ui.html.CSS;
 
 /**
@@ -35,27 +33,25 @@ import org.schorn.ella.ui.html.CSS;
  */
 public interface Item extends Build {
 
-    public class Name {
+    public interface Property {
+        public Class<?> classType();
+    }
 
-        static final Pattern REGEX = Pattern.compile("[a-z][a-zA-Z0-9_]{1,30}");
+    public enum Properties implements Property {
+        ID(String.class),
+        NAME(String.class),
+        LABEL(String.class),
+        VISIBILITY(Boolean.class);
 
-        static public Name create(String name) throws Exception {
-            Matcher matcher = REGEX.matcher(name);
-            if (matcher.matches()) {
-                return new Name(name);
-            }
-            throw new Exception(String.format("'%s' is not a valid name for an Item object.",
-                    name));
-        }
-        private final String name;
+        private final Class<?> classType;
 
-        private Name(String name) {
-            this.name = name;
+        Properties(Class<?> classType) {
+            this.classType = classType;
         }
 
         @Override
-        public String toString() {
-            return this.name;
+        public Class<?> classType() {
+            return this.classType;
         }
     }
 
@@ -65,7 +61,11 @@ public interface Item extends Build {
 
     public String label();
 
-    public void setLabel(String label);
+    public boolean visible();
+
+    public void property(Property property, Object value);
+
+    public <T> T property(Property property, Class<T> classType);
 
     public Type type();
 

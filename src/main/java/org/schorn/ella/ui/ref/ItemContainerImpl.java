@@ -26,12 +26,16 @@ package org.schorn.ella.ui.ref;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Container;
 import org.schorn.ella.ui.layout.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -39,11 +43,16 @@ import org.schorn.ella.ui.layout.Item;
  */
 abstract class ItemContainerImpl implements Container<Item>, Item {
 
+    static private final Logger LGR = LoggerFactory.getLogger(ItemContainerImpl.class);
+
     private final String id;
     private final String name;
     private String label;
+    protected final Map<Item.Property, Object> properties = new HashMap<>();
+
     private final List<Item> items = new ArrayList<>();
     private Exception exception = null;
+    private boolean visible = true;
 
     ItemContainerImpl(String name, String label) {
         this.id = UUID.randomUUID().toString();
@@ -67,18 +76,54 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
     }
 
     @Override
-    public void setLabel(String label) {
-        this.label = label;
+    public void property(Property property, Object value) {
+        if (property instanceof Properties) {
+            switch ((Properties) property) {
+                case LABEL:
+                    this.label = (String) value;
+                    break;
+            }
+        } else {
+            this.properties.put(property, value);
+        }
+    }
+
+    @Override
+    public <T> T property(Property property, Class<T> classForT) {
+        if (property instanceof Properties) {
+            switch ((Properties) property) {
+                case LABEL:
+                    return (T) classForT.cast(this.label);
+            }
+        } else {
+            Object value = this.properties.get(property);
+            if (value != null) {
+                if (property.classType().equals(classForT)
+                        && classForT.isInstance(value)) {
+                    return (T) value;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
     public void accept(Item item) {
+        LGR.debug("{}.accept() - Item: {} -> {}",
+                this.getClass().getSimpleName(),
+                item.getClass().getSimpleName(),
+                item.toString());
         this.items.add(item);
     }
 
     @Override
     public List<Item> items() {
         return Collections.unmodifiableList(this.items);
+    }
+
+    @Override
+    public boolean visible() {
+        return this.visible;
     }
 
     @Override
@@ -100,13 +145,19 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
     }
 
     protected List<String> containerClasses() {
-        return Arrays.asList((new String[]{this.name(), this.type().className(), "container"}));
+        if (this.name() == null || this.name().equals("none")) {
+            return Arrays.asList((new String[]{this.type().className(), "container"}));
+        } else {
+            return Arrays.asList((new String[]{this.name(), this.type().className(), "container"}));
+        }
     }
 
     protected HTML.Element build0() throws Exception {
         HTML.Div containerElement = HTML.Div.create();
         containerElement.setId(this.id());
-        containerClasses().forEach(className -> containerElement.addClass(className));
+        containerClasses().stream()
+                .filter(s -> s != null)
+                .forEachOrdered(className -> containerElement.addClass(className));
         if (this.label != null) {
             HTML.Div labelElement = HTML.Div.create();
             HTML.Span span = HTML.Span.create();
@@ -118,11 +169,20 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
             span.setTextContent(this.label());
             containerElement.append(labelElement);
         }
+        for (Item item : this.items()) {
+            Optional<HTML.Element> optElement = item.build();
+            item.throwException();
+            if (optElement.isPresent()) {
+                containerElement.append(optElement.get());
+            }
+        }
+        /*
         this.items().stream()
                 .map(i -> i.build())
                 .filter(o -> o.isPresent())
                 .map(o -> o.get())
                 .forEachOrdered(e -> containerElement.append(e));
+         */
         return containerElement;
     }
 }

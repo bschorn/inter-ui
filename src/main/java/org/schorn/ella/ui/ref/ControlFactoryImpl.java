@@ -52,6 +52,7 @@ public final class ControlFactoryImpl implements ControlWidgets.ControlFactory {
         //READ.SCROLL.setImpl(ScrollImpl.class);
         //READ.TEXT.setImpl(TextImpl.class);
         ControlWidgets.MENU.setImpl(MenuImpl.class);
+        ControlWidgets.MENU_ITEM.setImpl(MenuItemImpl.class);
     }
 
     @Override

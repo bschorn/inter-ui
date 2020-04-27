@@ -25,24 +25,29 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Aspect;
+import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Widget;
 import org.schorn.ella.ui.util.ToString;
+import org.schorn.ella.ui.layout.Pane;
 
 /**
  *
  * @author bschorn
  */
-class AspectImpl implements Aspect {
+class PaneImpl implements Pane {
 
     private final String id;
-    private final String formId;
     private final String name;
     private String label = null;
+    private Map<Item.Property, Object> properties = new HashMap<>();
+
+    private final String formId;
     private String actionURL = null;
     private HTML.Enctype enctype = null;
     private HTML.Method method = null;
@@ -50,8 +55,9 @@ class AspectImpl implements Aspect {
 
     private final List<Widget> widgets = new ArrayList<>();
     private Exception exception = null;
+    private boolean visible = true;
 
-    AspectImpl(String name, String label) {
+    PaneImpl(String name, String label) {
         this.id = UUID.randomUUID().toString();
         this.formId = UUID.randomUUID().toString();
         this.name = name;
@@ -64,7 +70,7 @@ class AspectImpl implements Aspect {
     }
 
     @Override
-    public String aspectId() {
+    public String paneId() {
         return this.formId;
     }
 
@@ -79,8 +85,35 @@ class AspectImpl implements Aspect {
     }
 
     @Override
-    public void setLabel(String label) {
-        this.label = label;
+    public void property(Property property, Object value) {
+        if (property instanceof Properties) {
+            switch ((Properties) property) {
+                case LABEL:
+                    this.label = (String) value;
+                    break;
+            }
+        } else {
+            this.properties.put(property, value);
+        }
+    }
+
+    @Override
+    public <T> T property(Property property, Class<T> classForT) {
+        if (property instanceof Properties) {
+            switch ((Properties) property) {
+                case LABEL:
+                    return (T) classForT.cast(this.label);
+            }
+        } else {
+            Object value = this.properties.get(property);
+            if (value != null) {
+                if (property.classType().equals(classForT)
+                        && classForT.isInstance(value)) {
+                    return (T) value;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -118,6 +151,11 @@ class AspectImpl implements Aspect {
         if (this.exception != null) {
             throw this.exception;
         }
+    }
+
+    @Override
+    public boolean visible() {
+        return this.visible;
     }
 
     @Override

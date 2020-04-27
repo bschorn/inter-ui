@@ -38,6 +38,7 @@ class FrameImpl extends ItemContainerImpl implements Frame {
     static final Logger LGR = LoggerFactory.getLogger(FrameImpl.class);
 
     private final Frame.Intent intent;
+    private boolean visible = true;
 
     FrameImpl(String name) {
         super(name, null);
@@ -51,6 +52,11 @@ class FrameImpl extends ItemContainerImpl implements Frame {
     @Override
     protected List<String> containerClasses() {
         return Arrays.asList((new String[]{this.name(), this.type().className(), this.intent.className()}));
+    }
+
+    @Override
+    public boolean visible() {
+        return this.visible;
     }
 
 }

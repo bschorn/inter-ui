@@ -26,15 +26,15 @@ package org.schorn.ella.ui;
 import java.util.Properties;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Aspect;
 import org.schorn.ella.ui.layout.Frame;
-import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Page;
-import org.schorn.ella.ui.layout.Panel;
 import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.widget.ControlWidgets;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
+import org.schorn.ella.ui.layout.Window;
+import org.schorn.ella.ui.layout.Pane;
 
 /**
  *
@@ -54,17 +54,17 @@ public interface UIProvider {
 
     public Page createPage();
 
-    public Frame createFrame(Item.Name name);
+    public Frame createFrame(Identifier name);
 
-    public Frame createFrame(Item.Name name, Frame.Intent intent);
+    public Frame createFrame(Identifier name, Frame.Intent intent);
 
-    public Panel createPanel(Item.Name name);
+    public Window createWindow(Identifier name);
 
-    public Panel createPanel(Item.Name name, String label);
+    public Window createWindow(Identifier name, String label);
 
-    public Aspect createAspect(Item.Name name);
+    public Pane createPane(Identifier name);
 
-    public Aspect createAspect(Item.Name name, String label);
+    public Pane createPane(Identifier name, String label);
 
     public Style.Reset getStyleSheetReset();
 

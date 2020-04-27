@@ -47,11 +47,23 @@ public interface Frame extends Container<Item> {
         }
     }
 
-    static Frame create(Item.Name name) {
+    static Frame create(Identifier name) {
         return UIProvider.provider().createFrame(name);
     }
-    static Frame create(Item.Name name, Intent intent) {
+    static Frame create(Identifier name, Intent intent) {
         return UIProvider.provider().createFrame(name, intent);
+    }
+
+    static Frame createHeader(Identifier name) {
+        return UIProvider.provider().createFrame(name, Frame.Intent.HEADER);
+    }
+
+    static Frame createFooter(Identifier name) {
+        return UIProvider.provider().createFrame(name, Frame.Intent.FOOTER);
+    }
+
+    static Frame createContent(Identifier name) {
+        return UIProvider.provider().createFrame(name, Frame.Intent.CONTENT);
     }
 
     @Override

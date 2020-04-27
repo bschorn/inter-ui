@@ -25,12 +25,15 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.widget.Input;
+import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Widget.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,16 +45,19 @@ abstract class InputWidgetImpl implements Input {
 
     static final Logger LGR = LoggerFactory.getLogger(InputWidgetImpl.class);
 
+    protected final String id = UUID.randomUUID().toString();
+    protected final String name;
+    protected String label = null;
+    protected final Map<Item.Property, Object> properties = new HashMap<>();
+
     protected final String customTag;
     protected final HTML.Input.InputType inputType;
     protected final String widgetId = UUID.randomUUID().toString();
-    protected final String id = UUID.randomUUID().toString();
-    protected final String name;
     protected final List<String> datalist = new ArrayList<>();
-    protected String label = null;
     protected Exception exception = null;
     protected boolean readonly = false;
     protected String placeholder = null;
+    protected boolean visible = true;
 
     InputWidgetImpl(String customTag, HTML.Input.InputType inputType, String name, String label) {
         this.customTag = customTag;
@@ -86,6 +92,11 @@ abstract class InputWidgetImpl implements Input {
     }
 
     @Override
+    public boolean visible() {
+        return this.visible;
+    }
+
+    @Override
     public String placeholder() {
         return this.placeholder;
     }
@@ -96,8 +107,35 @@ abstract class InputWidgetImpl implements Input {
     }
 
     @Override
-    public void setLabel(String label) {
-        this.label = label;
+    public void property(Property property, Object value) {
+        if (property instanceof Properties) {
+            switch ((Properties) property) {
+                case LABEL:
+                    this.label = (String) value;
+                    break;
+            }
+        } else {
+            this.properties.put(property, value);
+        }
+    }
+
+    @Override
+    public <T> T property(Property property, Class<T> classForT) {
+        if (property instanceof Properties) {
+            switch ((Properties) property) {
+                case LABEL:
+                    return (T) classForT.cast(this.label);
+            }
+        } else {
+            Object value = this.properties.get(property);
+            if (value != null) {
+                if (property.classType().equals(classForT)
+                        && classForT.isInstance(value)) {
+                    return (T) value;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

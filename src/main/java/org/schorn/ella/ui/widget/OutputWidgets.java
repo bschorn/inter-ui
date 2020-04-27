@@ -69,10 +69,7 @@ public enum OutputWidgets {
         FACTORY = UIProvider.provider().getOutputFactory();
     }
 
-    public interface Output extends Widget {
-    }
-
-    public interface Chart extends Output {
+    public interface Chart extends Widget.Output {
         @Override
         default String widgetName() {
             return Chart.class.getSimpleName().toLowerCase();
@@ -83,7 +80,7 @@ public enum OutputWidgets {
         }
     }
 
-    public interface Image extends Output {
+    public interface Image extends Widget.Output {
         @Override
         default String widgetName() {
             return Image.class.getSimpleName().toLowerCase();
@@ -94,7 +91,7 @@ public enum OutputWidgets {
         }
     }
 
-    public interface Progress extends Output {
+    public interface Progress extends Widget.Output {
         @Override
         default String widgetName() {
             return Progress.class.getSimpleName().toLowerCase();
@@ -105,7 +102,7 @@ public enum OutputWidgets {
         }
     }
 
-    public interface Scroll extends Output {
+    public interface Scroll extends Widget.Output {
         @Override
         default String widgetName() {
             return Scroll.class.getSimpleName().toLowerCase();
@@ -116,7 +113,7 @@ public enum OutputWidgets {
         }
     }
 
-    public interface Text extends Output {
+    public interface Text extends Widget.Output {
         @Override
         default String widgetName() {
             return Text.class.getSimpleName().toLowerCase();
@@ -127,7 +124,7 @@ public enum OutputWidgets {
         }
     }
 
-    public interface Title extends Output {
+    public interface Title extends Widget.Output {
         @Override
         default String widgetName() {
             return Title.class.getSimpleName().toLowerCase();

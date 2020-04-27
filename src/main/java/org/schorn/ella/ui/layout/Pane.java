@@ -25,7 +25,7 @@ package org.schorn.ella.ui.layout;
 
 import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
-import org.schorn.ella.ui.util.ToString;
+import org.schorn.ella.ui.html.HTML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,29 +33,32 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public interface Panel extends Container<Item> {
+public interface Pane extends Container<Widget> {
 
-    static final Logger LGR = LoggerFactory.getLogger(Panel.class);
+    static final Logger LGR = LoggerFactory.getLogger(Pane.class);
 
-    static Panel create(Item.Name name) {
-        return UIProvider.provider().createPanel(name);
+    static Pane create(Identifier name) {
+        return UIProvider.provider().createPane(name);
     }
-    static Panel create(Item.Name name, String label) {
-        return UIProvider.provider().createPanel(name, label);
+
+    static Pane create(Identifier name, String label) {
+        return UIProvider.provider().createPane(name, label);
     }
+
+    public String paneId();
 
     @Override
-    public void accept(Item item);
+    public void accept(Widget widget);
 
     @Override
     default Type type() {
-        return Type.PANEL;
+        return Type.PANE;
     }
 
     public enum Selector implements Style.Selectors {
-        CONTAINER(CSS.Selector.create("div.panel.container")),
-        LABEL(CSS.Selector.create("div.panel.label > *")),
-        FORM(CSS.Selector.create("div.panel form"));
+        CONTAINER(CSS.Selector.create("div.pane.container")),
+        LABEL(CSS.Selector.createClass("pane", "label")),
+        ENTITY(CSS.Selector.createClass("pane", "entity"));
 
         private final CSS.Selector selector;
 
@@ -67,25 +70,18 @@ public interface Panel extends Container<Item> {
         public CSS.Selector selector() {
             return this.selector;
         }
-    }
 
-    default Aspect newAspect() {
-        try {
-            Aspect aspect = UIProvider.provider().createAspect(Item.Name.create(this.name()), this.label());
-            this.accept(aspect);
-            return aspect;
-        } catch (Exception ex) {
-            LGR.error("{}.newAspect() - Caught Exception: {}",
-                    Panel.class.getSimpleName(),
-                    ToString.stackTrace(ex));
+        public CSS.Selector selector(Pane pane) {
+            return CSS.Selector.createClass(this.selector.render().substring(1), pane.name());
         }
-        return null;
     }
 
-    default Aspect newAspect(Item.Name name, String label) {
-        Aspect aspect = UIProvider.provider().createAspect(name, label);
-        this.accept(aspect);
-        return aspect;
-    }
 
+    public void setAction(String actionURL);
+
+    public void setMethod(HTML.Method method);
+
+    public void setEnctype(HTML.Enctype enctype);
+
+    public void setTarget(HTML.Target target);
 }

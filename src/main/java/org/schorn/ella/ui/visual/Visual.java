@@ -33,8 +33,8 @@ public class Visual {
         GenericStyle.init();
         PageStyle.init();
         FrameStyle.init();
-        PanelStyle.init();
-        AspectStyle.init();
+        WindowStyle.init();
+        PaneStyle.init();
         WidgetStyle.init();
         FontStyle.init();
     }

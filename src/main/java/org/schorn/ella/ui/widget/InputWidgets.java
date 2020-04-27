@@ -25,7 +25,8 @@ package org.schorn.ella.ui.widget;
 
 import java.util.regex.Pattern;
 import org.schorn.ella.ui.UIProvider;
-import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Identifier;
+import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,84 +73,84 @@ public enum InputWidgets {
         FACTORY = UIProvider.provider().getInputFactory();
     }
 
-    public interface Button extends Input {
+    public interface Button extends Widget.Input {
         @Override
         default String widgetName() {
             return Button.class.getSimpleName().toLowerCase();
         }
-        static public Button create(Item.Name name, String label) throws Exception {
+        static public Button create(Identifier name, String label) throws Exception {
             return InputWidgets.BUTTON.create(name.toString(), label);
         }
     }
 
-    public interface CheckBoxGroup extends Input {
+    public interface CheckBoxGroup extends Widget.Input {
         @Override
         default String widgetName() {
             return CheckBoxGroup.class.getSimpleName().toLowerCase();
         }
 
-        static public CheckBoxGroup create(Item.Name name, String label) throws Exception {
+        static public CheckBoxGroup create(Identifier name, String label) throws Exception {
             return InputWidgets.CHECKBOXGROUP.create(name.toString(), label);
         }
     }
 
-    public interface ComboBox extends Input {
+    public interface ComboBox extends Widget.Input {
         @Override
         default String widgetName() {
             return ComboBox.class.getSimpleName().toLowerCase();
         }
 
-        static public ComboBox create(Item.Name name, String label, String[] datalist) throws Exception {
+        static public ComboBox create(Identifier name, String label, String[] datalist) throws Exception {
             return InputWidgets.COMBOBOX.create(name.toString(), label, datalist);
         }
     }
 
-    public interface DataGrid extends Input {
+    public interface DataGrid extends Widget.Input {
 
         @Override
         default String widgetName() {
             return DataGrid.class.getSimpleName().toLowerCase();
         }
 
-        static public DataGrid create(Item.Name name, String label) throws Exception {
+        static public DataGrid create(Identifier name, String label) throws Exception {
             return InputWidgets.DATAGRID.create(name.toString(), label);
         }
     }
 
-    public interface DatePicker extends Input {
+    public interface DatePicker extends Widget.Input {
         @Override
         default String widgetName() {
             return DatePicker.class.getSimpleName().toLowerCase();
         }
 
-        static public DatePicker create(Item.Name name, String label) throws Exception {
+        static public DatePicker create(Identifier name, String label) throws Exception {
             return InputWidgets.DATEPICKER.create(name.toString(), label);
         }
     }
 
-    public interface DateRangePicker extends Input {
+    public interface DateRangePicker extends Widget.Input {
         @Override
         default String widgetName() {
             return DateRangePicker.class.getSimpleName().toLowerCase();
         }
 
-        static public DateRangePicker create(Item.Name name, String label) throws Exception {
+        static public DateRangePicker create(Identifier name, String label) throws Exception {
             return InputWidgets.DATERANGEPICKER.create(name.toString(), label);
         }
     }
 
-    public interface RadioBoxGroup extends Input {
+    public interface RadioBoxGroup extends Widget.Input {
         @Override
         default String widgetName() {
             return RadioBoxGroup.class.getSimpleName().toLowerCase();
         }
 
-        static public RadioBoxGroup create(Item.Name name, String label) throws Exception {
+        static public RadioBoxGroup create(Identifier name, String label) throws Exception {
             return InputWidgets.RADIOBOXGROUP.create(name.toString(), label);
         }
     }
 
-    public interface TextBox extends Input {
+    public interface TextBox extends Widget.Input {
 
         public Integer minLength();
 
@@ -174,7 +175,7 @@ public enum InputWidgets {
             return TextBox.class.getSimpleName().toLowerCase();
         }
 
-        static public TextBox create(Item.Name name, String label, Pattern pattern) throws Exception {
+        static public TextBox create(Identifier name, String label, Pattern pattern) throws Exception {
             return InputWidgets.TEXTBOX.create(name.toString(), label, pattern);
         }
     }

@@ -21,14 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
+package org.schorn.ella.ui.app;
 
-import org.schorn.ella.ui.layout.Widget;
+import java.util.function.Consumer;
+import org.schorn.ella.ui.layout.Frame;
 
 /**
  *
  * @author bschorn
  */
-public interface Control extends Widget {
+public interface PhoneApp extends Consumer<AppSection> {
+
+    public Frame header();
+
+    public Frame content();
+
+    public Frame footer();
+
+    @Override
+    public void accept(AppSection appSection);
+
+    public String build() throws Exception;
 
 }

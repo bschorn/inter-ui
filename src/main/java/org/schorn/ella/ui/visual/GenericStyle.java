@@ -83,7 +83,7 @@ public enum GenericStyle implements Style.Factory {
                 .append(CSS.Rule.create(CSS.Property.border_radius, "3px"))
                 .append(CSS.Rule.create(CSS.Property.background, "rgba(225, 225, 225, 0.5)"))
         );
-        Style.Repo.set(TEXT_ALIGN_CENTER_PADDING_2PX, CSS.Block.create().append(CSS.Selector.createClass("panel", "label"))
+        Style.Repo.set(TEXT_ALIGN_CENTER_PADDING_2PX, CSS.Block.create().append(CSS.Selector.createClass("window", "label"))
                 .append(CSS.Rule.create(CSS.Property.text_align, "center"))
                 .append(CSS.Rule.create(CSS.Property.padding, "2px"))
         );

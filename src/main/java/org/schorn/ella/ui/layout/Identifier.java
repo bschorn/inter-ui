@@ -21,14 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.widget;
+package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.layout.Widget;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author bschorn
  */
-public interface Output extends Widget {
+public class Identifier {
+    static final Pattern REGEX = Pattern.compile("[a-z][a-zA-Z0-9_]{1,30}");
+    static public final Identifier NONE = new Identifier("none");
+
+    static public Identifier create(String name) throws Exception {
+        Matcher matcher = REGEX.matcher(name);
+        if (matcher.matches()) {
+            return new Identifier(name);
+        }
+        throw new Exception(String.format("'%s' is not a valid name for an Item object.",
+                name));
+    }
+    private final String name;
+
+    private Identifier(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
 }
