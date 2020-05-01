@@ -23,7 +23,6 @@
  */
 package org.schorn.ella.ui.ref;
 
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Frame;
@@ -35,12 +34,13 @@ import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
 import org.schorn.ella.ui.layout.Window;
 import org.schorn.ella.ui.layout.Pane;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
  * @author bschorn
  */
-public class UIProviderImpl implements UIProvider {
+public class EllamentProviderImpl implements EllamentProvider {
 
     @Override
     public Page createPage() {

@@ -63,13 +63,21 @@ class PageImpl extends ItemContainerImpl implements Page {
         this.throwException();
         if (optPageElement.isPresent()) {
             HTML.Page pageElement = (HTML.Page) optPageElement.get();
-
             HTML.Style style = HTML.Style.create();
+            pageElement.append(style);
+
+            for (CSS.Style cssStyle : styleSheet.styles()) {
+                if (cssStyle instanceof CSS.Block) {
+                    CSS.Block cssBlock = (CSS.Block) cssStyle;
+                    style.append(cssBlock);
+                }
+            }
+            /*
             styleSheet.styles().stream()
                     .filter(s -> s instanceof CSS.Block)
                     .map(s -> (CSS.Block) s)
                     .forEachOrdered(b -> style.append(b));
-            pageElement.append(style);
+             */
             return pageElement.render();
         }
         return "<html><body><p>ERROR<p></body></html>";

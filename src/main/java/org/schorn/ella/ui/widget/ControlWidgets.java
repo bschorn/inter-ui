@@ -24,13 +24,13 @@
 package org.schorn.ella.ui.widget;
 
 import java.net.URL;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -69,7 +69,7 @@ public enum ControlWidgets {
     static final ControlFactory FACTORY;
 
     static {
-        FACTORY = UIProvider.provider().getControlFactory();
+        FACTORY = EllamentProvider.provider().getControlFactory();
     }
 
     /**

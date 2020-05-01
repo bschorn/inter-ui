@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -39,7 +39,7 @@ public interface Style {
 
     public interface Reset extends Style {
         static Reset get() {
-            return UIProvider.provider().getStyleSheetReset();
+            return EllamentProvider.provider().getStyleSheetReset();
         }
     }
     public interface Supplier {
@@ -101,7 +101,7 @@ public interface Style {
 
         private final List<CSS.Style> styles;
         private final Map<String, CSS.Block> blocksBySelector = new HashMap<>();
-        private final List<CSS.Block> blocksRenderOrder = new ArrayList<>();
+        private final List<String> blocksRenderOrder = new ArrayList<>();
 
         public Sheet() {
             this.styles = new ArrayList<>();
@@ -116,14 +116,14 @@ public interface Style {
                     CSS.Block block1 = this.blocksBySelector.get(selectorKey);
                     if (block1 == null) {
                         this.blocksBySelector.put(selectorKey, iBlock);
-                        this.blocksRenderOrder.add(iBlock);
+                        this.blocksRenderOrder.add(selectorKey);
                     } else {
-                        this.blocksRenderOrder.remove(iBlock);
+                        this.blocksRenderOrder.remove(selectorKey);
                         iBlock.rules().stream().forEachOrdered(r -> block1.append(r));
                         String postKey = iBlock.selectorKey();
                         this.blocksBySelector.remove(selectorKey);
-                        this.blocksBySelector.put(postKey, iBlock);
-                        this.blocksRenderOrder.add(iBlock);
+                        this.blocksBySelector.put(postKey, block1);
+                        this.blocksRenderOrder.add(selectorKey);
                     }
                     break;
                 case RULE:
@@ -136,7 +136,7 @@ public interface Style {
             List<CSS.Style> temp = new ArrayList<>();
             temp.addAll(this.styles);
             temp.addAll(this.blocksRenderOrder.stream()
-                    .map(b -> (CSS.Style) b)
+                    .map(selectorKey -> (CSS.Style) blocksBySelector.get(selectorKey))
                     .collect(Collectors.toList()));
             return temp;
         }

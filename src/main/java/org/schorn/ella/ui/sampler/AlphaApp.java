@@ -26,7 +26,6 @@ package org.schorn.ella.ui.sampler;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Page;
@@ -37,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.schorn.ella.ui.layout.Window;
 import org.schorn.ella.ui.layout.Pane;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -55,30 +55,30 @@ public class AlphaApp {
             page.setViewport("device-width", "1");
 
             Identifier menuName = Identifier.create("menu");
-            Frame menuFrame = UIProvider.provider().createFrame(menuName);
-            Window menuPanel = UIProvider.provider().createWindow(menuName, "Menu");
+            Frame menuFrame = EllamentProvider.provider().createFrame(menuName);
+            Window menuPanel = EllamentProvider.provider().createWindow(menuName, "Menu");
             menuFrame.accept(menuPanel);
             page.accept(menuFrame);
 
             Identifier navName = Identifier.create("nav");
-            Frame navFrame = UIProvider.provider().createFrame(navName);
-            Window navPanel = UIProvider.provider().createWindow(navName, "Navigation");
+            Frame navFrame = EllamentProvider.provider().createFrame(navName);
+            Window navPanel = EllamentProvider.provider().createWindow(navName, "Navigation");
             navFrame.accept(navPanel);
             page.accept(navFrame);
 
             Identifier viewerName = Identifier.create("viewer");
-            Frame viewerFrame = UIProvider.provider().createFrame(viewerName);
-            Window viewerPanel = UIProvider.provider().createWindow(viewerName, "Viewer");
+            Frame viewerFrame = EllamentProvider.provider().createFrame(viewerName);
+            Window viewerPanel = EllamentProvider.provider().createWindow(viewerName, "Viewer");
             viewerFrame.accept(viewerPanel);
             page.accept(viewerFrame);
 
             Identifier editorName = Identifier.create("editor");
-            Frame editorFrame = UIProvider.provider().createFrame(editorName);
-            Window editorPanel = UIProvider.provider().createWindow(editorName, "Editor");
+            Frame editorFrame = EllamentProvider.provider().createFrame(editorName);
+            Window editorPanel = EllamentProvider.provider().createWindow(editorName, "Editor");
             editorFrame.accept(editorPanel);
             page.accept(editorFrame);
 
-            Pane formAddress = UIProvider.provider().createPane(Identifier.create("addr"), "Address");
+            Pane formAddress = EllamentProvider.provider().createPane(Identifier.create("addr"), "Address");
             formAddress.accept(OutputWidgets.Title.create("customerAddress", "Customer Address"));
             formAddress.accept(InputWidgets.TextBox.create(Identifier.create("streetAddress"), "Street Address", Pattern.compile("^.*$")));
             formAddress.accept(InputWidgets.ComboBox.create(Identifier.create("city"), "City", new String[]{"Chicago", "Houston", "New York", "San Francisco"}));

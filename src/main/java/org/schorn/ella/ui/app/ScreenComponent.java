@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public abstract class AppSection implements Item {
+public abstract class ScreenComponent implements App.Screen.Component {
 
-    static final Logger LGR = LoggerFactory.getLogger(AppSection.class);
+    static final Logger LGR = LoggerFactory.getLogger(ScreenComponent.class);
 
     private final String id;
     private final String name;
@@ -50,7 +50,7 @@ public abstract class AppSection implements Item {
 
     private Exception exception = null;
 
-    public AppSection(String id, String name, String label, boolean visible) {
+    public ScreenComponent(String id, String name, String label, boolean visible) {
         this.id = id;
         this.name = name;
         this.label = label;
@@ -90,7 +90,7 @@ public abstract class AppSection implements Item {
                     case LABEL:
                         this.label = (String) value;
                         break;
-                    case VISIBILITY:
+                    case VISIBILE:
                         this.visible = (Boolean) value;
                 }
             } else {
@@ -106,7 +106,7 @@ public abstract class AppSection implements Item {
                 switch ((Properties) property) {
                     case LABEL:
                         return (T) classForT.cast(this.label);
-                    case VISIBILITY:
+                    case VISIBILE:
                         return (T) classForT.cast(this.visible);
                 }
             } else {
@@ -131,20 +131,20 @@ public abstract class AppSection implements Item {
 
     @Override
     public Optional<HTML.Element> build() {
-        HTML.Section section = null;
+        HTML.Div div = null;
         try {
-            section = HTML.Section.create();
-            section.setId(this.id());
-            section.addClass(this.name());
-            section.addClass("section");
-            this.build0(section);
+            div = HTML.Div.create();
+            div.setId(this.id());
+            div.addClass(this.name());
+            div.addClass("app-screen-component");
+            this.build0(div);
 
         } catch (Exception ex) {
             LGR.error("{}.build() - Caught Exception: {}",
                     this.getClass().getSimpleName(),
                     ToString.stackTrace(ex));
         }
-        return Optional.of(section);
+        return Optional.of(div);
     }
 
     abstract protected void build0(HTML.Element element) throws Exception;

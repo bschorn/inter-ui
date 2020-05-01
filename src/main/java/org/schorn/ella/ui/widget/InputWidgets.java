@@ -24,11 +24,11 @@
 package org.schorn.ella.ui.widget;
 
 import java.util.regex.Pattern;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -70,7 +70,7 @@ public enum InputWidgets {
     static final InputFactory FACTORY;
 
     static {
-        FACTORY = UIProvider.provider().getInputFactory();
+        FACTORY = EllamentProvider.provider().getInputFactory();
     }
 
     public interface Button extends Widget.Input {

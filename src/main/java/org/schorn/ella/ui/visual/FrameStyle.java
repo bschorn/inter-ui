@@ -42,7 +42,7 @@ public enum FrameStyle implements Style.Supplier {
     }
 
     static public void init() {
-        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Frame.Selectors.CONTAINER.selector())
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Frame.Selector.CONTAINER.selector())
                 .append(CSS.Rule.create(CSS.Property.margin, "0px"))
                 .append(CSS.Rule.create(CSS.Property.background_color, "white"))
         //.append(CSS.Rule.create(CSS.Property.flex_direction, "row"))
@@ -52,7 +52,7 @@ public enum FrameStyle implements Style.Supplier {
         //.append(CSS.Rule.create(CSS.Property.display, "flex")));
         );
         Style.Repo.set(BLUE_STEEL, CSS.Block.create()
-                .append(Frame.Selectors.CONTENT.selector())
+                .append(Frame.Selector.CONTENT.selector())
                 //.append(CSS.Rule.create(CSSProperty.display.flex))
                 .append(CSS.Rule.create(CSSProperty.flex_flow.row_nowrap))
                 .append(CSS.Rule.create(CSSProperty.flex_grow.unit(1)))

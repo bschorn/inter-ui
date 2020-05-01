@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -85,7 +85,7 @@ public enum CSS {
     static final CssFactory FACTORY;
 
     static {
-        FACTORY = UIProvider.provider().getCSSFactory();
+        FACTORY = EllamentProvider.provider().getCSSFactory();
     }
 
     static private <T> T createInstance(CSS css, Object... params) throws Exception {

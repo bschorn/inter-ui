@@ -23,10 +23,10 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -48,22 +48,22 @@ public interface Frame extends Container<Item> {
     }
 
     static Frame create(Identifier name) {
-        return UIProvider.provider().createFrame(name);
+        return EllamentProvider.provider().createFrame(name);
     }
     static Frame create(Identifier name, Intent intent) {
-        return UIProvider.provider().createFrame(name, intent);
+        return EllamentProvider.provider().createFrame(name, intent);
     }
 
     static Frame createHeader(Identifier name) {
-        return UIProvider.provider().createFrame(name, Frame.Intent.HEADER);
+        return EllamentProvider.provider().createFrame(name, Frame.Intent.HEADER);
     }
 
     static Frame createFooter(Identifier name) {
-        return UIProvider.provider().createFrame(name, Frame.Intent.FOOTER);
+        return EllamentProvider.provider().createFrame(name, Frame.Intent.FOOTER);
     }
 
     static Frame createContent(Identifier name) {
-        return UIProvider.provider().createFrame(name, Frame.Intent.CONTENT);
+        return EllamentProvider.provider().createFrame(name, Frame.Intent.CONTENT);
     }
 
     @Override
@@ -73,7 +73,7 @@ public interface Frame extends Container<Item> {
     default Type type() {
         return Type.FRAME;
     }
-    public enum Selectors implements Style.Selectors {
+    public enum Selector implements Style.Selectors {
         CONTAINER(CSS.Selector.create("div.frame." + Intent.CONTAINER.className())),
         CONTENT(CSS.Selector.create("div.frame." + Intent.CONTENT.className())),
         HEADER(CSS.Selector.create("div.frame." + Intent.HEADER.className())),
@@ -82,7 +82,7 @@ public interface Frame extends Container<Item> {
 
         private final CSS.Selector selector;
 
-        Selectors(CSS.Selector selector) {
+        Selector(CSS.Selector selector) {
             this.selector = selector;
         }
 

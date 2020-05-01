@@ -24,11 +24,11 @@
 package org.schorn.ella.ui.layout;
 
 import java.util.List;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 
 /**
@@ -40,7 +40,7 @@ public interface Page extends Container<Item>, Item {
     static final Logger LGR = LoggerFactory.getLogger(Page.class);
 
     static Page create() {
-        return UIProvider.provider().createPage();
+        return EllamentProvider.provider().createPage();
     }
 
     public void setTitle(String title);
@@ -77,8 +77,8 @@ public interface Page extends Container<Item>, Item {
     public String produce(Style styleSheet) throws Exception;
 
     default Window newWindowFrame(Identifier name, String label) {
-        Frame frame = UIProvider.provider().createFrame(name);
-        Window window = UIProvider.provider().createWindow(name, label);
+        Frame frame = EllamentProvider.provider().createFrame(name);
+        Window window = EllamentProvider.provider().createWindow(name, label);
         frame.accept(window);
         this.accept(frame);
         return window;

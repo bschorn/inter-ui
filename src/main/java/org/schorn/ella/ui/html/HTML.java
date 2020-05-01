@@ -35,11 +35,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.HTML.Form.FormAttributes;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -217,7 +217,7 @@ public enum HTML {
     static final HtmlFactory FACTORY;
 
     static {
-        FACTORY = UIProvider.provider().getHTMLFactory();
+        FACTORY = EllamentProvider.provider().getHTMLFactory();
     }
 
     public interface AttributeType {

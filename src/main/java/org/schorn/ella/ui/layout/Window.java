@@ -23,11 +23,11 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -38,10 +38,10 @@ public interface Window extends Container<Item> {
     static final Logger LGR = LoggerFactory.getLogger(Window.class);
 
     static Window create(Identifier name) {
-        return UIProvider.provider().createWindow(name);
+        return EllamentProvider.provider().createWindow(name);
     }
     static Window create(Identifier name, String label) {
-        return UIProvider.provider().createWindow(name, label);
+        return EllamentProvider.provider().createWindow(name, label);
     }
 
     @Override
@@ -71,7 +71,7 @@ public interface Window extends Container<Item> {
 
     default Pane newPane() {
         try {
-            Pane pane = UIProvider.provider().createPane(Identifier.create(this.name()), this.label());
+            Pane pane = EllamentProvider.provider().createPane(Identifier.create(this.name()), this.label());
             this.accept(pane);
             return pane;
         } catch (Exception ex) {
@@ -83,7 +83,7 @@ public interface Window extends Container<Item> {
     }
 
     default Pane newPane(Identifier name, String label) {
-        Pane pane = UIProvider.provider().createPane(name, label);
+        Pane pane = EllamentProvider.provider().createPane(name, label);
         this.accept(pane);
         return pane;
     }

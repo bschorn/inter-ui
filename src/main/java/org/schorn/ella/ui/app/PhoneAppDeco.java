@@ -21,55 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.app;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.schorn.ella.ui.html.CSS;
+import java.util.function.Consumer;
+import org.schorn.ella.ui.layout.Frame;
 
 /**
  *
  * @author bschorn
  */
-public interface Item extends Build {
+public interface PhoneAppDeco extends Consumer<ScreenComponent> {
 
-    public interface Property {
-        public Class<?> classType();
+    public enum Anchor {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT;
     }
+    public Frame header();
 
-    public enum Properties implements Property {
-        ID(String.class),
-        NAME(String.class),
-        LABEL(String.class),
-        VISIBILE(Boolean.class);
+    public Frame content();
 
-        private final Class<?> classType;
+    public Frame footer();
 
-        Properties(Class<?> classType) {
-            this.classType = classType;
-        }
+    @Override
+    public void accept(ScreenComponent appComponent);
 
-        @Override
-        public Class<?> classType() {
-            return this.classType;
-        }
-    }
+    public String build() throws Exception;
 
-    public String id();
-
-    public String name();
-
-    public String label();
-
-    public boolean visible();
-
-    public void property(Property property, Object value);
-
-    public <T> T property(Property property, Class<T> classType);
-
-    public Type type();
-
-    default List<CSS.Style> styles() {
-        return new ArrayList<>(0);
-    }
 }

@@ -23,24 +23,36 @@
  */
 package org.schorn.ella.ui.app;
 
-import java.util.function.Consumer;
-import org.schorn.ella.ui.layout.Frame;
-
 /**
  *
  * @author bschorn
+ * @param <T>
  */
-public interface PhoneApp extends Consumer<AppSection> {
+public abstract class BankApp<T> implements App<T> {
 
-    public Frame header();
+    private final Config config;
+    private final Data data;
+    private final Screen screen;
 
-    public Frame content();
-
-    public Frame footer();
+    public BankApp(App.Bootstrap bootstrap) {
+        this.config = bootstrap.get(Config.class);
+        this.data = bootstrap.get(Data.class);
+        this.screen = bootstrap.get(Screen.class);
+    }
 
     @Override
-    public void accept(AppSection appSection);
+    final public Config config() {
+        return this.config;
+    }
 
-    public String build() throws Exception;
+    @Override
+    final public Data data() {
+        return this.data;
+    }
+
+    @Override
+    final public Screen screen() {
+        return this.screen;
+    }
 
 }

@@ -23,11 +23,11 @@
  */
 package org.schorn.ella.ui.layout;
 
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -38,11 +38,11 @@ public interface Pane extends Container<Widget> {
     static final Logger LGR = LoggerFactory.getLogger(Pane.class);
 
     static Pane create(Identifier name) {
-        return UIProvider.provider().createPane(name);
+        return EllamentProvider.provider().createPane(name);
     }
 
     static Pane create(Identifier name, String label) {
-        return UIProvider.provider().createPane(name, label);
+        return EllamentProvider.provider().createPane(name, label);
     }
 
     public String paneId();
@@ -57,7 +57,7 @@ public interface Pane extends Container<Widget> {
 
     public enum Selector implements Style.Selectors {
         CONTAINER(CSS.Selector.create("div.pane.container")),
-        LABEL(CSS.Selector.createClass("pane", "label")),
+        LABEL(CSS.Selector.create("div.pane.label")),
         ENTITY(CSS.Selector.createClass("pane", "entity"));
 
         private final CSS.Selector selector;
@@ -72,7 +72,8 @@ public interface Pane extends Container<Widget> {
         }
 
         public CSS.Selector selector(Pane pane) {
-            return CSS.Selector.createClass(this.selector.render().substring(1), pane.name());
+            return CSS.Selector.create(String.format("div.%s.%s",
+                    this.selector.render().substring(1), pane.name()));
         }
     }
 

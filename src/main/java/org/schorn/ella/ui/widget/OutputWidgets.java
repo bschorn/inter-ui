@@ -23,10 +23,10 @@
  */
 package org.schorn.ella.ui.widget;
 
-import org.schorn.ella.ui.UIProvider;
 import org.schorn.ella.ui.layout.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -66,7 +66,7 @@ public enum OutputWidgets {
     static final OutputFactory FACTORY;
 
     static {
-        FACTORY = UIProvider.provider().getOutputFactory();
+        FACTORY = EllamentProvider.provider().getOutputFactory();
     }
 
     public interface Chart extends Widget.Output {

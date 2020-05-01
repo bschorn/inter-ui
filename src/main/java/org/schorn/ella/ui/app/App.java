@@ -21,55 +21,63 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.app;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.schorn.ella.ui.html.CSS;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import org.schorn.ella.ui.layout.Item;
 
 /**
  *
  * @author bschorn
  */
-public interface Item extends Build {
+public interface App<T> extends Callable<T> {
 
-    public interface Property {
-        public Class<?> classType();
+    public interface Bootstrap {
+
+        public <T> T get(Class<T> classT, Object... options);
     }
 
-    public enum Properties implements Property {
-        ID(String.class),
-        NAME(String.class),
-        LABEL(String.class),
-        VISIBILE(Boolean.class);
+    public interface Monitor {
 
-        private final Class<?> classType;
+        public void thumper(Consumer<String> listener) throws Exception;
+    }
 
-        Properties(Class<?> classType) {
-            this.classType = classType;
+    public interface Config {
+
+        public <T> T getProperty(Class<T> classT, String name);
+        public <T> T getItemPropertyValue(Class<T> classT, Class<?> classFor, Item.Property property);
+
+    }
+
+    public interface Data {
+        public interface Subscription {
+
         }
 
-        @Override
-        public Class<?> classType() {
-            return this.classType;
+        public interface Publication {
+
         }
     }
 
-    public String id();
+    public interface Screen extends Consumer<ScreenComponent> {
 
-    public String name();
+        public interface Component extends Item {
 
-    public String label();
+        }
 
-    public boolean visible();
+        public Component component(String id);
 
-    public void property(Property property, Object value);
+        public <T extends Component> T component(Class<T> classT, String id);
 
-    public <T> T property(Property property, Class<T> classType);
-
-    public Type type();
-
-    default List<CSS.Style> styles() {
-        return new ArrayList<>(0);
+        public List<Component> components();
     }
+
+    public Config config();
+
+    public Data data();
+
+    public Screen screen();
+
 }

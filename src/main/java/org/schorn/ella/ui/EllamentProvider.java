@@ -40,7 +40,7 @@ import org.schorn.ella.ui.layout.Pane;
  *
  * @author bschorn
  */
-public interface UIProvider {
+public interface EllamentProvider {
 
     public HTML.HtmlFactory getHTMLFactory();
 
@@ -74,7 +74,7 @@ public interface UIProvider {
      *
      * @return
      */
-    static UIProvider provider() {
+    static EllamentProvider provider() {
         return Support.INSTANCE;
     }
 
@@ -84,7 +84,7 @@ public interface UIProvider {
     static class Support implements ClassLocator {
 
         static final Support SUPPORT = new Support();
-        static final UIProvider INSTANCE = SUPPORT.newInstance(UIProvider.class);
+        static final EllamentProvider INSTANCE = SUPPORT.newInstance(EllamentProvider.class);
 
         private final ClassLocator classLocator;
 
