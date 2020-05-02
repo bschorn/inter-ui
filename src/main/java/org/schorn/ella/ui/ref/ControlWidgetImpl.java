@@ -24,14 +24,13 @@
 package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Widget.Control;
+import org.schorn.ella.ui.support.ItemSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,22 +42,19 @@ abstract class ControlWidgetImpl implements Control {
 
     static private final Logger LGR = LoggerFactory.getLogger(ControlWidgetImpl.class);
 
-    protected final String id = UUID.randomUUID().toString();
-    protected final String name;
-    protected String label = null;
-    protected final Map<Item.Property, Object> properties = new HashMap<>();
+    protected final ItemSupport support = new ItemSupport(LGR);
 
     protected final String customTag;
     protected final String widgetId = UUID.randomUUID().toString();
     protected final List<String> datalist = new ArrayList<>();
     protected Exception exception = null;
-    protected boolean visible = true;
-
 
     ControlWidgetImpl(String customTag, String name, String label) {
         this.customTag = customTag;
-        this.name = name;
-        this.label = label;
+        support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
+        support.properties().put(Item.Properties.NAME, name);
+        support.properties().put(Item.Properties.LABEL, label);
+        support.properties().put(Item.Properties.VISIBLE, Boolean.TRUE);
     }
 
     @Override
@@ -72,60 +68,26 @@ abstract class ControlWidgetImpl implements Control {
     }
 
     @Override
-    public String id() {
-        return this.id;
-    }
-
-    @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public String label() {
-        return this.label;
-    }
-
-    @Override
     public void property(Property property, Object value) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    this.label = (String) value;
-                    break;
-            }
-        } else {
-            this.properties.put(property, value);
-        }
+        support.property(property, value);
     }
 
     @Override
     public <T> T property(Property property, Class<T> classForT) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    return (T) classForT.cast(this.label);
-            }
-        } else {
-            Object value = this.properties.get(property);
-            if (value != null) {
-                if (property.classType().equals(classForT)
-                        && classForT.isInstance(value)) {
-                    return (T) value;
-                }
-            }
-        }
-        return null;
-    }
-
-    public void addLabel(String label) {
-        this.label = label;
+        return support.property(property, classForT);
     }
 
     @Override
-    public boolean visible() {
-        return this.visible;
+    public Object property(Property property) {
+        return support.property(property);
     }
+
+
+    /*
+    public void addLabel(String label) {
+        this.label = label;
+    }
+     */
 
     @Override
     public Optional<HTML.Element> build() {

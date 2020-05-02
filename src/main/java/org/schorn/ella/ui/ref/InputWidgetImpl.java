@@ -25,15 +25,14 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Widget.Input;
+import org.schorn.ella.ui.support.ItemSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,10 +44,7 @@ abstract class InputWidgetImpl implements Input {
 
     static final Logger LGR = LoggerFactory.getLogger(InputWidgetImpl.class);
 
-    protected final String id = UUID.randomUUID().toString();
-    protected final String name;
-    protected String label = null;
-    protected final Map<Item.Property, Object> properties = new HashMap<>();
+    protected final ItemSupport support = new ItemSupport(LGR);
 
     protected final String customTag;
     protected final HTML.Input.InputType inputType;
@@ -57,13 +53,14 @@ abstract class InputWidgetImpl implements Input {
     protected Exception exception = null;
     protected boolean readonly = false;
     protected String placeholder = null;
-    protected boolean visible = true;
 
     InputWidgetImpl(String customTag, HTML.Input.InputType inputType, String name, String label) {
         this.customTag = customTag;
         this.inputType = inputType;
-        this.name = name;
-        this.label = label;
+        support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
+        support.properties().put(Item.Properties.NAME, name);
+        support.properties().put(Item.Properties.LABEL, label);
+        support.properties().put(Item.Properties.VISIBLE, Boolean.TRUE);
     }
 
     @Override
@@ -74,26 +71,6 @@ abstract class InputWidgetImpl implements Input {
     @Override
     public String widgetId() {
         return this.widgetId;
-    }
-
-    @Override
-    public String id() {
-        return this.id;
-    }
-
-    @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public String label() {
-        return this.label;
-    }
-
-    @Override
-    public boolean visible() {
-        return this.visible;
     }
 
     @Override
@@ -108,35 +85,19 @@ abstract class InputWidgetImpl implements Input {
 
     @Override
     public void property(Property property, Object value) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    this.label = (String) value;
-                    break;
-            }
-        } else {
-            this.properties.put(property, value);
-        }
+        support.property(property, value);
     }
 
     @Override
     public <T> T property(Property property, Class<T> classForT) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    return (T) classForT.cast(this.label);
-            }
-        } else {
-            Object value = this.properties.get(property);
-            if (value != null) {
-                if (property.classType().equals(classForT)
-                        && classForT.isInstance(value)) {
-                    return (T) value;
-                }
-            }
-        }
-        return null;
+        return support.property(property, classForT);
     }
+
+    @Override
+    public Object property(Property property) {
+        return support.property(property);
+    }
+
 
     @Override
     final public void setDatalist(String[] datalist) {
@@ -177,7 +138,7 @@ abstract class InputWidgetImpl implements Input {
         inputElement.addClass("input");
         this.preBuild(inputElement);
         inputElement.addAttribute(this.inputType.asAttribute());
-        HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, this.name);
+        HTML.Attribute attribute = HTML.Attribute.create(HTML.Input.InputAttributes.NAME, this.name());
         inputElement.addAttribute(attribute);
         if (!this.datalist.isEmpty()) {
             String datalistId = String.format("%s-list", this.widgetId());
@@ -191,13 +152,13 @@ abstract class InputWidgetImpl implements Input {
             inputElement.addAttribute(HTML.Attribute.create("list", datalistId));
             inputElement.append(datalistElement);
         }
-        if (this.label != null) {
+        if (this.label() != null) {
             HTML.Label labelElement = HTML.Label.create();
             labelElement.append(inputElement);
             labelElement.addClass(this.name());
             labelElement.addClass(this.widgetName());
             labelElement.addClass("label");
-            labelElement.setTextContent(this.label);
+            labelElement.setTextContent(this.label());
             labelElement.append(inputElement);
             divElement.append(labelElement);
         } else {
@@ -256,4 +217,5 @@ abstract class InputWidgetImpl implements Input {
         return cssStyles;
     }
      */
+
 }

@@ -26,14 +26,13 @@ package org.schorn.ella.ui.ref;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Container;
 import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.support.ItemSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,67 +44,33 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
 
     static private final Logger LGR = LoggerFactory.getLogger(ItemContainerImpl.class);
 
-    private final String id;
-    private final String name;
-    private String label;
-    protected final Map<Item.Property, Object> properties = new HashMap<>();
+    protected final ItemSupport support = new ItemSupport(LGR);
 
     private final List<Item> items = new ArrayList<>();
     private Exception exception = null;
-    private boolean visible = true;
 
     ItemContainerImpl(String name, String label) {
-        this.id = UUID.randomUUID().toString();
-        this.name = name;
-        this.label = label;
-    }
-
-    @Override
-    public String id() {
-        return this.id;
-    }
-
-    @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public String label() {
-        return this.label;
+        support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
+        support.properties().put(Item.Properties.NAME, name);
+        support.properties().put(Item.Properties.LABEL, label);
+        support.properties().put(Item.Properties.VISIBLE, Boolean.TRUE);
     }
 
     @Override
     public void property(Property property, Object value) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    this.label = (String) value;
-                    break;
-            }
-        } else {
-            this.properties.put(property, value);
-        }
+        support.property(property, value);
     }
 
     @Override
     public <T> T property(Property property, Class<T> classForT) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    return (T) classForT.cast(this.label);
-            }
-        } else {
-            Object value = this.properties.get(property);
-            if (value != null) {
-                if (property.classType().equals(classForT)
-                        && classForT.isInstance(value)) {
-                    return (T) value;
-                }
-            }
-        }
-        return null;
+        return support.property(property, classForT);
     }
+
+    @Override
+    public Object property(Property property) {
+        return support.property(property);
+    }
+
 
     @Override
     public void accept(Item item) {
@@ -119,11 +84,6 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
     @Override
     public List<Item> items() {
         return Collections.unmodifiableList(this.items);
-    }
-
-    @Override
-    public boolean visible() {
-        return this.visible;
     }
 
     @Override
@@ -158,7 +118,7 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
         containerClasses().stream()
                 .filter(s -> s != null)
                 .forEachOrdered(className -> containerElement.addClass(className));
-        if (this.label != null) {
+        if (this.label() != null) {
             HTML.Div labelElement = HTML.Div.create();
             HTML.Span span = HTML.Span.create();
             labelElement.append(span);

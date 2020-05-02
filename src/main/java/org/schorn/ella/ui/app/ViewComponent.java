@@ -23,12 +23,14 @@
  */
 package org.schorn.ella.ui.app;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Type;
+import org.schorn.ella.ui.support.ItemSupport;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,24 +39,19 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public abstract class ScreenComponent implements App.Screen.Component {
+public abstract class ViewComponent implements App.View.Component {
 
-    static final Logger LGR = LoggerFactory.getLogger(ScreenComponent.class);
+    static final Logger LGR = LoggerFactory.getLogger(ViewComponent.class);
 
-    private final String id;
-    private final String name;
-    private String label;
-    private boolean visible;
-
-    protected final Map<Item.Property, Object> properties = new HashMap<>();
+    protected final ItemSupport support = new ItemSupport(LGR);
 
     private Exception exception = null;
 
-    public ScreenComponent(String id, String name, String label, boolean visible) {
-        this.id = id;
-        this.name = name;
-        this.label = label;
-        this.visible = visible;
+    public ViewComponent(String id, String name, String label, boolean visible) {
+        support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
+        support.properties().put(Item.Properties.NAME, name);
+        support.properties().put(Item.Properties.LABEL, label);
+        support.properties().put(Item.Properties.VISIBLE, Boolean.TRUE);
     }
 
     @Override
@@ -63,64 +60,20 @@ public abstract class ScreenComponent implements App.Screen.Component {
     }
 
     @Override
-    public String id() {
-        return this.id;
-    }
-
-    @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public boolean visible() {
-        return this.visible;
-    }
-
-    @Override
-    public String label() {
-        return this.label;
-    }
-
-    @Override
     public void property(Property property, Object value) {
-        if (property != null) {
-            if (property instanceof Properties) {
-                switch ((Properties) property) {
-                    case LABEL:
-                        this.label = (String) value;
-                        break;
-                    case VISIBILE:
-                        this.visible = (Boolean) value;
-                }
-            } else {
-                this.properties.put(property, value);
-            }
-        }
+        support.property(property, value);
     }
 
     @Override
     public <T> T property(Property property, Class<T> classForT) {
-        if (property != null) {
-            if (property instanceof Properties) {
-                switch ((Properties) property) {
-                    case LABEL:
-                        return (T) classForT.cast(this.label);
-                    case VISIBILE:
-                        return (T) classForT.cast(this.visible);
-                }
-            } else {
-                Object value = this.properties.get(property);
-                if (value != null) {
-                    if (property.classType().equals(classForT)
-                            && classForT.isInstance(value)) {
-                        return (T) value;
-                    }
-                }
-            }
-        }
-        return null;
+        return support.property(property, classForT);
     }
+
+    @Override
+    public Object property(Property property) {
+        return support.property(property);
+    }
+
 
     @Override
     public void throwException() throws Exception {
@@ -148,4 +101,14 @@ public abstract class ScreenComponent implements App.Screen.Component {
     }
 
     abstract protected void build0(HTML.Element element) throws Exception;
+
+    final protected String dumpProperties() {
+        return Arrays.asList(new Item.Properties[]{Item.Properties.ID, Item.Properties.NAME, Item.Properties.LABEL, Item.Properties.VISIBLE}).stream()
+                .map(p -> String.format("%s.%s=%s",
+                this.getClass().getSimpleName(),
+                p.getName(),
+                this.property(p).toString()))
+                .collect(Collectors.joining("\n"));
+    }
+
 }

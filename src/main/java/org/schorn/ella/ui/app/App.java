@@ -24,6 +24,7 @@
 package org.schorn.ella.ui.app;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import org.schorn.ella.ui.layout.Item;
@@ -36,7 +37,13 @@ public interface App<T> extends Callable<T> {
 
     public interface Bootstrap {
 
-        public <T> T get(Class<T> classT, Object... options);
+        public Properties getProperties();
+
+        public App.Config getConfig(App app) throws Exception;
+
+        public App.Controller getController(App app) throws Exception;
+
+        public App.View getView(App app) throws Exception;
     }
 
     public interface Monitor {
@@ -46,12 +53,16 @@ public interface App<T> extends Callable<T> {
 
     public interface Config {
 
+        public App getApp();
+
         public <T> T getProperty(Class<T> classT, String name);
+
         public <T> T getItemPropertyValue(Class<T> classT, Class<?> classFor, Item.Property property);
 
     }
 
-    public interface Data {
+    public interface Controller {
+
         public interface Subscription {
 
         }
@@ -59,13 +70,17 @@ public interface App<T> extends Callable<T> {
         public interface Publication {
 
         }
+
+        public App getApp();
     }
 
-    public interface Screen extends Consumer<ScreenComponent> {
+    public interface View extends Consumer<ViewComponent> {
 
         public interface Component extends Item {
 
         }
+
+        public App getApp();
 
         public Component component(String id);
 
@@ -74,10 +89,12 @@ public interface App<T> extends Callable<T> {
         public List<Component> components();
     }
 
+    public Bootstrap bootstrap();
+
     public Config config();
 
-    public Data data();
+    public Controller data();
 
-    public Screen screen();
+    public View screen();
 
 }

@@ -35,37 +35,64 @@ public interface Item extends Build {
 
     public interface Property {
         public Class<?> classType();
+
+        public boolean isMutable();
+
+        public String getName();
     }
 
     public enum Properties implements Property {
-        ID(String.class),
-        NAME(String.class),
-        LABEL(String.class),
-        VISIBILE(Boolean.class);
+        ID(String.class, false),
+        NAME(String.class, false),
+        LABEL(String.class, true),
+        VISIBLE(Boolean.class, true);
 
         private final Class<?> classType;
+        private final boolean mutable;
 
-        Properties(Class<?> classType) {
+        Properties(Class<?> classType, boolean mutable) {
             this.classType = classType;
+            this.mutable = mutable;
         }
 
         @Override
         public Class<?> classType() {
             return this.classType;
         }
+
+        @Override
+        public boolean isMutable() {
+            return this.mutable;
+        }
+
+        @Override
+        public String getName() {
+            return this.name().toLowerCase();
+        }
+
     }
 
-    public String id();
+    default String id() {
+        return (String) this.property(Item.Properties.ID, String.class);
+    }
 
-    public String name();
+    default String name() {
+        return (String) this.property(Item.Properties.NAME, String.class);
+    }
 
-    public String label();
+    default String label() {
+        return (String) this.property(Item.Properties.LABEL, String.class);
+    }
 
-    public boolean visible();
+    default boolean visible() {
+        return this.property(Item.Properties.VISIBLE, Boolean.class);
+    }
 
     public void property(Property property, Object value);
 
     public <T> T property(Property property, Class<T> classType);
+
+    public Object property(Property property);
 
     public Type type();
 
