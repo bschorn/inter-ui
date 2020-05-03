@@ -28,22 +28,22 @@ import java.nio.file.Paths;
 import java.util.regex.Pattern;
 import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Identifier;
-import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.util.ToString;
-import org.schorn.ella.ui.visual.PaneStyle;
-import org.schorn.ella.ui.visual.FontStyle;
-import org.schorn.ella.ui.visual.FrameStyle;
-import org.schorn.ella.ui.visual.GenericStyle;
-import org.schorn.ella.ui.visual.PageStyle;
-import org.schorn.ella.ui.visual.WindowStyle;
-import org.schorn.ella.ui.visual.Visual;
-import org.schorn.ella.ui.visual.WidgetStyle;
+import org.schorn.ella.ui.style.PaneStyle;
+import org.schorn.ella.ui.style.FontStyle;
+import org.schorn.ella.ui.style.FrameStyle;
+import org.schorn.ella.ui.style.GenericStyle;
+import org.schorn.ella.ui.style.PageStyle;
+import org.schorn.ella.ui.style.WindowStyle;
+import org.schorn.ella.ui.style.Visual;
+import org.schorn.ella.ui.style.WidgetStyle;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.schorn.ella.ui.layout.Window;
 import org.schorn.ella.ui.layout.Pane;
+import org.schorn.ella.ui.layout.Page;
 
 /**
  *

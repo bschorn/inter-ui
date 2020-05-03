@@ -25,16 +25,15 @@ package org.schorn.ella.ui.ref;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.layout.Widget;
-import org.schorn.ella.ui.util.ToString;
 import org.schorn.ella.ui.layout.Pane;
+import org.schorn.ella.ui.layout.Widget;
+import org.schorn.ella.ui.support.ItemSupport;
+import org.schorn.ella.ui.util.ToString;
 
 /**
  *
@@ -42,10 +41,7 @@ import org.schorn.ella.ui.layout.Pane;
  */
 class PaneImpl implements Pane {
 
-    private final String id;
-    private final String name;
-    private String label = null;
-    private Map<Item.Property, Object> properties = new HashMap<>();
+    protected final ItemSupport support = new ItemSupport(LGR);
 
     private final String formId;
     private String actionURL = null;
@@ -55,18 +51,13 @@ class PaneImpl implements Pane {
 
     private final List<Widget> widgets = new ArrayList<>();
     private Exception exception = null;
-    private boolean visible = true;
 
     PaneImpl(String name, String label) {
-        this.id = UUID.randomUUID().toString();
         this.formId = UUID.randomUUID().toString();
-        this.name = name;
-        this.label = label;
-    }
-
-    @Override
-    public String id() {
-        return this.id;
+        support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
+        support.properties().put(Item.Properties.NAME, name);
+        support.properties().put(Item.Properties.LABEL, label);
+        support.properties().put(Item.Properties.VISIBLE, Boolean.TRUE);
     }
 
     @Override
@@ -75,46 +66,20 @@ class PaneImpl implements Pane {
     }
 
     @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public String label() {
-        return this.label;
-    }
-
-    @Override
     public void property(Property property, Object value) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    this.label = (String) value;
-                    break;
-            }
-        } else {
-            this.properties.put(property, value);
-        }
+        support.property(property, value);
     }
 
     @Override
     public <T> T property(Property property, Class<T> classForT) {
-        if (property instanceof Properties) {
-            switch ((Properties) property) {
-                case LABEL:
-                    return (T) classForT.cast(this.label);
-            }
-        } else {
-            Object value = this.properties.get(property);
-            if (value != null) {
-                if (property.classType().equals(classForT)
-                        && classForT.isInstance(value)) {
-                    return (T) value;
-                }
-            }
-        }
-        return null;
+        return support.property(property, classForT);
     }
+
+    @Override
+    public Object property(Property property) {
+        return support.property(property);
+    }
+
 
     @Override
     public void accept(Widget widget) {
@@ -154,11 +119,6 @@ class PaneImpl implements Pane {
     }
 
     @Override
-    public boolean visible() {
-        return this.visible;
-    }
-
-    @Override
     public Optional<HTML.Element> build() {
         HTML.Element element = null;
         try {
@@ -175,7 +135,7 @@ class PaneImpl implements Pane {
         containerElement.addClass(this.name());
         containerElement.addClass(this.type().className());
         containerElement.addClass("container");
-        if (this.label != null) {
+        if (this.label() != null) {
             HTML.Div labelElement = HTML.Div.create();
             HTML.Span span = HTML.Span.create();
             labelElement.append(span);

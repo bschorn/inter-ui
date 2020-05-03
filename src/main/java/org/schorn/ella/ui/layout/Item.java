@@ -94,7 +94,7 @@ public interface Item extends Build {
 
     public Object property(Property property);
 
-    public Type type();
+    public Role type();
 
     default List<CSS.Style> styles() {
         return new ArrayList<>(0);

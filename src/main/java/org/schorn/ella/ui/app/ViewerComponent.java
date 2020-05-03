@@ -29,7 +29,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.layout.Type;
+import org.schorn.ella.ui.layout.Role;
 import org.schorn.ella.ui.support.ItemSupport;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
@@ -39,15 +39,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public abstract class ViewComponent implements App.View.Component {
+public abstract class ViewerComponent implements App.AppViewer.Component {
 
-    static final Logger LGR = LoggerFactory.getLogger(ViewComponent.class);
+    static private final Logger LGR = LoggerFactory.getLogger(ViewerComponent.class);
+    static private final String CLASS = "app-viewer-component";
 
     protected final ItemSupport support = new ItemSupport(LGR);
 
     private Exception exception = null;
 
-    public ViewComponent(String id, String name, String label, boolean visible) {
+    public ViewerComponent(String id, String name, String label, boolean visible) {
         support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
         support.properties().put(Item.Properties.NAME, name);
         support.properties().put(Item.Properties.LABEL, label);
@@ -55,8 +56,8 @@ public abstract class ViewComponent implements App.View.Component {
     }
 
     @Override
-    public Type type() {
-        return Type.ITEM;
+    public Role type() {
+        return Role.ITEM;
     }
 
     @Override
@@ -89,7 +90,7 @@ public abstract class ViewComponent implements App.View.Component {
             div = HTML.Div.create();
             div.setId(this.id());
             div.addClass(this.name());
-            div.addClass("app-screen-component");
+            div.addClass(CLASS);
             this.build0(div);
 
         } catch (Exception ex) {

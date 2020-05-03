@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.visual;
+package org.schorn.ella.ui.style;
 
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;

@@ -51,8 +51,8 @@ public interface Pane extends Container<Widget> {
     public void accept(Widget widget);
 
     @Override
-    default Type type() {
-        return Type.PANE;
+    default Role type() {
+        return Role.PANE;
     }
 
     public enum Selector implements Style.Selectors {

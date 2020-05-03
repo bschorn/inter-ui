@@ -36,8 +36,8 @@ public interface Widget extends Item {
     public String customTag();
 
     @Override
-    default Type type() {
-        return Type.WIDGET;
+    default Role type() {
+        return Role.WIDGET;
     }
 
     public enum Selector implements Style.Selectors {

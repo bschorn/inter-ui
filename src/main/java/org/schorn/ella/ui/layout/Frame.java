@@ -23,10 +23,10 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.EllamentProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
@@ -54,24 +54,12 @@ public interface Frame extends Container<Item> {
         return EllamentProvider.provider().createFrame(name, intent);
     }
 
-    static Frame createHeader(Identifier name) {
-        return EllamentProvider.provider().createFrame(name, Frame.Intent.HEADER);
-    }
-
-    static Frame createFooter(Identifier name) {
-        return EllamentProvider.provider().createFrame(name, Frame.Intent.FOOTER);
-    }
-
-    static Frame createContent(Identifier name) {
-        return EllamentProvider.provider().createFrame(name, Frame.Intent.CONTENT);
-    }
-
     @Override
     public void accept(Item item);
 
     @Override
-    default Type type() {
-        return Type.FRAME;
+    default Role type() {
+        return Role.FRAME;
     }
     public enum Selector implements Style.Selectors {
         CONTAINER(CSS.Selector.create("div.frame." + Intent.CONTAINER.className())),

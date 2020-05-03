@@ -31,15 +31,17 @@ package org.schorn.ella.ui.app;
 public abstract class BankApp<T> implements App<T> {
 
     private final Bootstrap bootstrap;
-    private final Config config;
-    private final Controller data;
-    private final View screen;
+    private final AppConfig config;
+    private final AppController controller;
+    private final AppViewer viewer;
+    private final AppStyler styler;
 
     public BankApp(App.Bootstrap bootstrap) throws Exception {
         this.bootstrap = bootstrap;
         this.config = this.bootstrap.getConfig(this);
-        this.data = this.bootstrap.getController(this);
-        this.screen = this.bootstrap.getView(this);
+        this.controller = this.bootstrap.getController(this);
+        this.viewer = this.bootstrap.getViewer(this);
+        this.styler = this.bootstrap.getStyler(this);
     }
 
     @Override
@@ -48,18 +50,23 @@ public abstract class BankApp<T> implements App<T> {
     }
 
     @Override
-    final public Config config() {
+    final public AppConfig config() {
         return this.config;
     }
 
     @Override
-    final public Controller data() {
-        return this.data;
+    final public AppController controller() {
+        return this.controller;
     }
 
     @Override
-    final public View screen() {
-        return this.screen;
+    final public AppViewer viewer() {
+        return this.viewer;
+    }
+
+    @Override
+    final public AppStyler styler() {
+        return this.styler;
     }
 
 }

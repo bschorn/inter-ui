@@ -48,8 +48,8 @@ public interface Window extends Container<Item> {
     public void accept(Item item);
 
     @Override
-    default Type type() {
-        return Type.WINDOW;
+    default Role type() {
+        return Role.WINDOW;
     }
 
     public enum Selector implements Style.Selectors {

@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.layout.Type;
+import org.schorn.ella.ui.layout.Role;
 import org.slf4j.Logger;
 
 /**
@@ -85,7 +85,7 @@ public class ItemSupport implements Item {
     }
 
     @Override
-    public Type type() {
+    public Role type() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

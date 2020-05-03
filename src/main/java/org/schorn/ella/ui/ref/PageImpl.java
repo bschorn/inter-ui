@@ -36,7 +36,7 @@ import org.schorn.ella.ui.layout.Style;
  */
 class PageImpl extends ItemContainerImpl implements Page {
 
-    private String title = "page";
+    private String title = "stage";
     private boolean isViewport = false;
     private String viewportWidth = "";
     private String viewportScale = "";
@@ -65,7 +65,6 @@ class PageImpl extends ItemContainerImpl implements Page {
             HTML.Page pageElement = (HTML.Page) optPageElement.get();
             HTML.Style style = HTML.Style.create();
             pageElement.append(style);
-
             for (CSS.Style cssStyle : styleSheet.styles()) {
                 if (cssStyle instanceof CSS.Block) {
                     CSS.Block cssBlock = (CSS.Block) cssStyle;

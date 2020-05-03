@@ -21,34 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
-
-import java.util.Arrays;
-import java.util.List;
-import org.schorn.ella.ui.layout.Frame;
+package org.schorn.ella.ui.layout;
 
 /**
  *
  * @author bschorn
  */
-class FrameImpl extends ItemContainerImpl implements Frame {
+public enum Role {
+    PAGE(Page.class),
+    FRAME(Frame.class),
+    WINDOW(Window.class),
+    PANE(Pane.class),
+    WIDGET(Widget.class),
+    ITEM(Item.class);
 
-    //static final Logger LGR = LoggerFactory.getLogger(FrameImpl.class);
+    private final Class<? extends Item> itemClass;
 
-    private final Frame.Intent intent;
-
-    FrameImpl(String name) {
-        super(name, null);
-        this.intent = Frame.Intent.CONTAINER;
-    }
-    FrameImpl(String name, Frame.Intent intent) {
-        super(name, null);
-        this.intent = intent;
-    }
-
-    @Override
-    protected List<String> containerClasses() {
-        return Arrays.asList((new String[]{this.name(), this.type().className(), this.intent.className()}));
+    Role(Class<? extends Item> itemClass) {
+        this.itemClass = itemClass;
     }
 
+    static Role get(Class<? extends Item> classFor) {
+        for (Role type : Role.values()) {
+            if (type.itemClass.equals(classFor)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    public Class<?> classFor() {
+        return this.itemClass;
+    }
+
+    public String className() {
+        return this.itemClass.getSimpleName().toLowerCase();
+    }
 }

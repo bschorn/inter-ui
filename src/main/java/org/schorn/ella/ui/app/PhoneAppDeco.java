@@ -30,7 +30,7 @@ import org.schorn.ella.ui.layout.Frame;
  *
  * @author bschorn
  */
-public interface PhoneAppDeco extends Consumer<ViewComponent> {
+public interface PhoneAppDeco extends Consumer<ViewerComponent> {
 
     public enum Anchor {
         TOP,
@@ -45,7 +45,7 @@ public interface PhoneAppDeco extends Consumer<ViewComponent> {
     public Frame footer();
 
     @Override
-    public void accept(ViewComponent appComponent);
+    public void accept(ViewerComponent appComponent);
 
     public String build() throws Exception;
 

@@ -29,12 +29,12 @@ import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Identifier;
 import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Pane;
 import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.layout.Window;
 import org.schorn.ella.ui.widget.ControlWidgets;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
-import org.schorn.ella.ui.layout.Window;
-import org.schorn.ella.ui.layout.Pane;
 
 /**
  *
@@ -90,7 +90,7 @@ public interface EllamentProvider {
 
         private Support() {
             Properties properties = System.getProperties();
-            properties.setProperty("UIProvider", "org.schorn.ella.ui.ref.UIProviderImpl");
+            properties.setProperty("EllamentProvider", "org.schorn.ella.ui.ref.UIProviderImpl");
             this.classLocator = ClassLocator.create(properties);
         }
 

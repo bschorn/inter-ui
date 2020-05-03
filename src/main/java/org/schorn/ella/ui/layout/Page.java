@@ -54,8 +54,8 @@ public interface Page extends Container<Item>, Item {
     public void setViewport(String width, String initialScale);
 
     @Override
-    default Type type() {
-        return Type.PAGE;
+    default Role type() {
+        return Role.PAGE;
     }
 
     public enum Selector implements Style.Selectors {

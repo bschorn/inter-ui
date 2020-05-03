@@ -21,19 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.visual;
+package org.schorn.ella.ui.style;
 
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.CSSProperty;
-import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.layout.Page;
 
 /**
  *
  * @author bschorn
  */
-public enum FrameStyle implements Style.Supplier {
+public enum PageStyle implements Style.Supplier {
     DEFAULT_CONTAINER,
+    FLEX_COLUMN_CONTAINER,
     BLUE_STEEL;
 
     @Override
@@ -42,50 +43,29 @@ public enum FrameStyle implements Style.Supplier {
     }
 
     static public void init() {
-        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create().append(Frame.Selector.CONTAINER.selector())
-                .append(CSS.Rule.create(CSS.Property.margin, "0px"))
-                .append(CSS.Rule.create(CSS.Property.background_color, "white"))
-        //.append(CSS.Rule.create(CSS.Property.flex_direction, "row"))
-        //.append(CSS.Rule.create(CSS.Property.flex_wrap, "wrap"))
-                //.append(CSS.Rule.create(CSS.Property.justify_content, "space-evenly"))
-                //.append(CSS.Rule.create(CSS.Property.align_content, "space-evenly"))
-        //.append(CSS.Rule.create(CSS.Property.display, "flex")));
+        Style.Repo.set(DEFAULT_CONTAINER, CSS.Block.create()
+                .append(Page.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.padding, "0px"))
+                .append(CSS.Rule.create(CSSProperty.display.grid))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
+                .append(CSS.Rule.create(CSSProperty.justify_content.center))
+                .append(CSS.Rule.create(CSSProperty.align_content.center))
+        );
+        Style.Repo.set(FLEX_COLUMN_CONTAINER, CSS.Block.create()
+                .append(Page.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.padding, "0px"))
+                .append(CSS.Rule.create(CSSProperty.display.flex))
+                .append(CSS.Rule.create(CSSProperty.flex_flow.column_nowrap))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
         );
         Style.Repo.set(BLUE_STEEL, CSS.Block.create()
-                .append(Frame.Selector.CONTENT.selector())
-                //.append(CSS.Rule.create(CSSProperty.display.flex))
-                .append(CSS.Rule.create(CSSProperty.flex_flow.row_nowrap))
-                .append(CSS.Rule.create(CSSProperty.flex_grow.unit(1)))
+                .append(Page.Selector.CONTAINER.selector())
+                .append(CSS.Rule.create(CSS.Property.padding, "0px"))
+                .append(CSS.Rule.create(CSSProperty.display.flex))
+                .append(CSS.Rule.create(CSSProperty.flex_flow.column_nowrap))
+                .append(CSS.Rule.create(CSS.Property.min_height, "100vh"))
         );
+
     }
-    /*
-.header,
-.footer {
-  height: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  background-image: linear-gradient(180deg, #fff, #ddd 40%, #ccc);
-  padding: 5px;
-}
-
-.main {
-  flex-grow: 1;
-  background-color: tan;
-  padding: 5px;
-}
-
-ul.menu {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.menu-item {
-  border: 1px solid white;
-  padding: 5px;
-}
-.fit-picture {
-    width: 16px;
-}
-     */
 
 }

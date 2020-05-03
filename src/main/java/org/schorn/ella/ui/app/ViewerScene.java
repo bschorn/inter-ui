@@ -21,34 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
+package org.schorn.ella.ui.app;
 
-import java.util.Arrays;
-import java.util.List;
-import org.schorn.ella.ui.layout.Frame;
+import java.util.Optional;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.util.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
-class FrameImpl extends ItemContainerImpl implements Frame {
+public abstract class ViewerScene extends ViewerComponent implements App.AppViewer.Scene {
 
-    //static final Logger LGR = LoggerFactory.getLogger(FrameImpl.class);
+    static private final Logger LGR = LoggerFactory.getLogger(ViewerScene.class);
+    static private final String CLASS = "app-viewer-scene";
 
-    private final Frame.Intent intent;
-
-    FrameImpl(String name) {
-        super(name, null);
-        this.intent = Frame.Intent.CONTAINER;
-    }
-    FrameImpl(String name, Frame.Intent intent) {
-        super(name, null);
-        this.intent = intent;
+    public ViewerScene(String id, String name, String label, boolean visible) {
+        super(id, name, label, visible);
     }
 
     @Override
-    protected List<String> containerClasses() {
-        return Arrays.asList((new String[]{this.name(), this.type().className(), this.intent.className()}));
+    public Optional<HTML.Element> build() {
+        HTML.Div div = null;
+        try {
+            div = HTML.Div.create();
+            div.setId(this.id());
+            div.addClass(this.name());
+            div.addClass(CLASS);
+            this.build0(div);
+
+        } catch (Exception ex) {
+            LGR.error("{}.build() - Caught Exception: {}",
+                    this.getClass().getSimpleName(),
+                    ToString.stackTrace(ex));
+        }
+        return Optional.of(div);
     }
 
 }

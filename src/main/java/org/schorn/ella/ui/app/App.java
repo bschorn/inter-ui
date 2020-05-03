@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Page;
 
 /**
  *
@@ -39,11 +40,13 @@ public interface App<T> extends Callable<T> {
 
         public Properties getProperties();
 
-        public App.Config getConfig(App app) throws Exception;
+        public App.AppConfig getConfig(App app) throws Exception;
 
-        public App.Controller getController(App app) throws Exception;
+        public App.AppController getController(App app) throws Exception;
 
-        public App.View getView(App app) throws Exception;
+        public App.AppViewer getViewer(App app) throws Exception;
+
+        public App.AppStyler getStyler(App app) throws Exception;
     }
 
     public interface Monitor {
@@ -51,7 +54,7 @@ public interface App<T> extends Callable<T> {
         public void thumper(Consumer<String> listener) throws Exception;
     }
 
-    public interface Config {
+    public interface AppConfig {
 
         public App getApp();
 
@@ -61,7 +64,7 @@ public interface App<T> extends Callable<T> {
 
     }
 
-    public interface Controller {
+    public interface AppController {
 
         public interface Subscription {
 
@@ -74,9 +77,19 @@ public interface App<T> extends Callable<T> {
         public App getApp();
     }
 
-    public interface View extends Consumer<ViewComponent> {
+    public interface AppViewer {
 
         public interface Component extends Item {
+
+        }
+
+        public interface Stage extends Component {
+            public List<Scene> scenes();
+
+            public Scene scene(String id);
+        }
+
+        public interface Scene extends Component {
 
         }
 
@@ -87,14 +100,25 @@ public interface App<T> extends Callable<T> {
         public <T extends Component> T component(Class<T> classT, String id);
 
         public List<Component> components();
+
+        public Page page();
+
+        public Stage stage();
+    }
+
+    public interface AppStyler {
+
+        public App getApp();
     }
 
     public Bootstrap bootstrap();
 
-    public Config config();
+    public AppConfig config();
 
-    public Controller data();
+    public AppController controller();
 
-    public View screen();
+    public AppViewer viewer();
+
+    public AppStyler styler();
 
 }

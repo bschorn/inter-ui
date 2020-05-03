@@ -28,7 +28,6 @@ import java.nio.file.Paths;
 import java.util.regex.Pattern;
 import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Identifier;
-import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.util.ToString;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
@@ -37,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.schorn.ella.ui.layout.Window;
 import org.schorn.ella.ui.layout.Pane;
 import org.schorn.ella.ui.EllamentProvider;
+import org.schorn.ella.ui.layout.Page;
 
 /**
  *

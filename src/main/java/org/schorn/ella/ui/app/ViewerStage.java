@@ -21,40 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.layout;
+package org.schorn.ella.ui.app;
+
+import java.util.Optional;
+import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.util.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author bschorn
  */
-public enum Type {
-    PAGE(Page.class),
-    FRAME(Frame.class),
-    WINDOW(Window.class),
-    PANE(Pane.class),
-    WIDGET(Widget.class),
-    ITEM(Item.class);
+public abstract class ViewerStage extends ViewerComponent implements App.AppViewer.Stage {
 
-    private final Class<? extends Item> itemClass;
+    static private final Logger LGR = LoggerFactory.getLogger(ViewerStage.class);
+    static private final String CLASS = "app-viewer-stage";
 
-    Type(Class<? extends Item> itemClass) {
-        this.itemClass = itemClass;
+    public ViewerStage(String id, String name, String label, boolean visible) {
+        super(id, name, label, visible);
     }
 
-    static Type get(Class<? extends Item> classFor) {
-        for (Type type : Type.values()) {
-            if (type.itemClass.equals(classFor)) {
-                return type;
-            }
+    @Override
+    public Optional<HTML.Element> build() {
+        HTML.Div div = null;
+        try {
+            div = HTML.Div.create();
+            div.setId(this.id());
+            div.addClass(this.name());
+            div.addClass(CLASS);
+            this.build0(div);
+
+        } catch (Exception ex) {
+            LGR.error("{}.build() - Caught Exception: {}",
+                    this.getClass().getSimpleName(),
+                    ToString.stackTrace(ex));
         }
-        return null;
+        return Optional.of(div);
     }
 
-    public Class<?> classFor() {
-        return this.itemClass;
-    }
-
-    public String className() {
-        return this.itemClass.getSimpleName().toLowerCase();
-    }
 }
