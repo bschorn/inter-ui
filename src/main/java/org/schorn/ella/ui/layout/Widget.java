@@ -29,11 +29,9 @@ import org.schorn.ella.ui.html.CSS;
  *
  * @author bschorn
  */
-public interface Widget extends Item {
+public interface Widget extends Item, Build {
 
     public String widgetId();
-
-    public String customTag();
 
     @Override
     default Role type() {

@@ -31,7 +31,7 @@ import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Widget.Output;
-import org.schorn.ella.ui.support.ItemSupport;
+import org.schorn.ella.ui.support.SupportItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,15 +43,15 @@ abstract class OutputWidgetImpl implements Output {
 
     static private final Logger LGR = LoggerFactory.getLogger(OutputWidgetImpl.class);
 
-    protected final ItemSupport support = new ItemSupport(LGR);
+    protected final SupportItem support = new SupportItem(LGR);
 
-    protected final String customTag;
+    protected final String tag;
     protected final String widgetId = UUID.randomUUID().toString();
     protected final List<String> datalist = new ArrayList<>();
     protected Exception exception = null;
 
-    OutputWidgetImpl(String customTag, String name, String label) {
-        this.customTag = customTag;
+    OutputWidgetImpl(String tag, String name, String label) {
+        this.tag = tag;
         support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
         support.properties().put(Item.Properties.NAME, name);
         support.properties().put(Item.Properties.LABEL, label);
@@ -59,8 +59,8 @@ abstract class OutputWidgetImpl implements Output {
     }
 
     @Override
-    public String customTag() {
-        return this.customTag;
+    public String tag() {
+        return this.tag;
     }
 
     @Override

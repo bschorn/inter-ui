@@ -21,15 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.schorn.ella.ui.ref;
+package org.schorn.ella.ui.app;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Arrays;
 import java.util.UUID;
-import org.schorn.ella.ui.html.HTML;
+import java.util.stream.Collectors;
 import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.layout.Widget.Control;
+import org.schorn.ella.ui.layout.Role;
 import org.schorn.ella.ui.support.SupportItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,19 +36,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-abstract class ControlWidgetImpl implements Control {
+public abstract class ViewerItem implements Item {
 
-    static private final Logger LGR = LoggerFactory.getLogger(ControlWidgetImpl.class);
+    static private final Logger LGR = LoggerFactory.getLogger(ViewerItem.class);
 
     protected final SupportItem support = new SupportItem(LGR);
 
-    protected final String tag;
-    protected final String widgetId = UUID.randomUUID().toString();
-    protected final List<String> datalist = new ArrayList<>();
-    protected Exception exception = null;
-
-    ControlWidgetImpl(String tag, String name, String label) {
-        this.tag = tag;
+    public ViewerItem(String id, String name, String label, boolean visible) {
         support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
         support.properties().put(Item.Properties.NAME, name);
         support.properties().put(Item.Properties.LABEL, label);
@@ -58,13 +50,8 @@ abstract class ControlWidgetImpl implements Control {
     }
 
     @Override
-    public String tag() {
-        return this.tag;
-    }
-
-    @Override
-    public String widgetId() {
-        return this.widgetId;
+    public Role type() {
+        return Role.ITEM;
     }
 
     @Override
@@ -82,40 +69,13 @@ abstract class ControlWidgetImpl implements Control {
         return support.property(property);
     }
 
-
-    /*
-    public void addLabel(String label) {
-        this.label = label;
-    }
-     */
-
-    @Override
-    public Optional<HTML.Element> build() {
-        HTML.Div divElement = null;
-        try {
-            divElement = HTML.Div.create();
-            divElement.setId(this.id());
-            divElement.addClass(this.name());
-            divElement.addClass(this.widgetName());
-            divElement.addClass(this.tag());
-            divElement.addClass("control");
-            divElement.addClass(this.type().className());
-            HTML.Element element = this.build0();
-            element.setId(this.widgetId());
-            divElement.append(element);
-        } catch (Exception ex) {
-            this.exception = ex;
-        }
-        return Optional.ofNullable(divElement);
-    }
-
-    abstract protected HTML.Element build0() throws Exception;
-
-    @Override
-    public void throwException() throws Exception {
-        if (this.exception != null) {
-            throw this.exception;
-        }
+    final protected String dumpProperties() {
+        return Arrays.asList(new Item.Properties[]{Item.Properties.ID, Item.Properties.NAME, Item.Properties.LABEL, Item.Properties.VISIBLE}).stream()
+                .map(p -> String.format("%s.%s=%s",
+                this.getClass().getSimpleName(),
+                p.getName(),
+                this.property(p).toString()))
+                .collect(Collectors.joining("\n"));
     }
 
 }

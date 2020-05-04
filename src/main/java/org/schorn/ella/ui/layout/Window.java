@@ -23,17 +23,17 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.EllamentProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.util.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
  * @author bschorn
  */
-public interface Window extends Container<Item> {
+public interface Window extends Container<Pane>, Build {
 
     static final Logger LGR = LoggerFactory.getLogger(Window.class);
 
@@ -45,7 +45,7 @@ public interface Window extends Container<Item> {
     }
 
     @Override
-    public void accept(Item item);
+    public void accept(Pane item);
 
     @Override
     default Role type() {

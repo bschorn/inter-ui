@@ -23,19 +23,21 @@
  */
 package org.schorn.ella.ui.ref;
 
+import org.schorn.ella.ui.layout.Pane;
+import org.schorn.ella.ui.layout.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.schorn.ella.ui.layout.Window;
 
 /**
  *
  * @author bschorn
  */
-class WindowImpl extends ItemContainerImpl implements Window {
+class WindowImpl extends ItemContainerImpl<Pane> implements Window {
 
     static final Logger LGR = LoggerFactory.getLogger(WindowImpl.class);
 
     WindowImpl(String name, String label) {
         super(name, label);
     }
+
 }

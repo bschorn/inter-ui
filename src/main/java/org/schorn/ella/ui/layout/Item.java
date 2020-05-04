@@ -31,7 +31,7 @@ import org.schorn.ella.ui.html.CSS;
  *
  * @author bschorn
  */
-public interface Item extends Build {
+public interface Item {
 
     public interface Property {
         public Class<?> classType();
@@ -95,6 +95,8 @@ public interface Item extends Build {
     public Object property(Property property);
 
     public Role type();
+
+    public String tag();
 
     default List<CSS.Style> styles() {
         return new ArrayList<>(0);

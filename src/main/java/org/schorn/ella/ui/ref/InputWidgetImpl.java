@@ -32,7 +32,7 @@ import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Widget.Input;
-import org.schorn.ella.ui.support.ItemSupport;
+import org.schorn.ella.ui.support.SupportItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +44,9 @@ abstract class InputWidgetImpl implements Input {
 
     static final Logger LGR = LoggerFactory.getLogger(InputWidgetImpl.class);
 
-    protected final ItemSupport support = new ItemSupport(LGR);
+    protected final SupportItem support = new SupportItem(LGR);
 
-    protected final String customTag;
+    protected final String tag;
     protected final HTML.Input.InputType inputType;
     protected final String widgetId = UUID.randomUUID().toString();
     protected final List<String> datalist = new ArrayList<>();
@@ -54,8 +54,8 @@ abstract class InputWidgetImpl implements Input {
     protected boolean readonly = false;
     protected String placeholder = null;
 
-    InputWidgetImpl(String customTag, HTML.Input.InputType inputType, String name, String label) {
-        this.customTag = customTag;
+    InputWidgetImpl(String tag, HTML.Input.InputType inputType, String name, String label) {
+        this.tag = tag;
         this.inputType = inputType;
         support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
         support.properties().put(Item.Properties.NAME, name);
@@ -64,8 +64,8 @@ abstract class InputWidgetImpl implements Input {
     }
 
     @Override
-    public String customTag() {
-        return this.customTag;
+    public String tag() {
+        return this.tag;
     }
 
     @Override

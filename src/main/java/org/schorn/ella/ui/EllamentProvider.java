@@ -23,6 +23,9 @@
  */
 package org.schorn.ella.ui;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Properties;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
@@ -32,6 +35,7 @@ import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Pane;
 import org.schorn.ella.ui.layout.Style;
 import org.schorn.ella.ui.layout.Window;
+import org.schorn.ella.ui.util.ToString;
 import org.schorn.ella.ui.widget.ControlWidgets;
 import org.schorn.ella.ui.widget.InputWidgets;
 import org.schorn.ella.ui.widget.OutputWidgets;
@@ -89,8 +93,16 @@ public interface EllamentProvider {
         private final ClassLocator classLocator;
 
         private Support() {
-            Properties properties = System.getProperties();
-            properties.setProperty("EllamentProvider", "org.schorn.ella.ui.ref.UIProviderImpl");
+            Properties properties = new Properties();
+            try {
+                URL urlObject = getClass().getClassLoader().getResource("ellament.properties").toURI().toURL();
+                URLConnection urlConnection = urlObject.openConnection();
+                try (InputStream inputStream = urlConnection.getInputStream()) {
+                    properties.load(inputStream);
+                }
+            } catch (Exception ex) {
+                System.err.println(ToString.stackTrace(ex));
+            }
             this.classLocator = ClassLocator.create(properties);
         }
 

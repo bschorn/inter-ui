@@ -24,18 +24,18 @@
 package org.schorn.ella.ui.layout;
 
 import java.util.List;
+import org.schorn.ella.ui.EllamentProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.schorn.ella.ui.EllamentProvider;
 
 
 /**
  *
  * @author bschorn
  */
-public interface Page extends Container<Item>, Item {
+public interface Page extends Container<Frame>, Item, Build {
 
     static final Logger LGR = LoggerFactory.getLogger(Page.class);
 
@@ -46,10 +46,10 @@ public interface Page extends Container<Item>, Item {
     public void setTitle(String title);
 
     @Override
-    public void accept(Item item);
+    public void accept(Frame item);
 
     @Override
-    public List<Item> items();
+    public List<Frame> items();
 
     public void setViewport(String width, String initialScale);
 

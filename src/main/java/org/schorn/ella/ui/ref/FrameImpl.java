@@ -26,12 +26,13 @@ package org.schorn.ella.ui.ref;
 import java.util.Arrays;
 import java.util.List;
 import org.schorn.ella.ui.layout.Frame;
+import org.schorn.ella.ui.layout.Window;
 
 /**
  *
  * @author bschorn
  */
-class FrameImpl extends ItemContainerImpl implements Frame {
+class FrameImpl extends ItemContainerImpl<Window> implements Frame {
 
     //static final Logger LGR = LoggerFactory.getLogger(FrameImpl.class);
 
@@ -49,6 +50,11 @@ class FrameImpl extends ItemContainerImpl implements Frame {
     @Override
     protected List<String> containerClasses() {
         return Arrays.asList((new String[]{this.name(), this.type().className(), this.intent.className()}));
+    }
+
+    @Override
+    public String tag() {
+        return String.format("frame-%s", this.intent.name().toLowerCase());
     }
 
 }

@@ -25,8 +25,6 @@ package org.schorn.ella.ui.support;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Role;
 import org.slf4j.Logger;
@@ -35,13 +33,13 @@ import org.slf4j.Logger;
  *
  * @author bschorn
  */
-public class ItemSupport implements Item {
+public final class SupportItem implements Item {
 
     protected final Map<Item.Property, Object> properties = new HashMap<>();
 
     private final Logger logger;
 
-    public ItemSupport(Logger logger) {
+    public SupportItem(Logger logger) {
         this.logger = logger;
     }
 
@@ -86,16 +84,12 @@ public class ItemSupport implements Item {
 
     @Override
     public Role type() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Optional<HTML.Element> build() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String tag() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void throwException() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

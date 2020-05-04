@@ -46,7 +46,7 @@ class MenuImpl extends ControlWidgetImpl implements ControlWidgets.Menu {
     protected HTML.Element build0() throws Exception {
         HTML.Ul ulElement = HTML.Ul.create();
         ulElement.addClass(this.name());
-        ulElement.addClass(this.customTag());
+        ulElement.addClass(this.tag());
         ulElement.addClass(this.widgetName());
         this.items.stream()
                 .map(mi -> mi.build())

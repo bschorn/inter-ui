@@ -26,7 +26,7 @@ package org.schorn.ella.ui.ref;
 import java.util.Optional;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Item;
+import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Page;
 import org.schorn.ella.ui.layout.Style;
 
@@ -34,7 +34,7 @@ import org.schorn.ella.ui.layout.Style;
  *
  * @author bschorn
  */
-class PageImpl extends ItemContainerImpl implements Page {
+class PageImpl extends ItemContainerImpl<Frame> implements Page {
 
     private String title = "stage";
     private boolean isViewport = false;
@@ -93,7 +93,7 @@ class PageImpl extends ItemContainerImpl implements Page {
         titleElement.setTextContent(this.title);
         pageElement.append(titleElement);
 
-        for (Item item : this.items()) {
+        for (Frame item : this.items()) {
             Optional<HTML.Element> optElement = item.build();
             item.throwException();
             if (optElement.isPresent()) {

@@ -23,17 +23,17 @@
  */
 package org.schorn.ella.ui.layout;
 
+import org.schorn.ella.ui.EllamentProvider;
 import org.schorn.ella.ui.html.CSS;
 import org.schorn.ella.ui.html.HTML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.schorn.ella.ui.EllamentProvider;
 
 /**
  *
  * @author bschorn
  */
-public interface Pane extends Container<Widget> {
+public interface Pane extends Container<Widget>, Build {
 
     static final Logger LGR = LoggerFactory.getLogger(Pane.class);
 

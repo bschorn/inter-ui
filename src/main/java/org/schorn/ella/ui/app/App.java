@@ -27,8 +27,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
+import org.schorn.ella.ui.layout.Frame;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Page;
+import org.schorn.ella.ui.layout.Style;
+import org.schorn.ella.ui.layout.Window;
 
 /**
  *
@@ -80,7 +83,7 @@ public interface App<T> extends Callable<T> {
     public interface AppViewer {
 
         public interface Component extends Item {
-
+            public Frame frame();
         }
 
         public interface Stage extends Component {
@@ -89,17 +92,15 @@ public interface App<T> extends Callable<T> {
             public Scene scene(String id);
         }
 
-        public interface Scene extends Component {
-
+        public interface Scene extends Item {
+            public List<Window> windows();
         }
 
         public App getApp();
 
-        public Component component(String id);
+        public <T extends Item> T component(Class<T> classT, String id);
 
-        public <T extends Component> T component(Class<T> classT, String id);
-
-        public List<Component> components();
+        public List<Item> items();
 
         public Page page();
 
@@ -109,7 +110,11 @@ public interface App<T> extends Callable<T> {
     public interface AppStyler {
 
         public App getApp();
+
+        public Style getPageStyle();
     }
+
+    public String name();
 
     public Bootstrap bootstrap();
 

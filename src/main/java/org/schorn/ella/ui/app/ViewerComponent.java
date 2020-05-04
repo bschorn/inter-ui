@@ -23,93 +23,21 @@
  */
 package org.schorn.ella.ui.app;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.layout.Role;
-import org.schorn.ella.ui.support.ItemSupport;
-import org.schorn.ella.ui.util.ToString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author bschorn
  */
-public abstract class ViewerComponent implements App.AppViewer.Component {
+public abstract class ViewerComponent extends ViewerItem implements App.AppViewer.Component {
 
-    static private final Logger LGR = LoggerFactory.getLogger(ViewerComponent.class);
-    static private final String CLASS = "app-viewer-component";
-
-    protected final ItemSupport support = new ItemSupport(LGR);
-
-    private Exception exception = null;
+    static private final String TAG = "app-viewer-component";
 
     public ViewerComponent(String id, String name, String label, boolean visible) {
-        support.properties().put(Item.Properties.ID, UUID.randomUUID().toString());
-        support.properties().put(Item.Properties.NAME, name);
-        support.properties().put(Item.Properties.LABEL, label);
-        support.properties().put(Item.Properties.VISIBLE, Boolean.TRUE);
+        super(id, name, label, visible);
     }
 
     @Override
-    public Role type() {
-        return Role.ITEM;
-    }
-
-    @Override
-    public void property(Property property, Object value) {
-        support.property(property, value);
-    }
-
-    @Override
-    public <T> T property(Property property, Class<T> classForT) {
-        return support.property(property, classForT);
-    }
-
-    @Override
-    public Object property(Property property) {
-        return support.property(property);
-    }
-
-
-    @Override
-    public void throwException() throws Exception {
-        if (this.exception != null) {
-            throw this.exception;
-        }
-    }
-
-    @Override
-    public Optional<HTML.Element> build() {
-        HTML.Div div = null;
-        try {
-            div = HTML.Div.create();
-            div.setId(this.id());
-            div.addClass(this.name());
-            div.addClass(CLASS);
-            this.build0(div);
-
-        } catch (Exception ex) {
-            LGR.error("{}.build() - Caught Exception: {}",
-                    this.getClass().getSimpleName(),
-                    ToString.stackTrace(ex));
-        }
-        return Optional.of(div);
-    }
-
-    abstract protected void build0(HTML.Element element) throws Exception;
-
-    final protected String dumpProperties() {
-        return Arrays.asList(new Item.Properties[]{Item.Properties.ID, Item.Properties.NAME, Item.Properties.LABEL, Item.Properties.VISIBLE}).stream()
-                .map(p -> String.format("%s.%s=%s",
-                this.getClass().getSimpleName(),
-                p.getName(),
-                this.property(p).toString()))
-                .collect(Collectors.joining("\n"));
+    public String tag() {
+        return TAG;
     }
 
 }

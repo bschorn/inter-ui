@@ -32,7 +32,7 @@ import org.schorn.ella.ui.html.HTML;
 import org.schorn.ella.ui.layout.Item;
 import org.schorn.ella.ui.layout.Pane;
 import org.schorn.ella.ui.layout.Widget;
-import org.schorn.ella.ui.support.ItemSupport;
+import org.schorn.ella.ui.support.SupportItem;
 import org.schorn.ella.ui.util.ToString;
 
 /**
@@ -41,7 +41,7 @@ import org.schorn.ella.ui.util.ToString;
  */
 class PaneImpl implements Pane {
 
-    protected final ItemSupport support = new ItemSupport(LGR);
+    protected final SupportItem support = new SupportItem(LGR);
 
     private final String formId;
     private String actionURL = null;
@@ -191,6 +191,11 @@ class PaneImpl implements Pane {
 
     protected List<Widget> widgets() {
         return this.widgets;
+    }
+
+    @Override
+    public String tag() {
+        return this.type().className();
     }
 
 }

@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-public interface Frame extends Container<Item> {
+public interface Frame extends Container<Window>, Build {
 
     static final Logger LGR = LoggerFactory.getLogger(Frame.class);
 
@@ -55,7 +55,7 @@ public interface Frame extends Container<Item> {
     }
 
     @Override
-    public void accept(Item item);
+    public void accept(Window item);
 
     @Override
     default Role type() {

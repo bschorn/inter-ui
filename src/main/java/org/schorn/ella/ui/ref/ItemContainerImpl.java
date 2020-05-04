@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.schorn.ella.ui.html.HTML;
+import org.schorn.ella.ui.layout.Build;
 import org.schorn.ella.ui.layout.Container;
 import org.schorn.ella.ui.layout.Item;
-import org.schorn.ella.ui.support.ItemSupport;
+import org.schorn.ella.ui.support.SupportItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,13 +41,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author bschorn
  */
-abstract class ItemContainerImpl implements Container<Item>, Item {
+abstract class ItemContainerImpl<T extends Item> implements Container<T>, Item, Build {
 
     static private final Logger LGR = LoggerFactory.getLogger(ItemContainerImpl.class);
 
-    protected final ItemSupport support = new ItemSupport(LGR);
+    protected final SupportItem support = new SupportItem(LGR);
 
-    private final List<Item> items = new ArrayList<>();
+    private final List<T> items = new ArrayList<>();
     private Exception exception = null;
 
     ItemContainerImpl(String name, String label) {
@@ -73,7 +74,7 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
 
 
     @Override
-    public void accept(Item item) {
+    public void accept(T item) {
         LGR.debug("{}.accept() - Item: {} -> {}",
                 this.getClass().getSimpleName(),
                 item.getClass().getSimpleName(),
@@ -82,7 +83,7 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
     }
 
     @Override
-    public List<Item> items() {
+    public List<T> items() {
         return Collections.unmodifiableList(this.items);
     }
 
@@ -124,16 +125,19 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
             labelElement.append(span);
             span.setId(String.format("%s-label", this.id()));
             labelElement.addClass(this.name());
-            labelElement.addClass(this.type().className());
+            labelElement.addClass(this.tag());
             labelElement.addClass("label");
             span.setTextContent(this.label());
             containerElement.append(labelElement);
         }
         for (Item item : this.items()) {
-            Optional<HTML.Element> optElement = item.build();
-            item.throwException();
-            if (optElement.isPresent()) {
-                containerElement.append(optElement.get());
+            if (item instanceof Build) {
+                Build buildItem = (Build) item;
+                Optional<HTML.Element> optElement = buildItem.build();
+                buildItem.throwException();
+                if (optElement.isPresent()) {
+                    containerElement.append(optElement.get());
+                }
             }
         }
         /*
@@ -145,4 +149,10 @@ abstract class ItemContainerImpl implements Container<Item>, Item {
          */
         return containerElement;
     }
+
+    @Override
+    public String tag() {
+        return this.type().className().toLowerCase();
+    }
+
 }

@@ -23,41 +23,21 @@
  */
 package org.schorn.ella.ui.app;
 
-import java.util.Optional;
-import org.schorn.ella.ui.html.HTML;
-import org.schorn.ella.ui.util.ToString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author bschorn
  */
-public abstract class ViewerScene extends ViewerComponent implements App.AppViewer.Scene {
+public abstract class ViewerScene extends ViewerItem implements App.AppViewer.Scene {
 
-    static private final Logger LGR = LoggerFactory.getLogger(ViewerScene.class);
-    static private final String CLASS = "app-viewer-scene";
+    static private final String TAG = "app-viewer-scene";
 
     public ViewerScene(String id, String name, String label, boolean visible) {
         super(id, name, label, visible);
     }
 
     @Override
-    public Optional<HTML.Element> build() {
-        HTML.Div div = null;
-        try {
-            div = HTML.Div.create();
-            div.setId(this.id());
-            div.addClass(this.name());
-            div.addClass(CLASS);
-            this.build0(div);
-
-        } catch (Exception ex) {
-            LGR.error("{}.build() - Caught Exception: {}",
-                    this.getClass().getSimpleName(),
-                    ToString.stackTrace(ex));
-        }
-        return Optional.of(div);
+    public String tag() {
+        return TAG;
     }
 
 }

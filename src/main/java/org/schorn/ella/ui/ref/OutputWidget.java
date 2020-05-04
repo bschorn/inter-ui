@@ -40,13 +40,13 @@ abstract class OutputWidget implements Widget {
 
     static final Logger LGR = LoggerFactory.getLogger(OutputWidget.class);
 
-    protected final String customTag;
+    protected final String tag;
     protected final String id;
     protected final String name;
     protected final List<CSS.Style> styles = new ArrayList<>();
 
-    public OutputWidget(String customTag, String id, String name) {
-        this.customTag = customTag;
+    public OutputWidget(String tag, String id, String name) {
+        this.tag = tag;
         this.id = id;
         this.name = name;
     }
@@ -73,8 +73,7 @@ abstract class OutputWidget implements Widget {
     }
 
     @Override
-    public String customTag() {
-        return this.customTag;
+    public String tag() {
+        return this.tag;
     }
-
 }
